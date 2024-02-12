@@ -2,7 +2,7 @@
 
 import React , { useState, useEffect }from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
-import './index.css';
+import '../index.css';
 const NavbarReactBootstrap = ({ onSignInClick }) => {
   const [showSearch, setShowSearch] = useState(false);
 

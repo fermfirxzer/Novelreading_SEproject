@@ -6,11 +6,11 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React, { useState, useEffect } from 'react';
 
-import NavbarReactBootstrap from './Navbar.js';
+import NavbarReactBootstrap from '../component/Navbar.js';
 import { Link } from 'react-router-dom';
 import Signup from './Signup.js';
-import Swipercate from './Swipercate.js';
-import './index.css';
+import Swipercate from '../Swipercate.js';
+import '../index.css';
 
 const Readnovel= () => {
     const [showSignup, setShowSignup] = useState(false);
@@ -30,10 +30,6 @@ const Readnovel= () => {
     const handleClick = () => {
       setIsClicked(!isClicked);
     };
-
-
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
     const chapters = Array.from({ length:33 }, (_, index) => index + 1); // Example array of chapters
@@ -52,6 +48,7 @@ const Readnovel= () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
   return (
+    
     <div style={{backgroundColor : '#f4f4f4'}}>
         <NavbarReactBootstrap onSignInClick={handleShowSignIn} />
         {showSignup && <Signup onSignInClick={handleCloseSignIn}/>}
@@ -172,6 +169,7 @@ const Readnovel= () => {
         &copy; 2024 NovelReading. All rights reserved.
     </footer>
     </div>
+    
   );
 };
 

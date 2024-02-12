@@ -1,21 +1,19 @@
 // server.js
-const express = require('express');
-const bodyParser = require('body-parser');
-const mysql = require('mysql');
-
+import express from 'express';
+import authRoutes from './routes/auth.js';
+import cors from "cors";
+import { db } from "./db.js";
 const app = express();
 const port = 5000;
-const cors = require('cors');
+
+
 app.use(cors());
+app.use(express.json());
+app.use("/api/auth",authRoutes)
 
-app.use(bodyParser.json());
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '123456789',
-  database: 'mc',
-});
+app.get("/",(req,res)=>{
+  res.json("kuy")
+})
 
 db.connect((err) => {
   if (err) {
@@ -40,9 +38,10 @@ app.get('http://localhost:5000/api/tasks', (req, res) => {
       res.json(results);
     });
   });
-  app.listen(port, () => {
+
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-  });
+});
 
 
 

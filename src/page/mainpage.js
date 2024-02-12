@@ -5,11 +5,11 @@
 
 import React, { useState, useEffect } from 'react';
 
-import NavbarReactBootstrap from './Navbar.js';
-import Swiperslide from './Swiperslide';
-import Swipercate from './Swipercate.js';
+import NavbarReactBootstrap from '../component/Navbar.js';
+import Swiperslide from '../Swiperslide.js';
+import Swipercate from '../Swipercate.js';
 import Signup from './Signup.js';
-import './index.css';
+import '../index.css';
 const Mainpage = () => {
     const [showSignup, setShowSignup] = useState(false);
     const showSignin = document.getElementById("sign-in-btn");

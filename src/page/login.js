@@ -1,32 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-
-
 import 'bootstrap/dist/css/bootstrap.css';
-
-
-
-
-
-
-const  Signup = ({ onSignInClick }) => {
+const  login = ({ onLoginClick }) => {
     const [showSignup, setShowSignup] = useState(true);
-   
-  
-
   return (
         
         <div className = "signup-container">
             {showSignup && (
             <>
             <div className="signup-form">
-                  <button id="close-signin-btn" onClick={onSignInClick} className="close-btn">
+                  <button id="close-signin-btn" onClick={onLoginClick} className="close-btn">
                       X
                   </button>
                   <div >
-                    <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/RAW-Login_v3@3x.png?t_143" className ='img-login'></img>
+                    <img src ="https://1146890965.rsc.cdn77.org/web/newux/assets/images/RAW-Login_v3@3x.png?t_143" className ='img-login'></img>
                   </div>
-                  
                   <form class="row g-3">
                       <h5 style={{justifyContent:'center' , display : 'flex' }}>NovelReading </h5>
                       <div class="col-12">
@@ -81,4 +69,4 @@ const  Signup = ({ onSignInClick }) => {
   );
 };
 
-export default Signup;
+export default login;
