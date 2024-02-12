@@ -1,8 +1,12 @@
 import React from 'react'
-
+import "./style.scss"
 const Readchapter = () => {
   return (
-    <div className='container'>readchapter</div>
+    <div className='readchapter'>
+        <div className='container'>
+        readchapter
+            </div>
+    </div>
   )
 }
 
