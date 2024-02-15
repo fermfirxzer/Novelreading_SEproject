@@ -9,12 +9,10 @@ import NavbarReactBootstrap from '../component/Navbar.js';
 import Swiperslide from '../Swiperslide.js';
 import Swipercate from '../Swipercate.js';
 import Signup from './Signup.js';
+import Login from './login.js'
 import '../index.css';
 const Mainpage = () => {
     const [showSignup, setShowSignup] = useState(false);
-    const showSignin = document.getElementById("sign-in-btn");
-    const closeSignin = document.getElementById("close-signin-btn");
-    const [closeSignup, setCloseSignup] = useState(false);
     const handleShowSignIn = () => {
         console.log("signin");
         setShowSignup(true);
@@ -22,8 +20,8 @@ const Mainpage = () => {
     const handleCloseSignIn = () => setShowSignup(false);
   return (
     <div>
-        <NavbarReactBootstrap onSignInClick={handleShowSignIn} />
-        {showSignup && <Signup onSignInClick={handleCloseSignIn}/>}
+        <NavbarReactBootstrap onSignInClick={handleShowSignIn}  isLoggedIn = {false} />
+        {showSignup && <Login onSignInClick={handleCloseSignIn}/>}
         
         
         <Swiperslide></Swiperslide>
@@ -74,7 +72,7 @@ const Mainpage = () => {
                 <div className='category-name-con'>
                     <a>Girl Love </a>  
                 </div>    
-                    <div className ="clearfix">
+                <div className ="clearfix">
                     <div className='category-swiper-container'>
                         <Swipercate></Swipercate>
                     </div>

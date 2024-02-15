@@ -1,0 +1,120 @@
+
+.headtopic{
+    font-size: 60px;
+    font-weight:600;
+}
+.flex{
+    display:flex;
+    justify-content: space-between;
+    
+    .head-writing{
+        font-size: large;
+        font-weight: bold;
+    }
+    
+    .authorupload-btn  {
+        background-color: rgba(0, 202, 202, 0.952);
+        color: rgb(255, 255, 255);
+        width:180px;
+        border: none;
+        padding: 10px;
+        border-radius: 30px;
+        margin: 0px 5px;
+    }
+    .manage-btn-container{
+
+        display:flex;
+        
+        .checkbox-con{
+            border:solid 1px;
+            border-radius: 10px;
+            border-color: rgb(221, 221, 221);
+            padding:5px;
+            width: 80px;
+            margin-right: 20px;
+            .custom-checkbox .form-check-input {
+                width: 25px;
+                height: 25px;
+            }
+        }
+        .Select-con{
+            width:180px;
+            border:solid 1px;
+            border-radius: 10px;
+            border-color: rgb(221, 221, 221);
+            .dot{
+   
+                margin-right: 8px;
+                font-size: 15px;
+                
+                color:rgb(0, 255, 221); 
+            }
+        }
+    }
+}
+.manage-writing-container:hover{
+    background-color: rgb(240, 240, 240);
+}
+.whole-div-link{
+    text-decoration: none;
+    .manage-writing-container{
+        display:flex;
+        justify-content: space-between;
+        margin:20px 0px;
+        border: solid 1px;
+        border-color: rgb(204, 204, 204);
+        border-radius: 15px;
+        padding: 15px;
+        .container-left{
+            display:flex;
+            align-items: center; 
+            .checkbox-con{
+                margin-right: 20px;
+                .custom-checkbox .form-check-input {
+                    width: 25px;
+                    height: 25px;
+                }
+            }
+            .novel-img-manage{
+                width:90px;
+            }
+            .describe-con{
+                margin-left: 20px;
+                
+                .describe{
+                    display: flex; 
+                    align-items: center; 
+                    color: black;
+                    font-size: 15px;
+                    .icon-manage{
+                        margin-right: 5px;
+                        width: 15px;
+                    }
+                }
+                .grey{
+                    color: #7f7f81;
+                }
+            }
+            
+        }
+        .container-right{
+            .describe{
+                color: black;
+            }
+            .Select-con{
+                width:180px;
+                border:solid 1px;
+                border-radius: 10px;
+                border-color: rgb(221, 221, 221);
+               
+                .dot{
+                    margin-right: 8px;
+                    font-size: 15px;
+                    color:rgb(0, 255, 221); 
+                }
+            }
+        }
+    }
+    
+    
+}

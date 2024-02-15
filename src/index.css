@@ -149,7 +149,18 @@ footer {
   /*.signup-container.show {
   opacity: 1; /* Shown when the 'show' class is applied 
 }*/
-
+  .link-login-signin-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: right;
+  }
+  .link-login-signin{
+   
+    margin-left: 5px;
+    color:#2ac4be;
+    cursor: pointer;
+    text-decoration: underline;
+  }
   .signup-form {
     display:flex;
     align-items: center;
@@ -194,7 +205,7 @@ footer {
   position: relative;
   
  }
-
+ 
  .heart-btn{
   background-color: transparent;
   border-width:thin;

@@ -4,19 +4,17 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import NavbarReactBootstrap from '../component/Navbar.js';
 import { Link } from 'react-router-dom';
-import Signup from './Signup.js';
+import Login from './login.js';
 import Swipercate from '../Swipercate.js';
 import '../index.css';
 
 const Readnovel= () => {
     const [showSignup, setShowSignup] = useState(false);
-    const showSignin = document.getElementById("sign-in-btn");
-    const closeSignin = document.getElementById("close-signin-btn");
-    const [closeSignup, setCloseSignup] = useState(false);
+    
     const handleShowSignIn = () => {
         console.log("signin");
         setShowSignup(true);
@@ -51,7 +49,7 @@ const Readnovel= () => {
     
     <div style={{backgroundColor : '#f4f4f4'}}>
         <NavbarReactBootstrap onSignInClick={handleShowSignIn} />
-        {showSignup && <Signup onSignInClick={handleCloseSignIn}/>}
+        {showSignup && <Login onSignInClick={handleCloseSignIn}/>}
         <div >
             <div className='reading-novel-container'>
                 <div className='reading-novel-img-con'>
@@ -108,10 +106,10 @@ const Readnovel= () => {
                         ตอนทั้งหมด ({chapters.length}) 
                     </div>
                     <div id ="chapterContainer">
-                        {currentChapters.map(chapter => (
+                        {currentChapters.map(index => (
                                 <div className='chapter' >
                             
-                                <Link to="/readchapter" className="no-underline"><g style={{color:'#00cbc3', fontSize:'18px'}}>#1 </g> กหฟกหฟกหฟกหฟ </Link>
+                                <Link to="/readchapter" className="no-underline"><g style={{color:'#00cbc3', fontSize:'18px'}}>#{index}</g> กหฟกหฟกหฟกหฟ </Link>
                                 <div style={{display:'flex'}}>
                                     <div style={{marginRight:'15px'}}>
                                         <span style={{marginRight:'5px'}}>

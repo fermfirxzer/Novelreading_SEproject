@@ -7,6 +7,9 @@ import Signup from './page/Signup.js';
 import Readnovel from './page/Readnovel.js'
 import Authorinfo from './page/authorinfo.js';
 import Readchapter from './page/readchapter.js';
+import Authorupload from './page/authorupload.js';
+import Managewriting from './page/managewriting.js';
+import Managechapter from './page/managechapter.js';
 function App() {
     
   
@@ -18,6 +21,9 @@ function App() {
             <Route path="/readnovel" element={<Readnovel/>} />
             <Route path="/authorinfo" element={<Authorinfo/>} />
             <Route path="/readchapter" element={<Readchapter/>} />
+            <Route path="/authorupload" element={<Authorupload/>} />
+            <Route path="/managewriting" element={<Managewriting/>} />
+            <Route path="/managechapter" element={<Managechapter/>} />
           </Routes>
       </Router>
     

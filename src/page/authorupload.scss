@@ -1,0 +1,61 @@
+.fontsize{
+    font-size: 20px;
+    margin-top: 10px;
+}
+.linktomanagewriting{
+    margin-top: 20px;
+    color: black;
+}
+.linktomanagewriting:hover {
+    color: #00cbc3; 
+  }
+.head{
+  
+    margin-top: 50px;
+    .uploadcon{
+        position: relative;
+        .img-icon-upload{
+            position:absolute;
+            width:60px;
+            right:30px;
+            bottom: 10px;
+        }
+    }
+    
+    .text-muted{
+        display:flex;
+        justify-content: right;
+    }
+    
+}
+
+.custom-placeholder {
+    font-size: 40px;
+
+}
+.custom-placeholder::placeholder {
+    font-size: 40px;
+    color: rgb(180, 180, 180); 
+    
+}
+.btn-container{
+    display: flex;
+    justify-content: center;
+    margin-top:30px;
+    .authorupload-btn ,.authorcancel-btn {
+        background-color: rgba(0, 202, 202, 0.952);
+        color: rgb(255, 255, 255);
+        width:150px;
+        border: none;
+        padding: 10px;
+        border-radius: 30px;
+        margin: 0px 5px;
+    }
+    .authorcancel-btn{
+        background-color: rgb(255, 255, 255);
+        color:rgb(168, 168, 168);
+        border: solid 0.5px;
+    }
+    
+}
+
