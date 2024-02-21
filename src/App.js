@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.css';
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './index.css';
@@ -7,9 +7,11 @@ import Signup from './page/Signup.js';
 import Readnovel from './page/Readnovel.js'
 import Authorinfo from './page/authorinfo.js';
 import Readchapter from './page/readchapter.js';
-import Authorupload from './page/authorupload.js';
-import Managewriting from './page/managewriting.js';
+import Writer_upload from './page/writer/writerupload.js';
+import Managewriting from './page/writer/managewriting.js';
 import Managechapter from './page/managechapter.js';
+import Writer_login from './page/writer/writerlogin.js';
+import Writer_register from './page/writer/writer_register.js';
 function App() {
     
   
@@ -21,9 +23,11 @@ function App() {
             <Route path="/readnovel" element={<Readnovel/>} />
             <Route path="/authorinfo" element={<Authorinfo/>} />
             <Route path="/readchapter" element={<Readchapter/>} />
-            <Route path="/authorupload" element={<Authorupload/>} />
-            <Route path="/managewriting" element={<Managewriting/>} />
-            <Route path="/managechapter" element={<Managechapter/>} />
+            <Route path="/writer/upload" element={<Writer_upload/>} />
+            <Route path="/writer/managewriting" element={<Managewriting/>} />
+            <Route path="/writer/managechapter" element={<Managechapter/>} />
+            <Route path="/writer/login" element={<Writer_login/>} />
+            <Route path="/writer/register" element={<Writer_register/>} />
           </Routes>
       </Router>
     

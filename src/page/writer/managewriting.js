@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import NavbarReactBootstrap from '../component/Navbar';
+import NavbarReactBootstrap from '../../component/Navbar';
 import { Form, Button, Container } from 'react-bootstrap';
 import Select from 'react-select';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -147,10 +147,6 @@ const Managewriting = () => {
         { value: 'option3', label: <div>< CircleIcon className = 'dot' style={{ color:"red"  }} /> ลบ</div> },
     ];
 
-
-    
-
-
   return (
     <div>
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -164,7 +160,7 @@ const Managewriting = () => {
                         <h2>จัดการงานเขียน</h2>
                     </div>
                     <div>
-                        <Link  to="/authorupload" style={{ textDecoration: 'none',color:'black'}}>
+                        <Link  to="/writer/upload" style={{ textDecoration: 'none',color:'black'}}>
                             <Button className = "authorupload-btn">
                                 เพิ่มงานเขียน
                             </Button>
