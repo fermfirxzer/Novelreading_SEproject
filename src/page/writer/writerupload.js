@@ -2,12 +2,13 @@ import React, { useState,useContext } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import NavbarReactBootstrap from '../../component/Navbar';
 import "./authorupload.scss"
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../context/authContextuser';
 import axios from 'axios';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const Writer_upload = () => {
   const {currentUser}=useContext(AuthContext)
+  const navigate = useNavigate();
   const [novelData, setNovelData] = useState({
     name: '',
     description: '',
@@ -18,7 +19,7 @@ const Writer_upload = () => {
     subCategory2: '',
     contentLevel: '',
   });
-
+  const [err,setError]=useState(null);
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(novelData)
@@ -51,26 +52,77 @@ const Writer_upload = () => {
   const handleImageClick = () => {
     document.getElementById('novel-image-input').click();
   };
-  const upload=async()=>{
+  const upload=async e=>{
     try{
       const formData=new FormData();
       formData.append("file",novelData.image)
       const res=await axios.post("http://localhost:5000/api/upload",formData)
-      console.log(res.data)
+      return res.data
+    
     }catch(err){
       console.log(err)
+      setError(err.response ? err.response.data : "An error occurred");
     }
   }
+  const [errname,setErrorName]=useState(null);
+  const [errdesc,setErrordesc]=useState(null);
+  const [errmaincategory,setErrormaincategory]=useState(null);
+  const [errcontentlevel,setErrorcontentlevel]=useState(null);
+  const setErrorr = (field, message) => {
+    switch (field) {
+      case 'name':
+        setErrName(message);
+        break;
+      case 'description':
+        setErrDescription(message);
+        break;
+      // handle other form fields...
+      default:
+        break;
+    }
+  };
   const handleSubmit = async e => {
     e.preventDefault();
-    if(novelData.image!==null){
-      const imageUrl=upload()
-      setNovelData({...novelData,image: imageUrl,});
+    setErrorName(null);
+    setErrordesc(null);
+    setErrormaincategory(null);
+    setErrorcontentlevel(null);
+    const validationErrors = [];
+    if (!novelData.name) {
+      validationErrors.push("Name is required");
     }
-    else{
-      const imgUrl=null;
+    if (!novelData.description) {
+      validationErrors.push("Description is required");
     }
-    const res=await axios.post("http://localhost:5000/api/writer/upload",novelData,currentUser.use);
+    if (validationErrors.length > 0) {
+      // If there are validation errors, set the errors and return
+      validationErrors.forEach(({ field, message }) => {
+        setErrorr(field, message);
+      });
+      return;
+    }
+
+    let imageUrl=null;
+    if(novelData.image!=null){
+      imageUrl=await upload();
+    }
+    const dataToSend = {
+      novelData: novelData,
+      imageUrl: imageUrl
+    };
+    console.log(dataToSend)
+    try{
+      const res=await axios.post("http://localhost:5000/api/writer/upload",dataToSend,{
+        withCredentials: true, // Include cookies in the request
+      });
+      setError(res.data)
+      setTimeout(() => {
+        navigate("/writer/managewriting")
+      }, 2000);
+    }catch(err){
+      console.error("Error in Upload:", err);
+      setError(err.response ? err.response.data : "An error occurred");
+    }
   };
   const subCategories = [
     "Romantic",
@@ -121,7 +173,7 @@ const Writer_upload = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Label >ชื่อเรื่อง</Form.Label>
-                <Form.Control as="textarea" rows={2} name="novelName" placeholder="ชื่อเรื่อง" value={novelData.name} onChange={handleChange}  maxLength={80}  className="custom-placeholder"/>
+                <Form.Control as="textarea" rows={2} name="name" placeholder="ชื่อเรื่อง" value={novelData.name} onChange={handleChange}  maxLength={80}  className="custom-placeholder"/>
                 <small className="text-muted"> {novelData.name.length}/80</small>
               </Form.Group>
               <Form.Group>
@@ -131,7 +183,7 @@ const Writer_upload = () => {
               </Form.Group>
               <Form.Group>
                 <Form.Label>นามปากกา</Form.Label>
-                <Form.Control type="text" name="authorName" value={novelData.penname} onChange={handleChange} maxLength={50}/>
+                <Form.Control type="text" name="penname" value={novelData.penname} onChange={handleChange} maxLength={50}/>
               </Form.Group>
             </Form>
           </Col>
@@ -189,11 +241,14 @@ const Writer_upload = () => {
                     <option value="20up">เฉพาะผู้ใหญ่ อายุ 20 ปีขึ้นไป</option>
                   </Form.Control>
                 </Form.Group>
-              
+                <div className='mb-3 text-center text-danger'>
+                  {err&&<p>{err}</p>}
+                </div>
                 <div className='btn-container'>
                   <Link to="/managewriting" style={{ textDecoration: 'none',color:'black'}}>
                     <Button className="authorcancel-btn">ยกเลิก</Button>
                   </Link>
+
                  
                   <Button className = "authorupload-btn" type="submit">บันทึก</Button>
                 </div>

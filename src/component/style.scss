@@ -1,0 +1,35 @@
+.custom-navbar{
+    .search-container{
+        display: flex;
+        width: 15%;
+    }
+    input{
+        width: 30%;
+        height: auto;
+    }
+    .user-info-box{
+        width: 30%;
+    .user-info{
+        display: flex;
+        color:black;
+        
+        .user-item {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: start;
+            align-items: center;
+            padding: 8px 0px;
+            width: 100%;
+            margin-left: 10px;
+            width: 35px;
+              height: auto;
+            /* Adjust the height as needed */
+              border-radius: 50%;
+        }
+        button{
+                width: 100px;
+            }
+          
+        }
+    }
+}
