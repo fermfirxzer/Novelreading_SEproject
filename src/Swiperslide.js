@@ -54,6 +54,20 @@ const Swiperslide = () => {
       scrollbar={{ draggable: true }}
       onSwiper={(swiper) => console.log(swiper)}
       onSlideChange={() => console.log('slide change')}
+      breakpoints={{
+        320: {
+          slidesPerView: 1,
+        },
+        720: {
+          slidesPerView: 2,
+        },
+        1024: {
+          slidesPerView: 2,
+        },
+        1224: {
+          slidesPerView: 3,
+        },
+      }}
     >
         {slidesData.map((slide) => (
         <SwiperSlide key={slide.id}>

@@ -69,6 +69,8 @@ footer {
 .swiper-container {
   width: 100%;
   margin: 20px 0;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 .swiper{
   margin: 20px 0px;
@@ -79,7 +81,7 @@ footer {
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
-  
+ 
   border-radius: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -132,8 +134,6 @@ footer {
   .signup-container {
    
     position: fixed;
-    
-    
     top: 40%;
     left: 50%;
     width: 850px;
@@ -168,12 +168,12 @@ footer {
     
   }
   .img-login{
-    width: 350px;
+    width: 70%;
     margin-right: 50px;
   }
   .close-btn {
     position: absolute;
-    top: -20px;
+    top: 20px;
     right: 10px;
     font-size: 20px;
     background: none;

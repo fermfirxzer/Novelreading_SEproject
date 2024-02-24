@@ -74,6 +74,23 @@ const Swipercate = () => {
             scrollbar={{ draggable: true }}
             onSwiper={(swiper) => console.log(swiper)}
             onSlideChange={() => console.log('slide change')}
+            breakpoints={{
+                320: {
+                  slidesPerView: 2,
+                },
+                500: {
+                    slidesPerView: 3,
+                  },
+                768: {
+                  slidesPerView: 4,
+                },
+                1024: {
+                  slidesPerView: 5,
+                },
+                1224: {
+                    slidesPerView: 6,
+                },
+              }}
         >
             <Swiper>
                 {novelsData.map((novel) => (
