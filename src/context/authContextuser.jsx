@@ -13,12 +13,10 @@ export const AuthContextProvider = ({ children }) => {
     try {
       const res = await axios.post(url, input, { withCredentials: true });
       setCurrentUser(res.data)
-      return { success: true, data: res.data }; 
-      
+      return { success: true, data: res.data };
     } catch (error) {
       console.error("Error in login:", error);
       return { success: false, error: error.response ? error.response.data : "An error occurred" };
-  
     }
     
   };

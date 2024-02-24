@@ -15,8 +15,8 @@ const Writer_upload = () => {
     penname:'',
     image: null,
     mainCategory: '',
-    subCategory1: '',
-    subCategory2: '',
+    subCategory1: "null",
+    subCategory2: "null",
     contentLevel: '',
   });
   const [err,setError]=useState(null);
@@ -28,7 +28,7 @@ const Writer_upload = () => {
         [name]: value,
       }));
   };
-  
+  // console.log(currentUser.writer_id)
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -64,17 +64,24 @@ const Writer_upload = () => {
       setError(err.response ? err.response.data : "An error occurred");
     }
   }
-  const [errname,setErrorName]=useState(null);
+  const [errname,setErrorname]=useState(null);
   const [errdesc,setErrordesc]=useState(null);
   const [errmaincategory,setErrormaincategory]=useState(null);
   const [errcontentlevel,setErrorcontentlevel]=useState(null);
   const setErrorr = (field, message) => {
     switch (field) {
       case 'name':
-        setErrName(message);
+        
+        setErrorname(message);
         break;
       case 'description':
-        setErrDescription(message);
+        setErrordesc(message);
+        break;
+      case 'maincategory':
+        setErrormaincategory(message);
+        break;
+      case 'contentlevel':
+        setErrorcontentlevel(message);
         break;
       // handle other form fields...
       default:
@@ -83,22 +90,30 @@ const Writer_upload = () => {
   };
   const handleSubmit = async e => {
     e.preventDefault();
-    setErrorName(null);
+    setErrorname(null);
     setErrordesc(null);
     setErrormaincategory(null);
     setErrorcontentlevel(null);
+    console.log(novelData)
     const validationErrors = [];
     if (!novelData.name) {
-      validationErrors.push("Name is required");
+      validationErrors.push({ field: 'name', message: 'Name is required' });
     }
     if (!novelData.description) {
-      validationErrors.push("Description is required");
+      validationErrors.push({ field: 'description', message: 'Description is required' });
+    }
+    if (!novelData.mainCategory) {
+      validationErrors.push({ field: 'maincategory', message: 'Maincategory is required' });
+    }
+    if (!novelData.contentLevel) {
+      validationErrors.push({ field: 'contentlevel', message: 'Contentlevel is required' });
     }
     if (validationErrors.length > 0) {
-      // If there are validation errors, set the errors and return
+      
       validationErrors.forEach(({ field, message }) => {
         setErrorr(field, message);
       });
+      
       return;
     }
 
@@ -106,8 +121,13 @@ const Writer_upload = () => {
     if(novelData.image!=null){
       imageUrl=await upload();
     }
+    let penname=novelData.penname;
+    if(novelData.penname==''){
+      penname=currentUser.writer_name;
+    }
     const dataToSend = {
       novelData: novelData,
+      penname:penname,
       imageUrl: imageUrl
     };
     console.log(dataToSend)
@@ -174,15 +194,18 @@ const Writer_upload = () => {
               <Form.Group>
                 <Form.Label >ชื่อเรื่อง</Form.Label>
                 <Form.Control as="textarea" rows={2} name="name" placeholder="ชื่อเรื่อง" value={novelData.name} onChange={handleChange}  maxLength={80}  className="custom-placeholder"/>
+                {errname&&<p className='text-danger '>{errname}</p>}
                 <small className="text-muted"> {novelData.name.length}/80</small>
+                
               </Form.Group>
               <Form.Group>
                 <Form.Label>คำอธิบาย</Form.Label>
                 <Form.Control as="textarea" rows={3} name="description" placeholder="เพิ่มคำอธิบายสั้นๆ" value={novelData.description} onChange={handleChange} maxLength={200} />
+                {errdesc&&<p className='text-danger'>{errdesc}</p>}
                 <small className="text-muted"> {novelData.description.length}/200</small>
               </Form.Group>
               <Form.Group>
-                <Form.Label>นามปากกา</Form.Label>
+                <Form.Label>นามปากกา  <span style={{color:'#888888'}}>(ถ้าไม่ใส่นามปากกาจะใช้ชื่อ writer_name) </span></Form.Label>
                 <Form.Control type="text" name="penname" value={novelData.penname} onChange={handleChange} maxLength={50}/>
               </Form.Group>
             </Form>
@@ -198,31 +221,34 @@ const Writer_upload = () => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group>
                   <Form.Label  className='fontsize'>หมวดหมู่หลัก</Form.Label>
+                  
                   <Form.Control as="select" name="mainCategory" value={novelData.mainCategory} onChange={handleChange}>
                           <option value="">หมวดที่ตรงกับกลุ่มนักอ่านที่ตั้งใจไว้</option>
+                          
                           {mainCategories.map((maincategory, index) => (
                             <option key={index} value={mainCategories[index]}>{maincategory}</option>
                           ))}
                   </Form.Control>
+                  {errmaincategory&&<p className='text-danger'>{errmaincategory}</p>}
                 </Form.Group>
                 <Row>
                     <Col md = {6}>
                     <Form.Group>
                       <Form.Label className='fontsize'>หมวดหมู่รอง 1 <span style={{color:'#888888'}}>(ไม่บังคับใส่) </span></Form.Label>
                       <Form.Control as="select" name="subCategory1" value={novelData.subCategory1} onChange={handleChange}>
-                        <option value="">หมวดที่เป็นแนวเรื่องเสริม</option>
+                        <option value="null">หมวดที่เป็นแนวเรื่องเสริม</option>
                         {subCategories.map((subcategory, index) => (
                           <option key={index} value={subCategories[index]}>{subcategory}</option>
                         ))}
                       </Form.Control>
-
+                      
                     </Form.Group>
                     </Col>
                     <Col md ={6}>
                       <Form.Group>
                         <Form.Label  className='fontsize'>หมวดหมู่รอง 2 <span style={{color:'#888888'}}>(ไม่บังคับใส่) </span></Form.Label>
                         <Form.Control as="select" name="subCategory2" value={novelData.subCategory2} onChange={handleChange}>
-                          <option value="">หมวดที่เป็นแนวเรื่องเสริม</option>
+                          <option value="null">หมวดที่เป็นแนวเรื่องเสริม</option>
                           {subCategories.map((subcategory, index) => (
                             <option key={index} value={subCategories[index]}>{subcategory}</option>
                           ))}
@@ -240,6 +266,7 @@ const Writer_upload = () => {
                     <option value="18up">อายุ 18 ปีขึ้นไป</option>
                     <option value="20up">เฉพาะผู้ใหญ่ อายุ 20 ปีขึ้นไป</option>
                   </Form.Control>
+                  {errcontentlevel&&<p className='text-danger'>{errcontentlevel}</p>}
                 </Form.Group>
                 <div className='mb-3 text-center text-danger'>
                   {err&&<p>{err}</p>}
