@@ -1,15 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Navbar, Nav } from 'react-bootstrap';
 import {  FaBell } from 'react-icons/fa'; 
 import ModeIcon from '@mui/icons-material/Mode';
 import MenuIcon from '@mui/icons-material/Menu';
 const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
   const [showSearch, setShowSearch] = useState(false);
-
+  const { currentUser,logout } = useContext(AuthContext);
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
-
+  const handlelogout=async e=>{
+  
+    try {
+        await logout();
+        
+    } catch (err) {
+        
+    }
+  }
   return (
     <>
       <Navbar bg="white" variant="dark" expand="lg" style={{ margin: '10px', borderBottom: '1px solid black', padding: '10px' }}>
@@ -55,11 +63,13 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                 </div>
               )}
           </Nav>
-          
-        </Navbar.Collapse>
-      </Navbar>
+        </>):null}
+    
+
+    
+  </Navbar.Collapse>
       
-    </>
+    </Navbar>
   );
 };
 

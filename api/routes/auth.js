@@ -1,11 +1,11 @@
 import express from 'express';
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken"
 import { db } from "../db.js";
 
 const router = express.Router();
 router.get("/", (req, res) => {
-    res.json("kuy")
-    console.log("kuy");
+    
 });
 router.post("/register",(req,res)=>{
     const q="SELECT * FROM user WHERE user_email=? || user_name=?";
@@ -27,7 +27,33 @@ router.post("/register",(req,res)=>{
         });
     })
 })
+router.post("/login", (req, res) => {
+    const q = "SELECT * FROM user WHERE user_name=?"
+    db.query(q, [req.body.username], (err, data) => {
+        if (err) return res.json(err)
+        if (data.length == 0) return res.status(404).json("User not found!");
+        const ispasswordcorrect = bcrypt.compareSync(req.body.password, data[0].user_password);
+        if (!ispasswordcorrect) return res.status(400).json("Wrong username or password!")
+        const token = jwt.sign({ user_id: data[0].user_id }, "jwtkey",{expiresIn:"1h"});
+        const { password, ...other } = data[0]
+        res.cookie("token",token,{
+            httpOnly:true
+        }).status(200).json(other)
+        
+    })
+})
 
-
+router.post("/logout", (req, res) => {
+    const token=req.cookies.token;
+    console.log(token)
+    res.clearCookie("token", {
+        path: "/api/auth/login", // or the specific path where the cookie was set
+        domain: "localhost",
+        samesite: "none",
+        secure: true
+    })
+    .status(200)
+    .json({message:"Successfully logged Out"})
+})
 
 export default router;

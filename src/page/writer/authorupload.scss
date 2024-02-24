@@ -1,6 +1,7 @@
 .fontsize{
     font-size: 20px;
     margin-top: 10px;
+    font-family:sans-serif;
 }
 .linktomanagewriting{
     margin-top: 20px;
@@ -9,8 +10,9 @@
 .linktomanagewriting:hover {
     color: #00cbc3; 
   }
+
 .head{
-  
+    
     margin-top: 50px;
     .uploadcon{
         position: relative;
@@ -21,12 +23,17 @@
             bottom: 10px;
         }
     }
+    h2{
+        font-size: 22px;
+    }
     
     .text-muted{
         display:flex;
         justify-content: right;
     }
-    
+    p{
+        font-size: 14px;
+    }
 }
 
 .custom-placeholder {

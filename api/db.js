@@ -3,6 +3,6 @@ export const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'Novelreading',
+    database: 'novelreading',
     port:3307,
   });
