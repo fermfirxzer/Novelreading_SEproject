@@ -81,28 +81,31 @@ router.post('/upload', (req, res) => {
               lastpenid=data.insertId;
           })
         }
-      console.log(lastpenid)
+      
       const value = [
         req.body.novelData.name,
         req.body.novelData.description,
         lastpenid,
         req.body.imageUrl,
         req.body.novelData.contentLevel,
+        req.body.formattedDate,
         decoded.writer_id
       ]
+      console.log(value)
       console.log(req.body.novelData.mainCategory)
-      const q = "INSERT INTO novel(novel_name,novel_desc,penid,novel_img,novel_contentlevel,writer_id) VALUES (?,?,?,?,?,?)";
+      const q = "INSERT INTO novel(novel_name,novel_desc,penid,novel_img,novel_contentlevel,novel_date,writer_id) VALUES (?,?,?,?,?,?,?)";
       db.query(q, value, (err, data) => {
         if (err) return res.status(400).json("error insert")
-        const category = "INSERT INTO novel_category (novel_name,novel_category) VALUES (?,?)"
-        db.query(category, [req.body.novelData.name, req.body.novelData.mainCategory], (err, data) => {
+        const novelId = data.insertId;
+        const category = "INSERT INTO novel_category (novel_id,novel_category) VALUES (?,?)"
+        db.query(category, [novelId,req.body.novelData.mainCategory], (err, data) => {
           const subCategory1 = req.body.novelData.subCategory1;
           const subCategory2 = req.body.novelData.subCategory2;
           if (subCategory1 != "null") {
-            db.query(category, [req.body.novelData.name, subCategory1], (err, data) => {
+            db.query(category, [novelId, subCategory1], (err, data) => {
               if (err) return res.status(400).json("Error in database query for subCategory1");
               if (subCategory2 != "null") {
-                db.query(category, [req.body.novelData.name, subCategory2], (err, data) => {
+                db.query(category, [novelId, subCategory2], (err, data) => {
                   if (err) return res.status(400).json("Error in database query for subCategory2");
                   return res.status(200).json("Upload Success");
                 });

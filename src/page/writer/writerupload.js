@@ -94,7 +94,6 @@ const Writer_upload = () => {
     setErrordesc(null);
     setErrormaincategory(null);
     setErrorcontentlevel(null);
-    console.log(novelData)
     const validationErrors = [];
     if (!novelData.name) {
       validationErrors.push({ field: 'name', message: 'Name is required' });
@@ -116,19 +115,24 @@ const Writer_upload = () => {
       
       return;
     }
-
+    const currentDate = new Date();
+    const formattedDate =currentDate.toLocaleString()
     let imageUrl=null;
     if(novelData.image!=null){
       imageUrl=await upload();
     }
+    console.log(formattedDate)
     let penname=novelData.penname;
     if(novelData.penname==''){
       penname=currentUser.writer_name;
     }
+    
+    
     const dataToSend = {
       novelData: novelData,
       penname:penname,
-      imageUrl: imageUrl
+      imageUrl: imageUrl,
+      formattedDate:formattedDate
     };
     console.log(dataToSend)
     try{
@@ -137,7 +141,7 @@ const Writer_upload = () => {
       });
       setError(res.data)
       setTimeout(() => {
-        navigate("/writer/managewriting")
+        // navigate("/writer/managewriting")
       }, 2000);
     }catch(err){
       console.error("Error in Upload:", err);

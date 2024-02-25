@@ -18,7 +18,7 @@ app.use("/api/writer",writerRoutes);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../src/uploads/novel/')
+    cb(null, '../public/uploads/novel/')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + file.originalname)
