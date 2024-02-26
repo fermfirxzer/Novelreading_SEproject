@@ -44,7 +44,7 @@ const Swiperslide = () => {
     
     return (
         
-      <Swiper
+      <Swiper className='border-top border-bottom py-4'
       // install Swiper modules
       modules={[Navigation, Pagination, Scrollbar, A11y]}
       spaceBetween={20}
@@ -70,7 +70,7 @@ const Swiperslide = () => {
       }}
     >
         {slidesData.map((slide) => (
-        <SwiperSlide key={slide.id}>
+        <SwiperSlide key={slide.id} >
           <div>
             <a href={slide.link}>
               <img src={slide.imageUrl} className="image" alt="Description" />

@@ -12,6 +12,7 @@ import Managewriting from './page/writer/managewriting.js';
 import Managechapter from './page/managechapter.js';
 import Writer_login from './page/writer/writerlogin.js';
 import Writer_register from './page/writer/writer_register.js';
+import Profile from './page/profile.js';
 function App() {
     
   
@@ -28,6 +29,7 @@ function App() {
             <Route path="/writer/managechapter" element={<Managechapter/>} />
             <Route path="/writer/login" element={<Writer_login/>} />
             <Route path="/writer/register" element={<Writer_register/>} />
+            <Route path="/profile" element={<Profile/>} />
           </Routes>
       </Router>
     

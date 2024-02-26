@@ -85,7 +85,7 @@ const Managewriting = () => {
    
 
 
-    // const novelsData = [
+    // const novelsData= [
     //     {
     //         id: 1,
     //         imageUrl: "https://cdn.readawrite.com/articles/14074/14073412/thumbnail/tiny.gif?2",
@@ -163,7 +163,7 @@ const Managewriting = () => {
     ];
 
   return (
-    <div>
+    <div style={{ marginTop: '5rem' }}>
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
         <Container style={{width:'65%'}}>
                 <div className='headtopic'>

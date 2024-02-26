@@ -6,6 +6,8 @@ import { Link ,useNavigate} from 'react-router-dom';
 import { AuthContext } from '../../context/authContextuser';
 import axios from 'axios';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+
 const Writer_upload = () => {
   const {currentUser}=useContext(AuthContext)
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const Writer_upload = () => {
     contentLevel: '',
   });
   const [err,setError]=useState(null);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log(novelData)
@@ -171,11 +174,11 @@ const Writer_upload = () => {
   
   
   return (
-    <div style={{height : '1200px'}}>
+    <div style={{ marginTop: '5.5rem' }} >
       <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
       <Container >
         <div style={{marginTop:"20px"}}>
-          <Link to="/managewriting" className = "linktomanagewriting" >
+          <Link to="/writer/managewriting" className = "linktomanagewriting" >
               กลับสู่หน้าหลัก <ArrowForwardIosIcon style={{fontSize:'15px'}}></ArrowForwardIosIcon>
           </Link>
         </div>
@@ -272,7 +275,7 @@ const Writer_upload = () => {
                   {err&&<p>{err}</p>}
                 </div>
                 <div className='btn-container'>
-                  <Link to="/managewriting" style={{ textDecoration: 'none',color:'black'}}>
+                  <Link to="/writer/managewriting" style={{ textDecoration: 'none',color:'black'}}>
                     <Button className="authorcancel-btn">ยกเลิก</Button>
                   </Link>
 

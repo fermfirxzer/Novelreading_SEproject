@@ -11,6 +11,7 @@ import Swipercate from '../Swipercate.js';
 import Signup from './Signup.js';
 import Login from './login.js'
 import '../index.css';
+
 const Mainpage = () => {
     const [showSignup, setShowSignup] = useState(false);
     const handleShowSignIn = () => {
@@ -19,14 +20,14 @@ const Mainpage = () => {
     }
     const handleCloseSignIn = () => setShowSignup(false);
   return (
-    <div>
+    <div style={{ marginTop: '4rem' }}>
         <NavbarReactBootstrap onSignInClick={handleShowSignIn}  isLoggedIn = {false} />
         {showSignup && <Login onSignInClick={handleCloseSignIn}/>}
         
         
         <Swiperslide></Swiperslide>
  
-        <div className="container-lg">
+        <div className="container-lg ">
             
             <div className='category-container'>
                 <div className='category-name-con'>
@@ -84,10 +85,8 @@ const Mainpage = () => {
         
        
 
-
-    <footer>
-        &copy; 2024 NovelReading. All rights reserved.
-    </footer>
+     
+    
     </div>
   );
 };
