@@ -1,28 +1,31 @@
-import React, { useState,useContext } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import NavbarReactBootstrap from '../../component/Navbar';
 import "./authorupload.scss"
-import { Link ,useNavigate} from 'react-router-dom';
+import { Link ,useNavigate,useLocation} from 'react-router-dom';
 import { AuthContext } from '../../context/authContextuser';
 import axios from 'axios';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 const Writer_upload = () => {
   const {currentUser}=useContext(AuthContext)
-  const navigate = useNavigate();
+  
+  const state = useLocation().state;
+  const [novelid,setNovelid]=useState(state?.novel.novel_id)
   const [novelData, setNovelData] = useState({
-    name: '',
-    description: '',
-    penname:'',
-    image: null,
-    mainCategory: '',
+    name: state?.novel.novel_name||'',
+    description: state?.novel.novel_desc||'',
+    penname:state?.novel.penname||'',
+    image: state?.novel.novel_img||null,
+    mainCategory:  '',
     subCategory1: "null",
     subCategory2: "null",
     contentLevel: '',
   });
+  
   const [err,setError]=useState(null);
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(novelData)
+  
       setNovelData((prevState) => ({
         ...prevState,
         [name]: value,
@@ -48,7 +51,31 @@ const Writer_upload = () => {
       }));
     }
   };
-
+  useEffect(() => {
+    console.log(novelData);
+  }, [novelData]);
+  useEffect(() => {
+    const fetchcategory = async () => {
+      
+      if (state) {
+        try {
+          console.log(novelid)
+          const res = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", {novel_id:novelid});
+          console.log(novelData.mainCategory)
+          setNovelData((prevState) => ({
+            ...prevState,
+            mainCategory: res.data[0].noval_category,
+          }));
+          // Logging after setting state
+          console.log("Updated novelData:", novelData);
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+    };
+    fetchcategory();
+  }, [state]);
   const handleImageClick = () => {
     document.getElementById('novel-image-input').click();
   };
@@ -188,7 +215,7 @@ const Writer_upload = () => {
             <h2>อัพโหลดรูปนิยาย</h2>
           </div>
           <Col md={4} className='uploadcon'>
-            <img src={novelData.image ? URL.createObjectURL(novelData.image) : "https://1146890965.rsc.cdn77.org/web/newux/assets/images/default-newArticle@3x.png"} alt="Novel" style={{ width: '100%', cursor: 'pointer' }} onClick={handleImageClick} />
+            <img src={novelData.image ? `/uploads/novel/${novelData.image}` : "https://1146890965.rsc.cdn77.org/web/newux/assets/images/default-newArticle@3x.png"} alt="Novel" style={{ width: '100%', cursor: 'pointer' }} onClick={handleImageClick} />
             <input id="novel-image-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageChange} />
             <img className = "img-icon-upload" src = "https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/chat_story/cam_big@2x.png?t_144" alt="upload"/>
           </Col>

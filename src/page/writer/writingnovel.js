@@ -12,8 +12,10 @@ const Writingnovel = () => {
     const novel = location.state.novel;
     const navigate=useNavigate()
     const handleClick=()=>{
-        
         navigate("/writer/writingepisode",{state:{novel}})
+    }
+    const handleEdit=()=>{
+        navigate("/writer/upload",{state:{novel}})
     }
     console.log(novel)
     return (
@@ -38,10 +40,15 @@ const Writingnovel = () => {
                                     <h6>สถานะเรื่อง :</h6>
                                 </div>
                             </div>
-
+                    
                         </div>
+                        
                     </div>
-                    <div className='header col-8 col-md-6'>
+                    <div className='header text-center col-8 col-md-6'>
+                    <div className='head-box header-right d-flex'style={{ marginTop: 'auto' }}>
+                        <button type="submit"className='form-control'>Temp</button>
+                        <button type="submit"className='form-control' onClick={handleEdit}>แก้ไข</button>
+                            </div>
                     </div>
                 </div>
                 <div className='img-box'>
