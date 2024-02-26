@@ -47,7 +47,7 @@ const Readnovel= () => {
     };
   return (
     
-    <div style={{backgroundColor : '#f4f4f4'}}>
+    <div style={{backgroundColor : '#f4f4f4' , marginTop: '4rem' }}>
         <NavbarReactBootstrap onSignInClick={handleShowSignIn} />
         {showSignup && <Login onSignInClick={handleCloseSignIn}/>}
         <div >
@@ -163,9 +163,7 @@ const Readnovel= () => {
        
 
 
-    <footer>
-        &copy; 2024 NovelReading. All rights reserved.
-    </footer>
+    
     </div>
     
   );

@@ -1,68 +1,120 @@
-import React, { useState,useContext } from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import {  FaBell } from 'react-icons/fa'; 
 import ModeIcon from '@mui/icons-material/Mode';
-import { Link } from 'react-router-dom';
-import "./style.scss" ;
-import { AuthContext } from '../context/authContextuser.jsx';
+import MenuIcon from '@mui/icons-material/Menu';
+
+import '../component/navbar.scss';
+
 const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
   const [showSearch, setShowSearch] = useState(false);
-  const { currentUser,logout } = useContext(AuthContext);
+
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
-  const handlelogout=async e=>{
-  
-    try {
-        await logout();
-        
-    } catch (err) {
-        
-    }
-  }
+
+
+  const handleIconClick = (event) => {
+    event.stopPropagation();
+    // Handle the click event for profile, writing, notification icons
+  };
+
   return (
-   
+    <>
+      <Navbar className= "fixed-top " bg="light" variant="dark" expand="lg" style={{  borderBottom: '1px solid black', padding: '15px', width:'100%'}}>
+        <Navbar.Brand href="/" style={{ color: 'black', marginLeft: '30px' }}>NovelReading</Navbar.Brand>
+        <Navbar.Toggle  className= "flex align-items-center " aria-controls="basic-navbar-nav" >
+                {isLoggedIn && ( 
+                  <div className = "flex align-item-center" >
+                    <Nav.Link href="/notifications" onClick={handleIconClick}  style={{ margin:'5px',color: 'black', background: '#dddddd', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <FaBell />
+                    </Nav.Link>
+                    <Nav.Link href="/writer/managewriting" onClick={handleIconClick}  style={{margin:'5px', color: 'black', background: '#dddddd', borderRadius: '50%',  width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <ModeIcon/>
+                    </Nav.Link>
+                    <Dropdown  align="end" className='mt-2 mx-2' onClick={handleIconClick}>
+                      <Dropdown.Toggle   variant="primary" id="dropdown-basic" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+                          <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn mt-2" style={{  width: '35px', height: '35px' }}/>
+                      </Dropdown.Toggle>
 
-    
-    <Navbar className="custom-navbar" bg="white" variant="dark" expand="lg" style={{ margin: '10px', borderBottom: '1px solid black', padding: '10px' }}>
-    <Navbar.Brand href="/" style={{ color: 'black', marginLeft: '30px' }}>NovelReading</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <button className="navbar-toggler text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#basic-navbar-nav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-      Menu
-    </button>
-    <Navbar.Collapse id="basic-navbar-nav">
-      <Nav className="">
-        <Nav.Link href="/novel" style={{ color: 'black' }}>นิยาย</Nav.Link>
-        <Nav.Link href="/cartoon" style={{ color: 'black' }}>การ์ตูน</Nav.Link>
-    
-      </Nav>
-    
-      
-        {!currentUser ? (
-          <Nav className=''>
-          <Nav.Link id="sign-in-btn" style={{ color: 'black', width: "auto" }} onClick={onSignInClick} className="signinbtn">
-            เข้าสู่ระบบ / สมัครสมาชิก
-          </Nav.Link>
-          </Nav>
-        ):null }
-        <input id="searchinput" type="text" placeholder="Search" className="search-input" /> 
-        {1?( <>
+                      <Dropdown.Menu className="dropdown-menu" >
+                        <Dropdown.Item href="/profile" >
+                            <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn"/>
+                            <span className='mx-3'>display name</span>
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
+                        <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href="#/action-4">Logout</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                )} 
+             
+               <MenuIcon className='mt-2 mx-2' style={{ color: 'black' }} />  
+        </Navbar.Toggle>
         
-          <Nav className='user-info-box'>
-          <ul className='nav navbar-nav user-info'>
-            <li className='hidden-xs user-item'>dad</li>
-            <li className='hidden-xs user-item'>da</li>
-            <li className='hidden-xs user-item'>da</li>
-            <li className='hidden-xs user-item'><Link to="/writer/login">writer</Link></li>
-          </ul>
+    
+        
+        <Navbar.Collapse id="basic-navbar-nav" style = {{justifyContent:'space-between'}}>
+          <Nav className="mr-auto flex navleft" >
+            <Nav.Link href="/novel" className = "bordercustom" >นิยาย</Nav.Link>
+            <Nav.Link href="/cartoon" className = "bordercustom">การ์ตูน</Nav.Link>
+           
           </Nav>
-        </>):null}
-    
+          
+          <Nav className="ml-auto navright">
+              <div className="search-container">
+                  {showSearch && (
+                    <input id="searchinput" type="text" placeholder="Search" className="search-input" />
+                  )}
+                  <button className="search-btn " onClick={toggleSearch} style={{ cursor: 'pointer' }}>
+                    <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="Button Image" />
+                  </button>
+              </div>      
+              {!isLoggedIn && (
+              <Nav.Link href="/writer/login" className="bordercustom">เข้าสู่ระบบ / สมัครสมาชิก</Nav.Link>
+              )}
+              {isLoggedIn && ( 
+                <div className = "d-none d-lg-flex" style={{right: '50px' }}>
+                  <Nav.Link href="/notifications" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <FaBell />
+                  </Nav.Link>
+                  <Nav.Link href="/writer/managewriting" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <ModeIcon className="search-btn"/>
+                  </Nav.Link>
+                  
+                  <Dropdown  align="end" className='mt-2 mx-3' >
+                      <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
+                          <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn"/>
+                      </Dropdown.Toggle>
 
-    
-  </Navbar.Collapse>
+                      <Dropdown.Menu className="dropdown-menu">
+                        <Dropdown.Item href="/profile" className='w-auto'>
+                            <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn"/>
+                            <span className='mx-3'>display name</span>
+                        </Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
+                        <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
+                        <Dropdown.Divider />
+                        <Dropdown.Item href="#/action-4">Logout</Dropdown.Item>
+                      </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+              )} 
+          </Nav>
+         
+              
+           
+        
+        </Navbar.Collapse>
+      </Navbar>
       
-    </Navbar>
+    </>
   );
 };
 

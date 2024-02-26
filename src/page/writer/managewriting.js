@@ -133,10 +133,10 @@ const Managewriting = () => {
         { value: 2, label: <div>< CircleIcon className='dot' style={{ color: "red" }} /> ลบ</div> },
     ];
 
-    return (
-        <div>
-            <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
-            <Container style={{ width: '65%' }}>
+  return (
+    <div style={{ marginTop: '5rem' }}>
+        <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
+        <Container style={{width:'65%'}}>
                 <div className='headtopic'>
                     Writing
                     <ExpandMoreIcon></ExpandMoreIcon>
