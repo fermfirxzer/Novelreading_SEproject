@@ -12,6 +12,8 @@ import Managewriting from './page/writer/managewriting.js';
 import Managechapter from './page/managechapter.js';
 import Writer_login from './page/writer/writerlogin.js';
 import Writer_register from './page/writer/writer_register.js';
+import Writingnovel from './page/writer/writingnovel.js';
+import Writingepisode from './page/writer/writingepisode.js';
 function App() {
     
   
@@ -28,6 +30,8 @@ function App() {
             <Route path="/writer/managechapter" element={<Managechapter/>} />
             <Route path="/writer/login" element={<Writer_login/>} />
             <Route path="/writer/register" element={<Writer_register/>} />
+            <Route path="/writer/writingnovel" element={<Writingnovel/>} />
+            <Route path="/writer/writingepisode" element={<Writingepisode/>} />
           </Routes>
       </Router>
     

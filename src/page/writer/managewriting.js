@@ -9,7 +9,7 @@ import "./managewrting.scss"
 import "./authorupload.scss"
 import axios from 'axios';
 import { AuthContext } from '../../context/authContextuser';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 const Managewriting = () => {
 
 
@@ -23,6 +23,7 @@ const Managewriting = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [page, setPage] = useState(0);
     const writerid = currentUser.writer_id;
+    const navigate=useNavigate()
     const fetchData = async () => {
         const value = {
             page,
@@ -120,8 +121,10 @@ const Managewriting = () => {
         }
     };
     
-    const handleLinkClick=()=>{
-
+    const handleLinkClick=(e,novel)=>{
+       
+    
+        navigate("/writer/writingnovel",{state:{novel}})
     }
 
     const options = [
@@ -176,7 +179,7 @@ const Managewriting = () => {
 
                 {novelsData.map((novel, index) => (
 
-                    <a className="whole-div-link" key={index} onClick={(e) => handleLinkClick(e)}>
+                    <a className="whole-div-link" key={index} onClick={(e) => handleLinkClick(e,novel)}>
                         <div className='manage-writing-container'>
 
                             <div className='container-left'>
