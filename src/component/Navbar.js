@@ -1,30 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import {  FaBell } from 'react-icons/fa'; 
 import ModeIcon from '@mui/icons-material/Mode';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import { AuthContext } from '../context/authContextuser';
 import '../component/navbar.scss';
 
 const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
+  const {currentUser,logout}=useContext(AuthContext)
   const [showSearch, setShowSearch] = useState(false);
 
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
 
-
+  const onClicklogout=()=>{
+    logout();
+  }
   const handleIconClick = (event) => {
     event.stopPropagation();
     // Handle the click event for profile, writing, notification icons
   };
-
+  
   return (
     <>
       <Navbar className= "fixed-top " bg="light" variant="dark" expand="lg" style={{  borderBottom: '1px solid black', padding: '15px', width:'100%'}}>
         <Navbar.Brand href="/" style={{ color: 'black', marginLeft: '30px' }}>NovelReading</Navbar.Brand>
         <Navbar.Toggle  className= "flex align-items-center " aria-controls="basic-navbar-nav" >
-                {isLoggedIn && ( 
+                {currentUser && ( 
                   <div className = "flex align-item-center" >
                     <Nav.Link href="/notifications" onClick={handleIconClick}  style={{ margin:'5px',color: 'black', background: '#dddddd', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <FaBell />
@@ -74,10 +77,10 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                     <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="Button Image" />
                   </button>
               </div>      
-              {!isLoggedIn && (
+              {!currentUser && (
               <Nav.Link href="/writer/login" className="bordercustom">เข้าสู่ระบบ / สมัครสมาชิก</Nav.Link>
               )}
-              {isLoggedIn && ( 
+              {currentUser && ( 
                 <div className = "d-none d-lg-flex" style={{right: '50px' }}>
                   <Nav.Link href="/notifications" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <FaBell />
@@ -101,7 +104,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                         <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
                         <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
                         <Dropdown.Divider />
-                        <Dropdown.Item href="#/action-4">Logout</Dropdown.Item>
+                        <Dropdown.Item href="#/action-4" onClick={onClicklogout}>Logout</Dropdown.Item>
                       </Dropdown.Menu>
                   </Dropdown>
                 </div>

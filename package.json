@@ -28,6 +28,7 @@
     "react-select": "^5.8.0",
     "sass": "^1.70.0",
     "scss": "^0.2.4",
+    "sweetalert2": "^11.10.5",
     "swiper": "^11.0.5",
     "web-vitals": "^2.1.4"
   },

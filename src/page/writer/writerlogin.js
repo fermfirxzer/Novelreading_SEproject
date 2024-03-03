@@ -23,7 +23,7 @@ const Writer_login = () => {
         // Handle successful login
         setError("Login success")
         setTimeout(() => {
-          navigate("/writer/managewriting")
+          navigate("/")
         }, 2000);
       } else {
         // Handle login error

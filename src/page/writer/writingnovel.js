@@ -1,22 +1,78 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./managewrting.scss"
 import NavbarReactBootstrap from '../../component/Navbar';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2'
+import axios from 'axios';
 const Writingnovel = () => {
     const value = [
         { novelname: 1, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
         { novelname: 2, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
         { novelname: 3, novelviews: 1, novelcomment: 1, novelprivacy: 1 }
     ]
-    const location = useLocation();
-    const novel = location.state.novel;
-    const navigate=useNavigate()
-    const handleClick=()=>{
-        navigate("/writer/writingepisode",{state:{novel}})
+    const state = useLocation().state;
+    const [novel,setNovel] = useState(state.novel);
+    const navigate = useNavigate()
+    const handleClick = () => {
+        navigate("/writer/writingepisode", { state: { novel } })
     }
-    const handleEdit=()=>{
-        navigate("/writer/upload",{state:{novel}})
+    const handleEdit = () => {
+        navigate("/writer/upload", { state: { novel } })
     }
+    const handleDelete = async () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+                try {
+                    if (state.novel.novel_img) {
+                        const deleteimg = await axios.delete(`http://localhost:5000/api/delete/${state.novel.novel_img}`)
+                    }
+                    
+                } catch (err) {
+                    console.log(err)
+                }
+                try {
+                    // Delete the novel from the database
+                    await axios.delete("http://localhost:5000/api/novel_delete/deletenovel", { data: { novel_id: novel.novel_id } });
+                    
+                    // Navigate to the desired location after deletion
+                    navigate("/writer/managewriting");
+                  } catch (error) {
+                    console.error("Error deleting novel:", error);
+                    // Handle errors or show a message to the user if needed
+                  }
+            }
+        });
+    }
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await axios.post("http://localhost:5000/api/writer/writer_fetchnovel/", { novelid: novel.novel_id });
+                setNovel(res.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        // Assuming 'novel' is the object containing the necessary data for the API call
+        if (novel) {
+            fetchData();
+        }
+    }, [novel]);
     console.log(novel)
     return (
         <div className='writingnovel'>
@@ -40,15 +96,16 @@ const Writingnovel = () => {
                                     <h6>สถานะเรื่อง :</h6>
                                 </div>
                             </div>
-                    
+
                         </div>
-                        
+
                     </div>
                     <div className='header text-center col-8 col-md-6'>
-                    <div className='head-box header-right d-flex'style={{ marginTop: 'auto' }}>
-                        <button type="submit"className='form-control'>Temp</button>
-                        <button type="submit"className='form-control' onClick={handleEdit}>แก้ไข</button>
-                            </div>
+                        <div className='head-box header-right d-flex' style={{ marginTop: 'auto' }}>
+                            <button type="submit" className='form-control' onClick={handleEdit}>แก้ไข</button>
+                            <button type="submit" className='form-control' onClick={handleDelete}>ลบ</button>
+
+                        </div>
                     </div>
                 </div>
                 <div className='img-box'>

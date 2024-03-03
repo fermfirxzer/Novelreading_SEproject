@@ -71,4 +71,11 @@ router.post("/writer_fetchcategory/",(req,res)=>{
         return res.status(200).json(data);
     })
 })
+router.post("/writer_fetchnovel/",(req,res)=>{
+    const q="SELCET * FROM novel WHERE novel_id=?";
+    db.query(q,[req.body.novelid],(err,data)=>{
+        if(err)return res.status(500).json(err);
+        return res.status(200).json(data);
+    })
+})
 export default router;
