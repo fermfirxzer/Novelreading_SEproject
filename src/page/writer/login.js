@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import './writer_style.scss'
 
 import { AuthContext } from '../../context/authContextuser'
-const Writer_login = () => {
+const Login = () => {
   const [input, setInput] = useState({
     email: "",
     password: "",
@@ -88,4 +88,4 @@ const Writer_login = () => {
   )
 }
 
-export default Writer_login;
+export default Login;

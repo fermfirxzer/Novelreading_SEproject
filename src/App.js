@@ -7,14 +7,14 @@ import Signup from './page/Signup.js';
 import Readnovel from './page/Readnovel.js'
 import Authorinfo from './page/authorinfo.js';
 import Readchapter from './page/readchapter.js';
-import Writer_upload from './page/writer/writerupload.js';
+import Uploadnovel from './page/writer/uploadnovel.js';
 import Managewriting from './page/writer/managewriting.js';
 import Managechapter from './page/managechapter.js';
-import Writer_login from './page/writer/writerlogin.js';
-import Writer_register from './page/writer/writer_register.js';
+import Login from './page/writer/login.js';
+import Register  from './page/writer/register.js';
 import Profile from './page/profile.js';
-import Writingnovel from './page/writer/writingnovel.js';
-import Writingepisode from './page/writer/writingepisode.js';
+import Viewnovel from './page/writer/viewnovel.js';
+import Uploadchapter from './page/writer/uploadchapter.js';
 function App() {
     
   
@@ -26,14 +26,14 @@ function App() {
             <Route path="/readnovel" element={<Readnovel/>} />
             <Route path="/authorinfo" element={<Authorinfo/>} />
             <Route path="/readchapter" element={<Readchapter/>} />
-            <Route path="/writer/upload" element={<Writer_upload/>} />
+            <Route path="/writer/upload" element={<Uploadnovel/>} />
             <Route path="/writer/managewriting" element={<Managewriting/>} />
             <Route path="/writer/managechapter" element={<Managechapter/>} />
-            <Route path="/writer/login" element={<Writer_login/>} />
-            <Route path="/writer/register" element={<Writer_register/>} />
+            <Route path="/writer/login" element={<Login/>} />
+            <Route path="/writer/register" element={<Register/>} />
             <Route path="/profile" element={<Profile/>} />
-            <Route path="/writer/writingnovel" element={<Writingnovel/>} />
-            <Route path="/writer/writingepisode" element={<Writingepisode/>} />
+            <Route path="/writer/viewnovel" element={<Viewnovel/>} />
+            <Route path="/writer/uploadchapter" element={<Uploadchapter />} />
           </Routes>
       </Router>
     

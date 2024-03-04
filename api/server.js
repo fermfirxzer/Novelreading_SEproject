@@ -30,6 +30,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({ storage: storage })
 app.post("/api/upload", upload.single('file'), function (req, res) {
+  
   if (!req.file) {
     return res.status(400).json({ error: "No file provided" });
   }
@@ -41,11 +42,10 @@ app.delete("/api/delete/:filename", function (req, res) {
   console.log("this is delete")
   const filename = req.params.filename;
   const filePath = path.join(__dirname, '..', 'public', 'uploads', 'novel', filename);
-
   fs.unlink(filePath, (err) => {
     if (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Internal Server Error" });
+      // console.error(err);
+      // return res.status(500).json({ error: "Internal Server Error" });
     }
 
     res.status(200).json({ message: "File deleted successfully" });

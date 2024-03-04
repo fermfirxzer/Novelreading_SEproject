@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
-const Writingepisode = () => {
+const Uploadchapter = () => {
     const state = useLocation().state;
     const [novel, setNovel] = useState({
         novel_name: state?.novel.novel_name,
@@ -91,7 +91,7 @@ const Writingepisode = () => {
     return (
         <div className='writingepisode'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
-            <div className='container mt-3'>
+            <div className='container'>
                 <div className='top d-flex pt-3 backtheme'>
                     <a href='/writer/managewriting' className='link ps-3'><span className='ps-2 mb-2'> กลับสู่หน้าหลัก</span></a>
                     <span className='ps-2 mb-2'> &gt;</span>
@@ -154,4 +154,4 @@ const Writingepisode = () => {
         </div>
     )
 }
-export default Writingepisode
+export default Uploadchapter;

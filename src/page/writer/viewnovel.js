@@ -4,7 +4,7 @@ import NavbarReactBootstrap from '../../component/Navbar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
-const Writingnovel = () => {
+const Viewnovel = () => {
     const value = [
         { novelname: 1, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
         { novelname: 2, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
@@ -14,7 +14,7 @@ const Writingnovel = () => {
     const [novel,setNovel] = useState(state.novel);
     const navigate = useNavigate()
     const handleClick = () => {
-        navigate("/writer/writingepisode", { state: { novel } })
+        navigate("/writer/uploadchapter", { state: { novel } })
     }
     const handleEdit = () => {
         navigate("/writer/upload", { state: { novel } })
@@ -29,7 +29,6 @@ const Writingnovel = () => {
             cancelButtonColor: "#d33",
             confirmButtonText: "Yes, delete it!"
         }).then(async (result) => {
-
             if (result.isConfirmed) {
 
                 Swal.fire({
@@ -69,15 +68,15 @@ const Writingnovel = () => {
         };
 
         // Assuming 'novel' is the object containing the necessary data for the API call
-        if (novel) {
+        
             fetchData();
-        }
+        
     }, [novel]);
     console.log(novel)
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
-            <div className='container mt-3'>
+            <div className='container'>
                 <div className='top d-flex pt-3'>
                     <a href='/writer/managewriting' className='link ps-3'><h6>กลับสู่หน้าหลัก</h6></a>
                     <span className='ps-2'> &gt;</span>
@@ -150,4 +149,4 @@ const Writingnovel = () => {
     )
 }
 
-export default Writingnovel
+export default Viewnovel;
