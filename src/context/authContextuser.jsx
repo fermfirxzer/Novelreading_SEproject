@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 export const AuthContext = createContext();
 
@@ -8,8 +9,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (input, userType) => {
-    const url = userType === "writer" ? "http://localhost:5000/api/writer/login" : "http://localhost:5000/api/auth/login";
-    console.log(url);
+    const url = "http://localhost:5000/api/writer/login" 
     try {
       const res = await axios.post(url, input, { withCredentials: true });
       setCurrentUser(res.data)
@@ -20,11 +20,14 @@ export const AuthContextProvider = ({ children }) => {
     }
     
   };
-
+  // const navigate = useNavigate()
   const logout = async () => {
-    
     localStorage.removeItem("user");
-    setCurrentUser(null);
+    if(currentUser){
+      setCurrentUser(null);
+    }
+    axios.post("http://localhost:5000/api/writer/logout",{},{withCredentials: true});
+    
   };
 
   useEffect(() => {

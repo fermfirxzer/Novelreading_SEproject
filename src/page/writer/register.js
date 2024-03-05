@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import './writer_style.scss'
 import axios from 'axios'
 
-const Writer_register = () => {
+const Register = () => {
   const [input, setInput] = useState({
     username:null,
     email: null,
@@ -15,7 +15,6 @@ const Writer_register = () => {
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  const navigate = useNavigate();
   
   const [err,setError]=useState(null)
   const handleSubmit = async (e) => {
@@ -93,4 +92,4 @@ const Writer_register = () => {
   )
 }
 
-export default Writer_register;
+export default Register ;

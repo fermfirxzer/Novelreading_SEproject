@@ -3,8 +3,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import { db } from "../db.js";
 import cors from "cors";
+
 const router = express.Router();
 router.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+////////////////////////////////////////////////////////////////////////////////////
+//Writer login,register,logout
+////////////////////////////////////////////////////////////////////////////////////
 router.post('/register', (req, res) => {
   if (!req.body.password || !req.body.username || !req.body.email || !req.body.confirmpassword) return res.status(400).json("Please fill in all information");
 
@@ -59,69 +63,262 @@ router.post('/login', (req, res) => {
 
   })
 })
-router.post('/upload', (req, res) => {
+router.post('/logout', (req, res) => {
+  // res.redirect('http://localhost:3000/');
+  res.clearCookie("token", {
+    domain: 'localhost:3000',
+    path: '/'
+  });
+  
+})
+
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json("Not authenticated");
+  }
+
+  jwt.verify(token, "jwtkey", (err, decoded) => {
+    if (err) {
+      return res.status(403).json("Token is not valid!");
+    }
+
+    // Optionally, you can attach the decoded user information to the request for later use
+    req.user = decoded;
+    
+    // Continue to the next middleware or route handler
+    next();
+  });
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//upload novel
+////////////////////////////////////////////////////////////////////////////////////
+router.post('/upload_novel', verifyToken, (req, res) => {
   const novelname = "SELECT * FROM novel WHERE novel_name=?";
   db.query(novelname, req.body.novelData.name, (err, data) => {
     if (err) return res.status(402).json("Error");
     if (data.length > 0) return res.status(404).json("Novel name already exit!")
-    const token = req.cookies.token
-    if (!token) return res.status(401).json("Not autdada")
-    jwt.verify(token, "jwtkey", (err, decoded) => {
-      if (err) return res.status(403).json("Token is not valid!");
-      const checkpenname="SELECT * FROM penname WHERE penname=?";
-      let lastpenid;
-      db.query(checkpenname,req.body.penname,(err,data)=>{
-        if(err)return res.status(403).json("Error query");
-        if(data.length>0){
-          lastpenid=data[0].penid;
-        }else{
-          const penname="INSERT into penname (penname) VALUES (?)";
-          db.query(penname,req.body.penname,(err,data)=>{
-            if(err)return res.status(401).json("error in penname");
-              lastpenid=data.insertId;
-          })
-        }
-      console.log(lastpenid)
+    const checkpenname = "SELECT * FROM penname WHERE penname=?";
+    let lastpenid;
+    db.query(checkpenname, req.body.penname, (err, data) => {
+      if (err) return res.status(403).json("Error query");
+      if (data.length > 0) {
+        lastpenid = data[0].penid;
+      } else {
+        const penname = "INSERT into penname (penname) VALUES (?)";
+        db.query(penname, req.body.penname, (err, data) => {
+          if (err) return res.status(401).json("error in penname");
+          lastpenid = data.insertId;
+        })
+      }
+      
       const value = [
         req.body.novelData.name,
         req.body.novelData.description,
         lastpenid,
         req.body.imageUrl,
         req.body.novelData.contentLevel,
-        decoded.writer_id
+        req.body.formattedDate,
+        req.user.writer_id
       ]
-      console.log(req.body.novelData.mainCategory)
-      const q = "INSERT INTO novel(novel_name,novel_desc,penid,novel_img,novel_contentlevel,writer_id) VALUES (?,?,?,?,?,?)";
+      const q = "INSERT INTO novel(novel_name,novel_desc,penid,novel_img,novel_contentlevel,novel_date,writer_id) VALUES (?,?,?,?,?,?,?)";
       db.query(q, value, (err, data) => {
         if (err) return res.status(400).json("error insert")
-        const category = "INSERT INTO novel_category (novel_name,novel_category) VALUES (?,?)"
-        db.query(category, [req.body.novelData.name, req.body.novelData.mainCategory], (err, data) => {
-          const subCategory1 = req.body.novelData.subCategory1;
-          const subCategory2 = req.body.novelData.subCategory2;
-          if (subCategory1 != "null") {
-            db.query(category, [req.body.novelData.name, subCategory1], (err, data) => {
-              if (err) return res.status(400).json("Error in database query for subCategory1");
-              if (subCategory2 != "null") {
-                db.query(category, [req.body.novelData.name, subCategory2], (err, data) => {
-                  if (err) return res.status(400).json("Error in database query for subCategory2");
-                  return res.status(200).json("Upload Success");
-                });
-              } else {
-                return res.status(200).json("Upload Success");
-              }
-            });
-          } else if (subCategory2 != "null") {
-            db.query(category, [req.body.novelData.name, subCategory2], (err, data) => {
-              if (err) return res.status(400).json("Error in database query for subCategory2");
-              return res.status(200).json("Upload Success");
-            });
-          } else {
-            return res.status(200).json("Upload Success");
-          }
-        })
+        const novelid = data.insertId;
+        return res.status(200).json(novelid)
       })
     })
   })
 })
+router.post("/upload_category", verifyToken, async (req, res) => {
+  console.log(req.body)
+  const selectQuery = "SELECT category_id FROM categories WHERE category_name = ?";
+  const insertQuery = "INSERT INTO novel_category (novel_id, category_id, category_type) VALUES (?, ?, ?)";
+  const categories = [req.body.mainCategory, req.body.subCategory1, req.body.subCategory2];
+  const order=["main","subCategory1","subCategory2"]
+  try {
+    const categoryData = [];
+
+    // Fetch category_ids for each category using callbacks
+    for (let order = 0; order < categories.length; order++) {
+      const category = categories[order];
+
+      db.query(selectQuery, [category], (err, data) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        if (data && data.length > 0) {
+          categoryData.push({ id: data[0].category_id, order });
+        } else {
+          console.error(`Category "${category}" not found in the database.`);
+          // You may choose to send an appropriate response to the client here
+        }
+      });
+    }
+
+    // Wait for the queries to complete (not ideal but works with callbacks)
+    await new Promise((resolve) => setTimeout(resolve, 100));  // Adjust the delay as needed
+
+    // Sort categoryData based on the original order
+    categoryData.sort((a, b) => a.order - b.order);
+
+    // Insert novel_id, category_id, and category_order into novel_category table
+    for (const data of categoryData) {
+      db.query(insertQuery, [req.body.novelid, data.id, order[data.order]], (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+      });
+    }
+
+    return res.status(200).json("Success upload");
+  } catch (error) {
+    console.error('Error uploading categories:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+router.post('/update_novel', verifyToken, (req, res) => {
+  console.log(req.body)
+  const image = req.body.imageUrl === null ? req.body.novelData.image:req.body.imageUrl;
+  console.log(image)
+  const q = "UPDATE novel SET novel_name=?,novel_desc=?,penid=?,novel_img=?,novel_contentlevel=? WHERE novel_id=?"
+  const querypenid = "SELECT * FROM penname WHERE penname=?";
+  db.query(querypenid, [req.body.novelData.penname], (err, data) => {
+    if (err) return res.json(err);
+    if (data.length >= 1) {
+      const value = [req.body.novelData.name, req.body.novelData.description, data[0].penid, image, req.body.novelData.contentLevel,req.body.novelid];
+      db.query(q, value, (err, data) => {
+        if (err) return res.json(err);
+        return res.status(200).json("success update")
+      })
+    } else {
+      const insertpenid = "INSERT INTO penname (penname) VALUES (?)";
+      db.query(insertpenid, [req.body.novelData.penname], (err, result) => {
+        if (err) return res.json(err);
+        const lastpenid = result.insertId;
+        const value = [req.body.novelData.name, req.body.novelData.description, lastpenid, image, req.body.novelData.contentLevel,req.body.novelid];
+        db.query(q, value, (err, data) => {
+          if (err) return res.json(err);
+          return res.status(200).json("success update")
+        })
+      })
+    }
+  })
+
+})
+router.post('/updata_category', verifyToken, async (req, res) => {
+  // console.log(req.body);
+  const selectQuery = "SELECT category_id FROM categories WHERE category_name = ?";
+  const insertQuery = "INSERT INTO novel_category (novel_id,category_id,category_type) VALUES (?,?,?)";
+  const deleteQuery = "DELETE FROM novel_category WHERE novel_id=?"
+  const categories = [req.body.novelData.mainCategory, req.body.novelData.subCategory1, req.body.novelData.subCategory2];
+  const order = ["main", "subCategory1", "subCategory2"];
+
+  try {
+    const categoryData = [];
+    // Fetch category_ids for each category using callbacks
+    for (let i = 0; i < categories.length; i++) {
+      const category = categories[i];
+      db.query(selectQuery, [category], (err, data) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        if (data && data.length > 0) {
+          categoryData.push({ id: data[0].category_id, order: i });
+        } else {
+          console.error(`Category "${category}" not found in the database.`);
+          // You may choose to send an appropriate response to the client here
+        }
+      });
+    }
+    // Wait for the queries to complete (not ideal but works with callbacks)
+    await new Promise((resolve) => setTimeout(resolve, 100));  // Adjust the delay as needed
+    // Sort categoryData based on the original order
+    categoryData.sort((a, b) => a.order - b.order);
+    // Update novel_category table with the new category_ids
+    db.query(deleteQuery,[req.body.novelid],(err,result)=>{
+      if (err)console.error(err);
+      for (const data of categoryData) {
+        if(data.id!==0){
+        db.query(insertQuery, [req.body.novelid, data.id, order[data.order]], (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+          }
+        });
+      }
+      }
+    })
+    return res.status(200).json("Success update");
+  } catch (error) {
+    console.error('Error updating categories:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+router.post('/upadate_penname',verifyToken,(req,res)=>{
+  
+  const select="SELECT penid FROM penname WHERE penname=?";
+  const update="UPDATE novel SET penid=? WHERE novel_id=?"
+  const insert="INSERT INTO penname (penname) VALUES (?)"
+  db.query(select,[req.body.penname],(err,data)=>{
+    if (err) return console.log(err);
+    if(data.length>=1){
+      db.query(update,[data[0].penid,req.body.novelid],(err,data)=>{
+        if (err) return res.json(err);
+        console.log("penname success");
+        return res.status(200);
+      })
+    }else{
+    db.query(insert,[req.body.penname],(err,data)=>{
+      if (err) return res.json(err);
+        const lastpenid=data.insertId;
+        db.query(update,[lastpenid, req.body.novelid],(err,data)=>{
+          if (err) return res.json(err);
+          console.log("penname success");
+          return res.status(200);
+        })
+    })
+  }
+
+  })
+})
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//upload Chapter
+////////////////////////////////////////////////////////////////////////////////////
+router.post("/upload_chapter/", (req, res) => {
+  console.log(req.body)
+  if (!req.body.novelid) return res.status(400).json("An error occurred");
+  const maxChapterIdQuery = "SELECT MAX(chapter_id) as maxChapterId FROM novel_chapter WHERE novel_id=?";
+  db.query(maxChapterIdQuery, [req.body.novelid], (err, data) => {
+      if (err) return res.status(500).json(err);
+      const maxChapterId = data[0].maxChapterId || 0;
+      const newChapterId = maxChapterId + 1;
+      console.log(req.body)
+      
+      const q = "INSERT INTO novel_chapter (novel_id,chapter_id,chapter_topic,chapter_title,chapter_content)VALUES (?,?,?,?,?)";
+      const value = [
+          req.body.novelid,
+          newChapterId,
+          req.body.noveltopic,
+          req.body.noveltitle,
+          req.body.content,
+      ]
+      db.query(q, value, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json("success insert")
+      })
+  })
 })
 export default router;
