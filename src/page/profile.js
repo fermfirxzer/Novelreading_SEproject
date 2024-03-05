@@ -115,7 +115,7 @@ const Profile = () => {
     }
 
     return (
-        <div style={{marginTop:'5rem'}}>
+        <div style={{marginTop:'5rem',marginBottom:'5rem'}}>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
             <div className='container headtopic'>
                 <Dropdown  align="end" className='mt-2 mx-2 ' >
@@ -157,9 +157,9 @@ const Profile = () => {
                        
                         
                     </div>      
-                <div >
-                    <button className="btn btn-primary rounded-pill px-4 py-2 custom-btn" onClick={handleForm}>แก้ไขข้อมูลส่วนตัว</button>
-                </div>
+                    <div >
+                        <button className="btn btn-primary rounded-pill px-4 py-2 custom-btn" onClick={handleForm}>แก้ไขข้อมูลส่วนตัว</button>
+                    </div>
             </div>
             <div className="container my-5 border-bottom ">
                 <h2>ข้อมูลส่วนตัว </h2>

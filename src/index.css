@@ -266,7 +266,7 @@ nav a {
 
 
 .reading-novel-container {
-  display: flex; 
+  display:flex; 
   align-items: center;
   justify-content: center;
   background-color: #000;
@@ -275,7 +275,7 @@ nav a {
 }
 
 .reading-novel-img-con {
-  margin-right: 50px; 
+  margin-right: 0px; 
 }
 
 .reading-novel-img {
@@ -306,6 +306,7 @@ nav a {
   border-radius: 30px;
   margin-right: 10px;
 }
+
 .reading-novel-describe{
   width: 500px;
   margin:40px 0px;
@@ -315,7 +316,23 @@ nav a {
   -webkit-line-clamp: 4; /* Set the number of lines to display */
   -webkit-box-orient: vertical;
 }
-
+@media (max-width: 1080px) {
+  .reading-novel-describe{
+    width: 350px;
+    
+  }
+  .reading-novel-img {
+    width: 400px; /* Set the width of the novel image */
+    height: auto; /* Maintain aspect ratio */
+  }
+}
+@media (max-width:480px){
+  .reading-novel-container {
+    display:block; 
+   
+    
+  }
+}
 .follow-btn,.add-playlist,.readnow{
   background-color: transparent;
   color: #ffffff;

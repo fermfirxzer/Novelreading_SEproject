@@ -174,7 +174,7 @@ const Writer_upload = () => {
   
   
   return (
-    <div style={{ marginTop: '5.5rem' }} >
+    <div style={{marginTop:'5.5rem',marginBottom:'5rem'}} >
       <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
       <Container >
         <div style={{marginTop:"20px"}}>
