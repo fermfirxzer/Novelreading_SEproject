@@ -1,6 +1,7 @@
 import React, { useState,useContext } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
 import {  FaBell } from 'react-icons/fa'; 
+import { useNavigate } from 'react-router-dom';
 import ModeIcon from '@mui/icons-material/Mode';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AuthContext } from '../context/authContextuser';
@@ -13,9 +14,10 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
   const toggleSearch = () => {
     setShowSearch(!showSearch);
   };
-
+  const navigate = useNavigate()
   const onClicklogout=()=>{
     logout();
+    navigate("/")
   }
   const handleIconClick = (event) => {
     event.stopPropagation();

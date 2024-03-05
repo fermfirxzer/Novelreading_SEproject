@@ -74,7 +74,7 @@ const Uploadnovel = () => {
             contentLevel: novel.data[0].novel_contentlevel,
           };
           setOldimage(novel.data[0].novel_img)
-          console.log(novel.data[0].novel_img)
+          
           for (const category of categories.data.result) {
             const categoryName = category[0];
             const categoryType = category[1];
@@ -105,7 +105,7 @@ const Uploadnovel = () => {
     try {
       const formData = new FormData();
       formData.append("file", novelData.image)
-      console.log(formData)
+      // console.log(formData)
       const res = await axios.post("http://localhost:5000/api/upload", formData)
       return res.data
       
@@ -222,41 +222,43 @@ const Uploadnovel = () => {
       return;
     }
     
-    console.log(novelData.image)
+    
     console.log("this update")
     let imageUrl = null;
       if (novelData.image != null) {
         imageUrl = await upload();
         if (imageUrl === undefined) {
           imageUrl = null;
-
-          
         }
       }
-      console.log("dad"+imageUrl)
+      
       const dataToSend = {
         novelData: novelData,
         novelid: novelid,
         imageUrl: imageUrl
       };
+      const penToSend={
+        novelid:novelid,
+        penname:novelData.penname,
+      }
       try {
-        const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
-        
-        await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
-        
-        setError(res.data)
+        // const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
+        // await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
+
+        await axios.post("http://localhost:5000/api/writer/upadate_penname",penToSend, { withCredentials: true, });
+        // setError(res.data)
       } catch (err) {
         setError(err.response ? err.response.data : "An error occurred");
         console.log(err)
       }
-      try {
-        console.log(oldimage)
-        if(oldimage!==null){
-          await axios.delete(`http://localhost:5000/api/delete/${oldimage}`);
-        }
-      } catch (err) {
-        console.log(err)
-      }
+      // try {
+      //   // console.log(oldimage)
+      //   // if(oldimage!==null){
+      //   //   await axios.delete(`http://localhost:5000/api/delete/${oldimage}`);
+      //   // }
+      // } catch (err) {
+      //   console.log(err)
+      // }
       // setTimeout(() => {
       //   navigate("/writer/managewriting")
       // }, 2000);

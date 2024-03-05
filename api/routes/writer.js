@@ -6,6 +6,9 @@ import cors from "cors";
 
 const router = express.Router();
 router.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+////////////////////////////////////////////////////////////////////////////////////
+//Writer login,register,logout
+////////////////////////////////////////////////////////////////////////////////////
 router.post('/register', (req, res) => {
   if (!req.body.password || !req.body.username || !req.body.email || !req.body.confirmpassword) return res.status(400).json("Please fill in all information");
 
@@ -61,12 +64,14 @@ router.post('/login', (req, res) => {
   })
 })
 router.post('/logout', (req, res) => {
-  console.log("clearCookies")
+  // res.redirect('http://localhost:3000/');
   res.clearCookie("token", {
     domain: 'localhost:3000',
     path: '/'
   });
+  
 })
+
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
 
@@ -86,6 +91,11 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//upload novel
+////////////////////////////////////////////////////////////////////////////////////
 router.post('/upload_novel', verifyToken, (req, res) => {
   const novelname = "SELECT * FROM novel WHERE novel_name=?";
   db.query(novelname, req.body.novelData.name, (err, data) => {
@@ -253,6 +263,62 @@ router.post('/updata_category', verifyToken, async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+router.post('/upadate_penname',verifyToken,(req,res)=>{
+  
+  const select="SELECT penid FROM penname WHERE penname=?";
+  const update="UPDATE novel SET penid=? WHERE novel_id=?"
+  const insert="INSERT INTO penname (penname) VALUES (?)"
+  db.query(select,[req.body.penname],(err,data)=>{
+    if (err) return console.log(err);
+    if(data.length>=1){
+      db.query(update,[data[0].penid,req.body.novelid],(err,data)=>{
+        if (err) return res.json(err);
+        console.log("penname success");
+        return res.status(200);
+      })
+    }else{
+    db.query(insert,[req.body.penname],(err,data)=>{
+      if (err) return res.json(err);
+        const lastpenid=data.insertId;
+        db.query(update,[lastpenid, req.body.novelid],(err,data)=>{
+          if (err) return res.json(err);
+          console.log("penname success");
+          return res.status(200);
+        })
+    })
+  }
+
+  })
+})
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////////
+//upload Chapter
+////////////////////////////////////////////////////////////////////////////////////
+router.post("/upload_chapter/", (req, res) => {
+  console.log(req.body)
+  if (!req.body.novelid) return res.status(400).json("An error occurred");
+  const maxChapterIdQuery = "SELECT MAX(chapter_id) as maxChapterId FROM novel_chapter WHERE novel_id=?";
+  db.query(maxChapterIdQuery, [req.body.novelid], (err, data) => {
+      if (err) return res.status(500).json(err);
+      const maxChapterId = data[0].maxChapterId || 0;
+      const newChapterId = maxChapterId + 1;
+      console.log(req.body)
+      
+      const q = "INSERT INTO novel_chapter (novel_id,chapter_id,chapter_topic,chapter_title,chapter_content)VALUES (?,?,?,?,?)";
+      const value = [
+          req.body.novelid,
+          newChapterId,
+          req.body.noveltopic,
+          req.body.noveltitle,
+          req.body.content,
+      ]
+      db.query(q, value, (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json("success insert")
+      })
+  })
+})
 export default router;

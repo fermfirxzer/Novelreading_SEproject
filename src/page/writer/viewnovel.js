@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import "./managewrting.scss"
 import NavbarReactBootstrap from '../../component/Navbar';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate,Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 const Viewnovel = () => {
@@ -11,7 +11,9 @@ const Viewnovel = () => {
         { novelname: 3, novelviews: 1, novelcomment: 1, novelprivacy: 1 }
     ]
     const state = useLocation().state;
-    const [novel,setNovel] = useState(state.novel);
+
+    const [novel, setNovel] = useState(state.novel);
+    const [chapters, setchapters] = useState(null)
     const navigate = useNavigate()
     const handleClick = () => {
         navigate("/writer/uploadchapter", { state: { novel } })
@@ -40,39 +42,38 @@ const Viewnovel = () => {
                     if (state.novel.novel_img) {
                         const deleteimg = await axios.delete(`http://localhost:5000/api/delete/${state.novel.novel_img}`)
                     }
-                    
+
                 } catch (err) {
                     console.log(err)
                 }
                 try {
                     // Delete the novel from the database
                     await axios.delete("http://localhost:5000/api/novel_delete/deletenovel", { data: { novel_id: novel.novel_id } });
-                    
+
                     // Navigate to the desired location after deletion
                     navigate("/writer/managewriting");
-                  } catch (error) {
+                } catch (error) {
                     console.error("Error deleting novel:", error);
                     // Handle errors or show a message to the user if needed
-                  }
+                }
             }
         });
     }
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.post("http://localhost:5000/api/writer/writer_fetchnovel/", { novelid: novel.novel_id });
-                setNovel(res.data);
+                const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novel.novel_id });
+                console.log(res.data)
+                setchapters(res.data);
+                
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
 
-        // Assuming 'novel' is the object containing the necessary data for the API call
-        
-            fetchData();
-        
-    }, [novel]);
-    console.log(novel)
+        fetchData();
+
+    }, [state]);
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -133,16 +134,25 @@ const Viewnovel = () => {
                         <div className='col'>
                             <table className='table'>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ width: '25%' }}>1</td>
-                                        <td style={{ width: '25%' }}>1</td>
-                                        <td style={{ width: '25%' }}>1</td>
-                                        <td style={{ width: '25%' }}>1</td>
-                                    </tr>
+                                    {chapters&&chapters.map((chapter, index) => (
+                                        
+                                        <tr key={index}>
+                                        <Link to="/writer/uploadchapter" state={{novel:state,chapter}}>
+                                            <td style={{width:'25%'}}>{chapter.chapter_topic}</td>
+                                            <td>{chapter.chapter_title}</td>
+                                            <td>{chapter.chapter_privacy}</td>
+                                            <td>{chapter.chapter_views}</td>
+                                            </Link>
+                                        </tr>
+                                        
+                                        
+                                        
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>

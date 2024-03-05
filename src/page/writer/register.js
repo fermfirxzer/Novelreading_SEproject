@@ -15,7 +15,6 @@ const Register = () => {
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  const navigate = useNavigate();
   
   const [err,setError]=useState(null)
   const handleSubmit = async (e) => {

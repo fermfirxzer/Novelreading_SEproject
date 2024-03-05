@@ -37,33 +37,10 @@ router.post("/writer_setprivacy/", (req, res) => {
         return res.status(200);
     })
 })
-router.post("/writer_writingchapter/", (req, res) => {
-    if (!req.body.chapter.novel_id) return res.status(400).json("An error occurred");
-    const maxChapterIdQuery = "SELECT MAX(chapter_id) as maxChapterId FROM novel_chapter WHERE novel_id=?";
-    db.query(maxChapterIdQuery, [req.body.chapter_id], (err, data) => {
-        if (err) return res.status(500).json(err);
-        const maxChapterId = data[0].maxChapterId || 0;
-        const newChapterId = maxChapterId + 1;
-        console.log(req.body)
-        console.log(newChapterId)
-        const q = "INSERT INTO novel_chapter (novel_id,chapter_id,chapter_topic,chapter_title,chapter_content)VALUES (?,?,?,?,?)";
-        const value = [
-            req.body.chapter.novel_id,
-            newChapterId,
-            req.body.chapter.topic,
-            req.body.chapter.title,
-            req.body.content,
-        ]
-        db.query(q, value, (err, data) => {
-            if (err) return res.status(500).json(err);
-            return res.status(200).json("success insert")
-        })
-    })
-})
 router.post("/writer_fetchcategory/", async (req, res) => {
     const selectNovelCategoryQuery = "SELECT * FROM novel_category WHERE novel_id=?";
     const selectCategoryQuery = "SELECT * FROM categories WHERE category_id=?";
-    // console.log(req.body.novelid);
+    console.log(req.body.novelid);
     const result = [];
     try {
         const datas = await new Promise((resolve, reject) => {
@@ -95,18 +72,17 @@ router.post("/writer_fetchcategory/", async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-router.post("/writer_fetchnovel/",(req,res)=>{
-    const q="SELECT * FROM novel WHERE novel_id=?";
-    
+router.post("/writer_fetchchapter/",(req,res)=>{
+    console.log(req.body)
+    const q="SELECT chapter_topic,chapter_title,chapter_privacy,chapter_views,chapter_comment FROM novel_chapter WHERE novel_id=?";
     db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
         return res.status(200).json(data);
     })
 })
-router.post("/writer_fetch_byname/",(req,res)=>{
-    
-    const q="SELECT * FROM novel WHERE novel_name=?";
-    db.query(q,[req.body.novelname],(err,data)=>{
+router.post("/writer_fetchnovel/",(req,res)=>{
+    const q="SELECT * FROM novel WHERE novel_id=?";
+    db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
         
         return res.status(200).json(data);

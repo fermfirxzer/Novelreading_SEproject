@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 export const AuthContext = createContext();
 
@@ -19,11 +20,14 @@ export const AuthContextProvider = ({ children }) => {
     }
     
   };
-
+  // const navigate = useNavigate()
   const logout = async () => {
     localStorage.removeItem("user");
-    setCurrentUser(null);
+    if(currentUser){
+      setCurrentUser(null);
+    }
     axios.post("http://localhost:5000/api/writer/logout",{},{withCredentials: true});
+    
   };
 
   useEffect(() => {

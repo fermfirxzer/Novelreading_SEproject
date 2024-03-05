@@ -6,19 +6,24 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 const Uploadchapter = () => {
-    const state = useLocation().state;
+    const statenovel = useLocation().state?.novel; // Assuming 'novel' is a property in the state object
+    const statechapter = useLocation().state?.chapter; // Assuming 'chapter' is a property in the state object
+
+    console.log("Novel State:", statenovel);
+    console.log("Chapter State:", statechapter);
     const [novel, setNovel] = useState({
-        novel_name: state?.novel.novel_name,
+        novel_name: statenovel.novel.novel_name || null,
     })
     const [chapter, setChapter] = useState({
-        novel_id: state?.novel.novel_id,
-        topic: '',
-        title: null,
+        novel_id: statenovel?.novel?.novel_id || null,
+        topic: statechapter?.chapter?.chapter_topic || null,
+        title: statechapter?.chapter?.chapter_title || null,
     })
+    console.log(chapter)
     const [errtopic, setErrortopic] = useState(null);
     const [errtitle, setErrortitle] = useState(null);
     const [errcontent, setErrorcontent] = useState(null);
-    const [errsubmit,setErrorsubmit]=useState(null);
+    const [errsubmit, setErrorsubmit] = useState(null);
     const setErrorr = (field, message) => {
         switch (field) {
             case 'topic':
@@ -58,7 +63,7 @@ const Uploadchapter = () => {
         if (!chapter.title) {
             validationErrors.push({ field: 'title', message: 'title is required' });
         }
-        if(!chapter.novel_id){
+        if (!chapter.novel_id) {
             setErrorsubmit("unknow error occured!")
             return;
         }
@@ -74,18 +79,20 @@ const Uploadchapter = () => {
             console.log(content)
             return;
         }
-        const dataTosend={
-            
-            chapter,
+        const dataTosend = {
+            novelid: chapter.novel_id,
+            noveltopic: chapter.topic,
+            noveltitle: chapter.title,
             content,
-
         }
-        try{
-            const res=await axios.post("http://localhost:5000/api/novel/writer_writingchapter/",dataTosend)
+        try {
+            const res = await axios.post("http://localhost:5000/api/writer/upload_chapter/", dataTosend)
             setErrorsubmit(res.data)
-            }catch(err){
-                setErrorsubmit(err.response ? err.response.data : "An error occurred");
-                console.log(err)
+
+            navigate("/writer/viewnovel", { state: statenovel })
+        } catch (err) {
+            setErrorsubmit(err.response ? err.response.data : "An error occurred");
+            console.log(err)
         }
     }
     return (
@@ -97,13 +104,13 @@ const Uploadchapter = () => {
                     <span className='ps-2 mb-2'> &gt;</span>
                     <a href='' className='link ps-3 text-center'><span className='mb-2'>{novel.novel_name}</span></a>
                     <span className='ps-2'> &gt;</span>
-                    <span className='ps-2 mb-2'> ตอนที่ :</span>
+                    {chapter&&<span className='ps-2 mb-2'>{chapter.topic+chapter.title} </span>}
 
                 </div>
                 <div className='chapter-input backtheme'>
                     <div className='row paddingleftright30 paddingtopbottom10'>
                         <div className='col-4 chapter-left paddingleftright30 paddingtopbottom10'>
-                            <h5>ตอนที่</h5>
+                            <h5>บทที่ :</h5>
                             <input type="text" className='form-control' name='topic' onChange={handleChange}></input>
                             {errtopic && <p className='error'>{errtopic}</p>}
                         </div>
@@ -142,7 +149,7 @@ const Uploadchapter = () => {
                     </div>
                 </div>
                 <div className='form-control text-center'>
-                    {errsubmit&&<p className='error'>{errsubmit}</p>}
+                    {errsubmit && <p className='error'>{errsubmit}</p>}
                     <div className='d-inline-block mr-2'>
                         <button className='form-control'>ยกเลิก</button>
                     </div>
