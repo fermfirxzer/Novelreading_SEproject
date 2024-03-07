@@ -45,5 +45,12 @@ router.post("/deletechapter/",verifyToken,(req,res)=>{
             return res.status(200).json("Delete success!")
         })
 })
-
+router.post("/deletechapter_id/",verifyToken,(req,res)=>{
+  const deletechapter="DELETE FROM novel_chapter WHERE novel_id=? AND chapter_id=?";
+  console.log(req.body)
+  db.query(deletechapter,[req.body.novelid,req.body.chapterid],(err,data)=>{
+    if(err)return res.status(500).json(err);
+    return res.status(200).json("Delete success!")
+  })
+})
 export default router;

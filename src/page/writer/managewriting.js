@@ -1,14 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import NavbarReactBootstrap from '../../component/Navbar';
-import { Form, Button, Container,Dropdown } from 'react-bootstrap';
+import { Form, Button, Container } from 'react-bootstrap';
 import Select from 'react-select';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircleIcon from '@mui/icons-material/Circle';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import "./managewrting.scss"
 import "./authorupload.scss"
-import "../profile.scss"
-
 import axios from 'axios';
 import { AuthContext } from '../../context/authContextuser';
 import { Link,useNavigate } from 'react-router-dom';
@@ -139,22 +137,11 @@ const Managewriting = () => {
     <div style={{ marginTop: '5rem' }}>
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
         <Container style={{width:'65%'}}>
-                
-                <div className='headtopic my-4'>
-                    <Dropdown  align="end" className='mt-2 mx-2 ' >
-                        My Writing
-                        <Dropdown.Toggle className = "dropdown-custom" variant="primary" id="dropdown-basic "  >
-                            <ExpandMoreIcon style={{color:"black"}}></ExpandMoreIcon> 
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu className="dropdown-menu" >
-                            <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
-                            <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                <div className='headtopic'>
+                    Writing
+                    <ExpandMoreIcon></ExpandMoreIcon>
                 </div>
-            
-                <div className='flex '>
+                <div className='flex'>
                     <div className='head-writing'>
                         <h2>จัดการงานเขียน</h2>
                     </div>

@@ -53,7 +53,7 @@ router.post('/login', (req, res) => {
     if (data.length == 0) return res.status(404).json("Email not found!");
     const ispasswordcorrect = bcrypt.compareSync(req.body.password, data[0].writer_password);
     if (!ispasswordcorrect) return res.status(400).json("Wrong Email or password!")
-    const token = jwt.sign({ writer_id: data[0].writer_id }, "jwtkey", { expiresIn: "1h" });
+    const token = jwt.sign({ writer_id: data[0].writer_id }, "jwtkey", { expiresIn: "6h" });
     const { writer_password, ...other } = data[0]
 
     res.cookie("token", token, {
@@ -106,10 +106,10 @@ router.post('/upload_novel', verifyToken, (req, res) => {
         const penname = "INSERT into penname (penname) VALUES (?)";
         db.query(penname, req.body.penname, (err, data) => {
           if (err) return res.status(401).json("error in penname");
-          lastpenid = data.insertId;
+          lastpenid = data[0].insertId;
         })
       }
-      
+      console.log(lastpenid)
       const value = [
         req.body.novelData.name,
         req.body.novelData.description,
@@ -129,35 +129,35 @@ router.post('/upload_novel', verifyToken, (req, res) => {
   })
 })
 router.post("/upload_category", verifyToken, async (req, res) => {
-  console.log(req.body)
+  console.log("this "+req.body)
   const selectQuery = "SELECT category_id FROM categories WHERE category_name = ?";
   const insertQuery = "INSERT INTO novel_category (novel_id, category_id, category_type) VALUES (?, ?, ?)";
   const categories = [req.body.mainCategory, req.body.subCategory1, req.body.subCategory2];
   const order=["main","subCategory1","subCategory2"]
   try {
     const categoryData = [];
-
     // Fetch category_ids for each category using callbacks
     for (let order = 0; order < categories.length; order++) {
       const category = categories[order];
 
-      db.query(selectQuery, [category], (err, data) => {
-        if (err) {
-          console.error(err);
-          return res.status(500).json({ error: 'Internal Server Error' });
-        }
-        if (data && data.length > 0) {
-          categoryData.push({ id: data[0].category_id, order });
-        } else {
-          console.error(`Category "${category}" not found in the database.`);
-          // You may choose to send an appropriate response to the client here
-        }
-      });
+      // Only perform the SELECT query if category is not an empty string
+      if (category !== '') {
+        db.query(selectQuery, [category], (err, data) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+          }
+          if (data && data.length > 0) {
+            categoryData.push({ id: data[0].category_id, order });
+          } else {
+            console.error(`Category "${category}" not found in the database.`);
+            // You may choose to send an appropriate response to the client here
+          }
+        });
+      }
     }
-
     // Wait for the queries to complete (not ideal but works with callbacks)
-    await new Promise((resolve) => setTimeout(resolve, 100));  // Adjust the delay as needed
-
+    await new Promise((resolve) => setTimeout(resolve, 300));  // Adjust the delay as needed
     // Sort categoryData based on the original order
     categoryData.sort((a, b) => a.order - b.order);
 
@@ -170,7 +170,7 @@ router.post("/upload_category", verifyToken, async (req, res) => {
         }
       });
     }
-
+    console.log("kuy");
     return res.status(200).json("Success upload");
   } catch (error) {
     console.error('Error uploading categories:', error);
@@ -178,9 +178,8 @@ router.post("/upload_category", verifyToken, async (req, res) => {
   }
 });
 router.post('/update_novel', verifyToken, (req, res) => {
-  console.log(req.body)
+
   const image = req.body.imageUrl === null ? req.body.novelData.image:req.body.imageUrl;
-  console.log(image)
   const q = "UPDATE novel SET novel_name=?,novel_desc=?,penid=?,novel_img=?,novel_contentlevel=? WHERE novel_id=?"
   const querypenid = "SELECT * FROM penname WHERE penname=?";
   db.query(querypenid, [req.body.novelData.penname], (err, data) => {

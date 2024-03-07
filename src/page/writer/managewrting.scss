@@ -176,7 +176,6 @@
 }
 
 .writingnovel {
-
     font-size: 16px;
     font-family: sans-serif;
 
@@ -212,11 +211,7 @@
                 width: 177px;
             }
         }
-
-
-
     }
-
     .img-box {
         background-color: #000000;
         display: flex;
@@ -244,7 +239,6 @@
             }
         }
     }
-
     .novel-box {
         .novel-box-header {
             display: flex;
@@ -262,36 +256,40 @@
                 list-style-type: none;
 
                 li {
-                    .chapter-item{
+                    .chapter-item {
                         display: flex;
                         cursor: pointer;
-                    .a{
-                        
-                        margin-right:100px;
-                    }
-                    .number{
-                        margin-right: 16px;
-                        width: 40px;
-                        min-height: 18px;
-                    }
-                    .chapter{
+
+                        .a {
+
+                            margin-right: 100px;
+                        }
+
+                        .number {
+                            margin-right: 16px;
+                            width: 40px;
+                            min-height: 18px;
+                        }
+
+                        .chapter {
+                            display: flex;
+                            flex-grow: 1;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            margin-left: 0;
+                        }
+
+                        margin-top: 1rem;
+                        border: 1px solid #e6e6e6;
+                        width: 100%;
+                        height: 50px;
                         display: flex;
-                        flex-grow: 1;
-                        flex-direction: column;
-                        align-items: flex-start;
-                        margin-left: 0;
+                        justify-content: start;
+                        align-items: center;
+                        padding: 2rem;
+
                     }
-                    margin-top: 1rem;
-                    border: 1px solid #e6e6e6;
-                    width: 100%;
-                    height: 50px;
-                    display: flex;
-                    justify-content: start;
-                    align-items: center;
-                    padding: 2rem;
-                    
                 }
-            }
             }
         }
     }

@@ -52,73 +52,101 @@ const Viewnovel = () => {
             }
         });
     }
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
+        try {
+            const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novelid });
+
+            setchapters(res.data);
+
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
+    };
+    const fetchnovel = async () => {
+        if (state) {
             try {
-                const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novelid });
+                const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
 
-                setchapters(res.data);
+                const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
+                const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
 
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchData();
-
-    }, [state]);
-    useEffect(() => {
-        const fetchnovel = async () => {
-            if (state) {
-                try {
-                    const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
-
-                    const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
-                    const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
-
-                    const updatedNovelData = {
-                        name: data_novel.data[0].novel_name,
-                        description: data_novel.data[0].novel_desc,
-                        penname: penname.data[0].penname,
-                        image: data_novel.data[0].novel_img || null,
-                        mainCategory: '',
-                        subCategory1: "",
-                        subCategory2: "",
-                        contentLevel: data_novel.data[0].novel_contentlevel,
-                    };
+                const updatedNovelData = {
+                    name: data_novel.data[0].novel_name,
+                    description: data_novel.data[0].novel_desc,
+                    penname: penname.data[0].penname,
+                    image: data_novel.data[0].novel_img || null,
+                    mainCategory: '',
+                    subCategory1: "",
+                    subCategory2: "",
+                    contentLevel: data_novel.data[0].novel_contentlevel,
+                };
 
 
-                    for (const category of categories.data.result) {
-                        const categoryName = category[0];
-                        const categoryType = category[1];
+                for (const category of categories.data.result) {
+                    const categoryName = category[0];
+                    const categoryType = category[1];
 
-                        if (categoryType === 'main') {
-                            updatedNovelData.mainCategory = categoryName;
-                        } else if (categoryType === 'subcategory1') {
-                            updatedNovelData.subCategory1 = categoryName;
-                        } else if (categoryType === 'subcategory2') {
-                            updatedNovelData.subCategory2 = categoryName;
-                        }
+                    if (categoryType === 'main') {
+                        updatedNovelData.mainCategory = categoryName;
+                    } else if (categoryType === 'subcategory1') {
+                        updatedNovelData.subCategory1 = categoryName;
+                    } else if (categoryType === 'subcategory2') {
+                        updatedNovelData.subCategory2 = categoryName;
                     }
-                    setNovel(updatedNovelData);
-                } catch (err) {
-                    console.log(err);
                 }
-
+                setNovel(updatedNovelData);
+            } catch (err) {
+                console.log(err);
             }
-        };
 
-        fetchnovel();
-    }, [state]);
-    const handleNonDeleteClick = (index, e) => {
-        // Check if the click event originated from the delete button
-        if (!e.target.closest('.delete-button')) {
-            // Handle click logic here (navigate or anything else)
-            console.log("kuy")
-            // navigate(`/writer/uploadchapter`, { state: { novelid, chapter, index: index + 1 } });
         }
     };
 
+    useEffect(() => {
+        fetchData();
+        fetchnovel();
+    }, [state]);
 
+    const handleNonDeleteClick = (chapterid, e,index) => {
+        
+        if (!e.target.closest('.delete-button')) {
+            
+            navigate(`/writer/uploadchapter`, { state: { novel,novelid, chapter:chapters[index],index: index + 1} });
+        }
+    };
+    const handleDeleteChapter = (chapterid) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+                try {
+                      await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novelid, chapterid }, { withCredentials: true, });
+                      fetchData();
+                } catch (error) {
+                    console.error("Error deleting novel:", error);
+                    Swal.fire({
+                        title: "Error",
+                        text: `An error occurred: ${error.response ? error.response.data : "Unknown error"}`,
+                        icon: "error"
+                    });
+
+                }
+            }
+        });
+    }
+    console.log(chapters)
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -175,21 +203,24 @@ const Viewnovel = () => {
 
 
                                 <li>
-                                    
-                                        <div className='chapter-item' onClick={(e) => handleNonDeleteClick(index, e)}>
-                                            <div className='a number'>
-                                                {index + 1}
-                                            </div>
-                                            <div className='a chapter'>
-                                                {index + 1 + chapter.chapter_title + chapter.chapter_views}
-                                            </div>
-                                            <div className='a delete-button'>
-                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDelete(index + 1); }}>
-                                                    Delete
-                                                </button>
-                                            </div>
+
+                                    <div className='chapter-item' onClick={(e) => handleNonDeleteClick(chapter.chapter_id, e,index)}>
+                                        <div className='a number'>
+                                            {index + 1}
                                         </div>
-                                    
+                                        <div className='a chapter'>
+                                            {chapter.chapter_title}
+                                        </div>
+                                        <div className='a views'>
+                                            {"จำนวนการดู : " + chapter.chapter_views}
+                                        </div>
+                                        <div className='a delete-button'>
+                                            <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </li>
 
 

@@ -13,16 +13,16 @@ const Uploadnovel = () => {
   const { currentUser } = useContext(AuthContext)
   const navigate = useNavigate()
   const state = useLocation().state;
-  const [novelid, setNovelid] = useState(state?.novelid||null)
+  const [novelid, setNovelid] = useState(state?.novelid || null)
   const [novelData, setNovelData] = useState({
-    name: state?.novel.name||'',
+    name: state?.novel.name || '',
     description: state?.novel.description || '',
     penname: state?.novel.penname || '',
     image: state?.novel.image || null,
-    mainCategory: state?.novel.mainCategory||'',
-    subCategory1: state?.novel.subCategory1||'',
-    subCategory2: state?.novel.subCategory2||'',
-    contentLevel: state?.novel.contentLevel||'',
+    mainCategory: state?.novel.mainCategory || '',
+    subCategory1: state?.novel.subCategory1 || '',
+    subCategory2: state?.novel.subCategory2 || '',
+    contentLevel: state?.novel.contentLevel || '',
   });
 
   const [oldimage, setOldimage] = useState(state?.novel.image || null);
@@ -60,7 +60,7 @@ const Uploadnovel = () => {
   //     if (state) {
   //       try {
   //         const novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
-         
+
   //         const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
   //         // console.log(categories.data)
   //         const updatedNovelData = {
@@ -137,9 +137,10 @@ const Uploadnovel = () => {
         break;
     }
   };
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log("this is upload")
+    setError(null)
     setErrorname(null);
     setErrordesc(null);
     setErrormaincategory(null);
@@ -166,9 +167,10 @@ const Uploadnovel = () => {
 
       return;
     }
-    if (novelData.mainCategory == novelData.subCategory1 || novelData.mainCategories == novelData.subCategory2 ||
-      (novelData.subCategory1 == novelData.subCategory2 && (!novelData.subCategory1 && !novelData.subCategory2))) {
-      setError("category can't be the same");
+    if (novelData.mainCategory === novelData.subCategory1 ||novelData.mainCategory === novelData.subCategory2 ||
+    (novelData.subCategory1 === novelData.subCategory2 &&(novelData.subCategory1 !== '' || novelData.subCategory2 !== ''))
+    ) {
+      setError("Category can't be the same");
       return;
     }
     const currentDate = new Date();
@@ -191,22 +193,28 @@ const Uploadnovel = () => {
     console.log(dataToSend)
     try {
       const res = await axios.post("http://localhost:5000/api/writer/upload_novel", dataToSend, { withCredentials: true, });
-
+      
       const category = {
         mainCategory: novelData.mainCategory,
-        subCategory1: novelData.subCategory1,
-        subCategory2: novelData.subCategory2,
-        novelid: res.data,
+        subCategory1: novelData.subCategory1 === '' ? '' : novelData.subCategory1,
+        subCategory2: novelData.subCategory2 === '' ? '' : novelData.subCategory2,
+        novelid:res.data,
       }
+      console.log(category)
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
-      setError(rescategory.data)
-      // setTimeout(() => {
-      //   navigate("/writer/managewriting")
-      // }, 2000);
+      console.log(rescategory.data)
+      setError(rescategory.data);
+      
+      
+      setTimeout(() => {
+        navigate("/writer/managewriting");
+      }, 2000);
     } catch (err) {
       console.error("Error in Upload:", err);
-      setError(err.response ? err.response.data : "An error occurred");
+      // setError(err.response ? err.response.data : "An error occurred");
     }
+    
+
   };
   const update = async e => {
     console.log("kida")
@@ -223,7 +231,7 @@ const Uploadnovel = () => {
 
 
     console.log("this update")
-    
+
     let imageUrl = null;
     if (novelData.image != null) {
       imageUrl = await upload();
@@ -253,9 +261,9 @@ const Uploadnovel = () => {
     }
     const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
     setTimeout(() => {
-      navigate("/writer/viewnovel",{state:{novelid:novelid}});
+      navigate("/writer/viewnovel", { state: { novelid: novelid } });
     }, 2000);
-    
+
 
 
     // try {
