@@ -11,21 +11,21 @@ import { Category } from '@mui/icons-material';
 
 const Uploadnovel = () => {
   const { currentUser } = useContext(AuthContext)
-  const state = useLocation().state;
   const navigate = useNavigate()
-  const [novelid, setNovelid] = useState(state?.novel.novel_id)
+  const state = useLocation().state;
+  const [novelid, setNovelid] = useState(state?.novelid||null)
   const [novelData, setNovelData] = useState({
-    name:'',
-    description: state?.novel.novel_desc || '',
+    name: state?.novel.name||'',
+    description: state?.novel.description || '',
     penname: state?.novel.penname || '',
-    image:state?.novel.novel_img,
-    mainCategory: '',
-    subCategory1: "",
-    subCategory2: "",
-    contentLevel: '',
+    image: state?.novel.image || null,
+    mainCategory: state?.novel.mainCategory||'',
+    subCategory1: state?.novel.subCategory1||'',
+    subCategory2: state?.novel.subCategory2||'',
+    contentLevel: state?.novel.contentLevel||'',
   });
 
-  const [oldimage, setOldimage] = useState(state?.novel.novel_img||null);
+  const [oldimage, setOldimage] = useState(state?.novel.image || null);
   const [count, setCount] = useState(0);
   const [err, setError] = useState(null);
 
@@ -55,48 +55,48 @@ const Uploadnovel = () => {
       }));
     }
   };
-  useEffect(() => {
-    const fetchnovel = async () => {
-      if (state) {
-        try {
-          const novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/",{novelid:novelid});
-          // console.log(novel.data[0])
-          const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
-          // console.log(categories.data)
-          const updatedNovelData = {
-            name: novel.data[0].novel_name,
-            description: novel.data[0].novel_desc,
-            penname: state?.novel.penname || '',
-            image: novel.data[0].novel_img||null,
-            mainCategory: '',
-            subCategory1: "",
-            subCategory2: "",
-            contentLevel: novel.data[0].novel_contentlevel,
-          };
-          setOldimage(novel.data[0].novel_img)
-          
-          for (const category of categories.data.result) {
-            const categoryName = category[0];
-            const categoryType = category[1];
+  // useEffect(() => {
+  //   const fetchnovel = async () => {
+  //     if (state) {
+  //       try {
+  //         const novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
+         
+  //         const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
+  //         // console.log(categories.data)
+  //         const updatedNovelData = {
+  //           name: novel.data[0].novel_name,
+  //           description: novel.data[0].novel_desc,
+  //           penname: state?.novel.penname || '',
+  //           image: novel.data[0].novel_img || null,
+  //           mainCategory: '',
+  //           subCategory1: "",
+  //           subCategory2: "",
+  //           contentLevel: novel.data[0].novel_contentlevel,
+  //         };
+  //         setOldimage(novel.data[0].novel_img)
 
-            if (categoryType === 'main') {
-              updatedNovelData.mainCategory = categoryName;
-            } else if (categoryType === 'subcategory1') {
-              updatedNovelData.subCategory1 = categoryName;
-            } else if (categoryType === 'subcategory2') {
-              updatedNovelData.subCategory2 = categoryName;
-            }
-          }
-          setNovelData(updatedNovelData);
-        } catch (err) {
-          console.log(err);
-        }
+  //         for (const category of categories.data.result) {
+  //           const categoryName = category[0];
+  //           const categoryType = category[1];
 
-      }
-    };
+  //           if (categoryType === 'main') {
+  //             updatedNovelData.mainCategory = categoryName;
+  //           } else if (categoryType === 'subcategory1') {
+  //             updatedNovelData.subCategory1 = categoryName;
+  //           } else if (categoryType === 'subcategory2') {
+  //             updatedNovelData.subCategory2 = categoryName;
+  //           }
+  //         }
+  //         setNovelData(updatedNovelData);
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
 
-    fetchnovel();
-  }, [state]);
+  //     }
+  //   };
+
+  //   fetchnovel();
+  // }, [state]);
   // console.log("Updated novelData:", novelData);
   const handleImageClick = () => {
     document.getElementById('novel-image-input').click();
@@ -108,7 +108,7 @@ const Uploadnovel = () => {
       // console.log(formData)
       const res = await axios.post("http://localhost:5000/api/upload", formData)
       return res.data
-      
+
     } catch (err) {
       // console.log(err)
       // setError(err.response ? err.response.data : "An error occurred");
@@ -138,7 +138,7 @@ const Uploadnovel = () => {
     }
   };
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault()
     console.log("this is upload")
     setErrorname(null);
     setErrordesc(null);
@@ -182,8 +182,6 @@ const Uploadnovel = () => {
     if (novelData.penname == '') {
       penname = currentUser.writer_name;
     }
-
-
     const dataToSend = {
       novelData: novelData,
       penname: penname,
@@ -202,67 +200,74 @@ const Uploadnovel = () => {
       }
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
       setError(rescategory.data)
-      setTimeout(() => {
-        navigate("/writer/managewriting")
-      }, 2000);
+      // setTimeout(() => {
+      //   navigate("/writer/managewriting")
+      // }, 2000);
     } catch (err) {
       console.error("Error in Upload:", err);
       setError(err.response ? err.response.data : "An error occurred");
     }
   };
   const update = async e => {
+    console.log("kida")
     e.preventDefault()
     if (!novelData.mainCategory || novelData.mainCategory == '') {
       setErrormaincategory('Maincategory is required');
-      return ;
+      return;
     }
-    if (novelData.mainCategory == novelData.subCategory1 || novelData.mainCategory  == novelData.subCategory2 ||
+    if (novelData.mainCategory == novelData.subCategory1 || novelData.mainCategory == novelData.subCategory2 ||
       (novelData.subCategory1 == novelData.subCategory2)) {
       setError("category can't be the same");
       return;
     }
-    
-    
-    console.log("this update")
-    let imageUrl = null;
-      if (novelData.image != null) {
-        imageUrl = await upload();
-        if (imageUrl === undefined) {
-          imageUrl = null;
-        }
-      }
-      
-      const dataToSend = {
-        novelData: novelData,
-        novelid: novelid,
-        imageUrl: imageUrl
-      };
-      const penToSend={
-        novelid:novelid,
-        penname:novelData.penname,
-      }
-      try {
-        // const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
-        // await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
 
-        await axios.post("http://localhost:5000/api/writer/upadate_penname",penToSend, { withCredentials: true, });
-        // setError(res.data)
-      } catch (err) {
-        setError(err.response ? err.response.data : "An error occurred");
-        console.log(err)
+
+    console.log("this update")
+    
+    let imageUrl = null;
+    if (novelData.image != null) {
+      imageUrl = await upload();
+      if (imageUrl === undefined) {
+        imageUrl = null;
       }
-      // try {
-      //   // console.log(oldimage)
-      //   // if(oldimage!==null){
-      //   //   await axios.delete(`http://localhost:5000/api/delete/${oldimage}`);
-      //   // }
-      // } catch (err) {
-      //   console.log(err)
-      // }
-      // setTimeout(() => {
-      //   navigate("/writer/managewriting")
-      // }, 2000);
     }
+
+    const dataToSend = {
+      novelData: novelData,
+      novelid: novelid,
+      imageUrl: imageUrl
+    };
+    const penToSend = {
+      novelid: novelid,
+      penname: novelData.penname,
+    }
+    try {
+      const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
+      const penname = await axios.post("http://localhost:5000/api/writer/upadate_penname", penToSend, { withCredentials: true, });
+      console.log(res.data)
+      setError(res.data)
+    } catch (err) {
+      setError(err.response ? err.response.data : "An error occurred");
+      console.log(err)
+      return;
+    }
+    const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
+    setTimeout(() => {
+      navigate("/writer/viewnovel",{state:{novelid:novelid}});
+    }, 2000);
+    
+
+
+    // try {
+    //   // console.log(oldimage)
+    //   // if(oldimage!==null){
+    //   //   await axios.delete(`http://localhost:5000/api/delete/${oldimage}`);
+    //   // }
+    // } catch (err) {
+    //   console.log(err)
+    // }
+
+  }
   const subCategories = [
     'Romantic',
     'Funny',
@@ -298,7 +303,7 @@ const Uploadnovel = () => {
     'Horror',
 
   ];
-  
+
   return (
     <div style={{ marginTop: '5.5rem' }} >
       <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -314,8 +319,8 @@ const Uploadnovel = () => {
           </div>
           <Col md={4} className='uploadcon'>
 
-          <img src={novelData.image ? (!(state&&count===0)? URL.createObjectURL(novelData.image) : `/uploads/novel/${oldimage}`) : "https://1146890965.rsc.cdn77.org/web/newux/assets/images/default-newArticle@3x.png"} alt="Novel" style={{ width: '100%', cursor: 'pointer' }} onClick={handleImageClick} />
-           
+            <img src={novelData.image ? (!(state && count === 0) ? URL.createObjectURL(novelData.image) : `/uploads/novel/${oldimage}`) : "https://1146890965.rsc.cdn77.org/web/newux/assets/images/default-newArticle@3x.png"} alt="Novel" style={{ width: '100%', cursor: 'pointer' }} onClick={handleImageClick} />
+
 
             <input id="novel-image-input" type="file" accept="image/*" style={{ display: 'none' }} onChange={handleImageChange} />
             <img className="img-icon-upload" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/chat_story/cam_big@2x.png?t_144" alt="upload" />

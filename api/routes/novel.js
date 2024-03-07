@@ -74,7 +74,7 @@ router.post("/writer_fetchcategory/", async (req, res) => {
 });
 router.post("/writer_fetchchapter/",(req,res)=>{
     console.log(req.body)
-    const q="SELECT chapter_topic,chapter_title,chapter_privacy,chapter_views,chapter_comment FROM novel_chapter WHERE novel_id=?";
+    const q="SELECT * FROM novel_chapter WHERE novel_id=?";
     db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
         return res.status(200).json(data);
@@ -82,10 +82,23 @@ router.post("/writer_fetchchapter/",(req,res)=>{
 })
 router.post("/writer_fetchnovel/",(req,res)=>{
     const q="SELECT * FROM novel WHERE novel_id=?";
+   
     db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
-        
+        console.log(data)
         return res.status(200).json(data);
+    })
+})
+router.post("/writer_fetchpenname/",(req,res)=>{
+    
+    const q="SELECT penid FROM novel WHERE novel_id=?";
+    const penname="SELECT penname FROM penname WHERE penid=?";
+    db.query(q,[req.body.novelid],(err,data)=>{
+        if(err)return res.status(500).json(err);
+        db.query(penname,[data[0].penid],(err,result)=>{
+            if(err)return res.status(500).json(err);
+            return res.status(200).json(result);
+        })
     })
 })
 export default router;

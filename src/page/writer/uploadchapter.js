@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NavbarReactBootstrap from '../../component/Navbar';
 import "./managewrting.scss"
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -6,41 +6,33 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 const Uploadchapter = () => {
-    const statenovel = useLocation().state?.novel; // Assuming 'novel' is a property in the state object
-    const statechapter = useLocation().state?.chapter; // Assuming 'chapter' is a property in the state object
-
-    console.log("Novel State:", statenovel);
-    console.log("Chapter State:", statechapter);
+    
+    const state = useLocation().state || { novel: null };
+    const navigate = useNavigate()
+    useEffect(()=>{
+        if(!state){
+            navigate("/writer/managewriting");
+        }
+        setcount(1);
+    },[state,navigate]) 
+    console.log(state)
+    // console.log("Chapter State:", statechapter);
     const [novel, setNovel] = useState({
-        novel_name: statenovel.novel.novel_name || null,
+        novelid:state.novelid,
+        novelname:state.novel?.name,
     })
+    
     const [chapter, setChapter] = useState({
-        novel_id: statenovel?.novel?.novel_id || null,
-        topic: statechapter?.chapter?.chapter_topic || null,
-        title: statechapter?.chapter?.chapter_title || null,
+        title : state.chapter?.chapter_title ??null,
     })
-    console.log(chapter)
-    const [errtopic, setErrortopic] = useState(null);
+    const [number, setNumber] = useState(state.index ?? null);
+    const [content, setcontent] = useState(state.chapter?.chapter_content||null);
+    const [count,setcount]=useState(0);
+    const [header,setHeader]=useState(state.chapter?.chapter_title&&count===0?state.chapter.chapter_title:null)
     const [errtitle, setErrortitle] = useState(null);
     const [errcontent, setErrorcontent] = useState(null);
     const [errsubmit, setErrorsubmit] = useState(null);
-    const setErrorr = (field, message) => {
-        switch (field) {
-            case 'topic':
-                setErrortopic(message);
-                break;
-            case 'title':
-                setErrortitle(message);
-                break;
-            // handle other form fields...
-            default:
-                break;
-        }
-    };
-    const [content, setcontent] = useState(null)
-    const navigate = useNavigate()
-    const handlenav = () => {
-    }
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -49,47 +41,66 @@ const Uploadchapter = () => {
             [name]: value,
         }));
     };
-    const handlesubmit = async (e) => {
-        console.log(chapter)
-        e.preventDefault();
-        setErrortopic(null);
+
+    const check=()=>{
         setErrortitle(null);
         setErrorcontent(null);
         setErrorsubmit(null)
         const validationErrors = [];
-        if (!chapter.topic) {
-            validationErrors.push({ field: 'topic', message: 'topic is required' });
-        }
         if (!chapter.title) {
-            validationErrors.push({ field: 'title', message: 'title is required' });
-        }
-        if (!chapter.novel_id) {
-            setErrorsubmit("unknow error occured!")
+            setErrortitle("title is required!")
             return;
         }
-        if (validationErrors.length > 0) {
-            validationErrors.forEach(({ field, message }) => {
-                setErrorr(field, message);
-            });
-            e.preventDefault();
-            if (!content) {
-                setErrorcontent("content is required")
-            }
-            console.log(chapter)
-            console.log(content)
+        if (!novel.novelid) {
+            setErrorsubmit("novelid error occured!")
             return;
         }
+        if (!content) {
+            setErrorcontent("content is required")
+            return;
+        }
+    }
+    const handlesubmit = async (e) => {
+        e.preventDefault();
+        check();
+        console.log("thisddddddddd",)
         const dataTosend = {
-            novelid: chapter.novel_id,
-            noveltopic: chapter.topic,
+            novelid: novel.novelid,
             noveltitle: chapter.title,
             content,
         }
         try {
             const res = await axios.post("http://localhost:5000/api/writer/upload_chapter/", dataTosend)
+            console.log(res.data)
             setErrorsubmit(res.data)
-
-            navigate("/writer/viewnovel", { state: statenovel })
+            
+          
+            setTimeout(() => {
+                navigate("/writer/viewnovel", { state: { novelid: novel.novelid } });
+              }, 2000);
+        } catch (err) {
+            setErrorsubmit(err.response ? err.response.data : "An error occurred");
+            console.log(err)
+        }
+    }
+    const update=async(e)=>{
+        e.preventDefault();
+        check();
+        console.log("this update")
+        const dataTosend = {
+            novelid: novel.novelid,
+            chapterid:state.chapter.chapter_id,
+            title: chapter.title,
+            content,
+        }
+        console.log(dataTosend)
+        try {
+            const res = await axios.post("http://localhost:5000/api/writer/update_chapter/", dataTosend)
+            console.log(res.data)
+            setErrorsubmit(res.data)
+            setTimeout(() => {
+                navigate("/writer/viewnovel", { state: { novelid: novel.novelid } });
+              }, 2000);
         } catch (err) {
             setErrorsubmit(err.response ? err.response.data : "An error occurred");
             console.log(err)
@@ -102,28 +113,34 @@ const Uploadchapter = () => {
                 <div className='top d-flex pt-3 backtheme'>
                     <a href='/writer/managewriting' className='link ps-3'><span className='ps-2 mb-2'> กลับสู่หน้าหลัก</span></a>
                     <span className='ps-2 mb-2'> &gt;</span>
-                    <a href='' className='link ps-3 text-center'><span className='mb-2'>{novel.novel_name}</span></a>
+                    {novel&&<a href='' className='link ps-3 text-center'><span className='mb-2'>{novel.novelname}</span></a>}
                     <span className='ps-2'> &gt;</span>
-                    {chapter&&<span className='ps-2 mb-2'>{chapter.topic+chapter.title} </span>}
+                    {state.chapter&&<span className='ps-2 mb-2'>{header} </span>}
 
                 </div>
-                <div className='chapter-input backtheme'>
-                    <div className='row paddingleftright30 paddingtopbottom10'>
-                        <div className='col-4 chapter-left paddingleftright30 paddingtopbottom10'>
+                <div className='d-flex mx-auto justify-content-center'>
+                    <div className='top text-center'>
+                    {state.chapter?.chapter_title && <h3>{"ลำดับตอนที่: " + number + " - " + header}</h3>}
+                    </div>
+                </div>
+                <div className='chapter-input backtheme paddingleftright30'>
+                    <div className='row p-3 paddingtopbottom10'>
+                        
+                        {/* <div className='col-4 chapter-left paddingleftright30 paddingtopbottom10'>
                             <h5>บทที่ :</h5>
                             <input type="text" className='form-control' name='topic' onChange={handleChange}></input>
                             {errtopic && <p className='error'>{errtopic}</p>}
-                        </div>
-                        <div className='col-8 chapter-right paddingleftright30 paddingtopbottom10'>
+                        </div> */}
+                        <div className='col-8 chapter-right paddingtopbottom10'>
                             <h5>ชื่อตอน</h5>
-                            <input type="text" className='form-control' name='title' onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'></input>
+                            <input type="text" className='form-control' name='title'value={chapter.title} onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'></input>
                             {errtitle && <p className='error'>{errtitle}</p>}
                         </div>
                     </div>
 
                 </div>
-                <div className='chapter-input'>
-                    <div className='form-control paddingtop20 mt-3 backtheme p-3'>
+                <div className='chapter-input paddingleftright30'>
+                    <div className='form-control paddingtop20 mt-3 backtheme p-3 paddingleftright30'>
                         <div className='header'>
                             <h3>เนื้อหา</h3>
                             {errcontent && <p className='error'>{errcontent}</p>}
@@ -154,7 +171,7 @@ const Uploadchapter = () => {
                         <button className='form-control'>ยกเลิก</button>
                     </div>
                     <div className='d-inline-block'>
-                        <button className='form-control' onClick={handlesubmit}>บันทึก</button>
+                        <button className='form-control' onClick={state.chapter?update:handlesubmit}>บันทึก</button>
                     </div>
                 </div>
             </div>

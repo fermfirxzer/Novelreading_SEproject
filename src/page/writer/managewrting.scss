@@ -1,237 +1,329 @@
-
-.headtopic{
+.headtopic {
     font-size: 60px;
-    font-weight:600;
+    font-weight: 600;
 }
-.flex{
-    display:flex;
+
+.flex {
+    display: flex;
     justify-content: space-between;
-    
-    .head-writing{
+
+    .head-writing {
         font-size: large;
         font-weight: bold;
     }
-    
-    .authorupload-btn  {
+
+    .authorupload-btn {
         background-color: rgba(0, 202, 202, 0.952);
         color: rgb(255, 255, 255);
-        width:180px;
+        width: 180px;
         border: none;
         padding: 10px;
         border-radius: 30px;
         margin: 0px 5px;
     }
-    .manage-btn-container{
 
-        display:flex;
-        
-        .checkbox-con{
-            border:solid 1px;
+    .manage-btn-container {
+
+        display: flex;
+
+        .checkbox-con {
+            border: solid 1px;
             border-radius: 10px;
             border-color: rgb(221, 221, 221);
-            padding:5px;
+            padding: 5px;
             width: 80px;
             margin-right: 20px;
+
             .custom-checkbox .form-check-input {
                 width: 25px;
                 height: 25px;
             }
         }
-        .Select-con{
-            width:180px;
-            border:solid 1px;
+
+        .Select-con {
+            width: 180px;
+            border: solid 1px;
             border-radius: 10px;
             border-color: rgb(221, 221, 221);
-            .dot{
-   
+
+            .dot {
+
                 margin-right: 8px;
                 font-size: 15px;
-                
-                color:rgb(0, 255, 221); 
+
+                color: rgb(0, 255, 221);
             }
         }
     }
-    button{
+
+    button {
         border: none;
-        background-color:rgb(0, 255, 221,1);
+        background-color: rgb(0, 255, 221, 1);
     }
+
     button:hover {
-        background-color:rgb(0, 255, 221,0.65);
-      }
+        background-color: rgb(0, 255, 221, 0.65);
+    }
 }
-.manage-writing-container:hover{
+
+.manage-writing-container:hover {
     background-color: rgb(240, 240, 240);
 }
-.whole-div-link{
+
+.whole-div-link {
     cursor: pointer;
     text-decoration: none;
-    .manage-writing-container{
-        display:flex;
+
+    .manage-writing-container {
+        display: flex;
         justify-content: space-between;
-        margin:20px 0px;
+        margin: 20px 0px;
         border: solid 1px;
         border-color: rgb(204, 204, 204);
         border-radius: 15px;
         padding: 15px;
-        .container-left{
-            display:flex;
-            align-items: center; 
-            .checkbox-con{
+
+        .container-left {
+            display: flex;
+            align-items: center;
+
+            .checkbox-con {
                 margin-right: 20px;
+
                 .custom-checkbox .form-check-input {
                     width: 25px;
                     height: 25px;
                 }
             }
-            .novel-img-manage{
-                width:90px;
+
+            .novel-img-manage {
+                width: 90px;
             }
-            .describe-con{
+
+            .describe-con {
                 margin-left: 20px;
-                
-                .describe{
-                    display: flex; 
-                    align-items: center; 
+
+                .describe {
+                    display: flex;
+                    align-items: center;
                     color: black;
                     font-size: 15px;
-                    .icon-manage{
+
+                    .icon-manage {
                         margin-right: 5px;
                         width: 15px;
                     }
                 }
-                .grey{
+
+                .grey {
                     color: #7f7f81;
                 }
             }
-            
+
         }
-        .container-right{
-            .describe{
+
+        .container-right {
+            .describe {
                 color: black;
             }
-            .Select-con{
-                width:180px;
-                border:solid 1px;
+
+            .Select-con {
+                width: 180px;
+                border: solid 1px;
                 border-radius: 10px;
                 border-color: rgb(221, 221, 221);
-               
-                .dot{
+
+                .dot {
                     margin-right: 8px;
                     font-size: 15px;
-                    color:rgb(0, 255, 221); 
+                    color: rgb(0, 255, 221);
                 }
             }
         }
     }
-    
-    
+
+
 }
-.link{
+
+.link {
     text-decoration: none;
     color: black;
 }
-.link:hover{
+
+.link:hover {
     color: rgba(0, 202, 202, 0.952);
 }
-.paddingleftright30{
+
+.paddingleftright30 {
     padding-left: 30px;
     padding-right: 30px;
 }
-.paddingtopbottom10{
+
+.paddingtopbottom10 {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-.paddingtop20{
+
+.paddingtop20 {
     padding-top: 20px;
 }
-.error{
+
+.error {
     font-family: sans-serif;
     font-size: 12px;
-    color:red;
+    color: red;
 
 }
-.writingnovel{
-        
-        font-size: 16px;
-        font-family: sans-serif;
-        .container{
-            margin-top: 100px;
-            width:100%;
-        }
-        .header{
-            height: 100%;
-            .head-box{
-                height: 100px;
-                border: solid 1px #e6e6e6;
-                padding: 20px;
-                h3{
-                    font-size: 16px;
-                }   
-            }
-            .header-right{
-                padding-top: 50px;
-                justify-content: flex-end; 
-                display: flex;
-                position: relative;
-                button{
-                    
-                    border-radius: 20pt;
-                    margin-left: 20px;
-                    min-height: 50px;
-                    width: 177px;
-                }
-            }
-            
-            
-            
-        }
-        .img-box{
-            background-color: #000000;
-            display: flex;
+
+.writingnovel {
+
+    font-size: 16px;
+    font-family: sans-serif;
+
+    .container {
+        margin-top: 100px;
+        width: 100%;
+    }
+
+    .header {
+        height: 100%;
+
+        .head-box {
+            height: 100px;
             border: solid 1px #e6e6e6;
-            .box-left{
-                text-align: center;
-                img{
-                    width: 85%;
-                }
-                flex:0.75;
-                
-                
-            }
-            .box-right{
-                
-               flex:1;
-               color: white;
-               h3{
-                color:rgba(0, 202, 202, 0.952);
-               }
+            padding: 20px;
+
+            h3 {
+                font-size: 16px;
             }
         }
-        .novel-box-header{
+
+        .header-right {
+            padding-top: 50px;
+            justify-content: flex-end;
+            display: flex;
+            position: relative;
+
+            button {
+
+                border-radius: 20pt;
+                margin-left: 20px;
+                min-height: 50px;
+                width: 177px;
+            }
+        }
+
+
+
+    }
+
+    .img-box {
+        background-color: #000000;
+        display: flex;
+        border: solid 1px #e6e6e6;
+
+        .box-left {
+            text-align: center;
+
+            img {
+                width: 85%;
+            }
+
+            flex:0.75;
+
+
+        }
+
+        .box-right {
+
+            flex: 1;
+            color: white;
+
+            h3 {
+                color: rgba(0, 202, 202, 0.952);
+            }
+        }
+    }
+
+    .novel-box {
+        .novel-box-header {
             display: flex;
         }
-    
+
+        .chapter-box {
+
+            .box {
+                display: flex;
+                flex-direction: column;
+
+
+
+
+                list-style-type: none;
+
+                li {
+                    .chapter-item{
+                        display: flex;
+                        cursor: pointer;
+                    .a{
+                        
+                        margin-right:100px;
+                    }
+                    .number{
+                        margin-right: 16px;
+                        width: 40px;
+                        min-height: 18px;
+                    }
+                    .chapter{
+                        display: flex;
+                        flex-grow: 1;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        margin-left: 0;
+                    }
+                    margin-top: 1rem;
+                    border: 1px solid #e6e6e6;
+                    width: 100%;
+                    height: 50px;
+                    display: flex;
+                    justify-content: start;
+                    align-items: center;
+                    padding: 2rem;
+                    
+                }
+            }
+            }
+        }
+    }
+
+
 }
-.writingepisode{
+
+.writingepisode {
     margin-top: 100px;
     height: auto;
+
     // background-color: #f4f4f4;
-    .container{
-        
-        .chapter-input{
-            .chapter-left{
+    .container {
+
+        .chapter-input {
+            .chapter-left {
                 height: 125px;
                 border: solid 1px #e6e6e6;
             }
-            .chapter-right{
+
+            .chapter-right {
                 border: solid 1px #e6e6e6;
             }
         }
     }
+
     font-size: 16px;
     font-family: sans-serif;
 }
-.backtheme{
+
+.backtheme {
     background-color: white;
 }
+
 $color-backtheme: #f4f4f4;

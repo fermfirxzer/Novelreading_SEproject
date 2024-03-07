@@ -36,7 +36,7 @@ const Managewriting = () => {
             setTotalpage(totalpage.data.totalPages);
             const res = await axios.post("http://localhost:5000/api/novel/writer_getnovel/", value)
             setNovelsData(res.data)
-           
+        
         } catch (err) {
             console.log(err)
         }
@@ -123,8 +123,8 @@ const Managewriting = () => {
     
     const handleLinkClick=(e,novel)=>{
        
-    
-        navigate("/writer/viewnovel",{state:{novel}})
+        
+        navigate("/writer/viewnovel",{state:{novelid:novel.novel_id}})
     }
 
     const options = [

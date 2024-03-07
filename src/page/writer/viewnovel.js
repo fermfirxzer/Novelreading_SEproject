@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import "./managewrting.scss"
 import NavbarReactBootstrap from '../../component/Navbar';
-import { useLocation, useNavigate,Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 const Viewnovel = () => {
-    const value = [
-        { novelname: 1, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
-        { novelname: 2, novelviews: 1, novelcomment: 1, novelprivacy: 1 },
-        { novelname: 3, novelviews: 1, novelcomment: 1, novelprivacy: 1 }
-    ]
-    const state = useLocation().state;
 
-    const [novel, setNovel] = useState(state.novel);
+    const state = useLocation().state;
+    console.log(state)
+    const [novel, setNovel] = useState({});
+    const [novelid, setNovelid] = useState(state.novelid)
     const [chapters, setchapters] = useState(null)
     const navigate = useNavigate()
     const handleClick = () => {
-        navigate("/writer/uploadchapter", { state: { novel } })
+        navigate("/writer/uploadchapter", { state: { novel, novelid } })
     }
     const handleEdit = () => {
-        navigate("/writer/upload", { state: { novel } })
+        navigate("/writer/upload", { state: { novel, novelid } })
     }
     const handleDelete = async () => {
         Swal.fire({
@@ -39,22 +36,18 @@ const Viewnovel = () => {
                     icon: "success"
                 });
                 try {
-                    if (state.novel.novel_img) {
-                        const deleteimg = await axios.delete(`http://localhost:5000/api/delete/${state.novel.novel_img}`)
-                    }
 
-                } catch (err) {
-                    console.log(err)
-                }
-                try {
-                    // Delete the novel from the database
-                    await axios.delete("http://localhost:5000/api/novel_delete/deletenovel", { data: { novel_id: novel.novel_id } });
-
+                    await axios.post("http://localhost:5000/api/novel_delete/deletenovel/", { novelid: novelid }, { withCredentials: true, });
+                    await axios.post("http://localhost:5000/api/novel_delete/deletechapter/", { novelid: novelid }, { withCredentials: true, });
                     // Navigate to the desired location after deletion
                     navigate("/writer/managewriting");
                 } catch (error) {
                     console.error("Error deleting novel:", error);
-                    // Handle errors or show a message to the user if needed
+                    Swal.fire({
+                        title: "Error",
+                        text: `An error occurred: ${error.response ? error.response.data : "Unknown error"}`,
+                        icon: "error"
+                    });
                 }
             }
         });
@@ -62,18 +55,70 @@ const Viewnovel = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novel.novel_id });
-                console.log(res.data)
+                const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novelid });
+
                 setchapters(res.data);
-                
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
-
         fetchData();
 
     }, [state]);
+    useEffect(() => {
+        const fetchnovel = async () => {
+            if (state) {
+                try {
+                    const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
+
+                    const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
+                    const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
+
+                    const updatedNovelData = {
+                        name: data_novel.data[0].novel_name,
+                        description: data_novel.data[0].novel_desc,
+                        penname: penname.data[0].penname,
+                        image: data_novel.data[0].novel_img || null,
+                        mainCategory: '',
+                        subCategory1: "",
+                        subCategory2: "",
+                        contentLevel: data_novel.data[0].novel_contentlevel,
+                    };
+
+
+                    for (const category of categories.data.result) {
+                        const categoryName = category[0];
+                        const categoryType = category[1];
+
+                        if (categoryType === 'main') {
+                            updatedNovelData.mainCategory = categoryName;
+                        } else if (categoryType === 'subcategory1') {
+                            updatedNovelData.subCategory1 = categoryName;
+                        } else if (categoryType === 'subcategory2') {
+                            updatedNovelData.subCategory2 = categoryName;
+                        }
+                    }
+                    setNovel(updatedNovelData);
+                } catch (err) {
+                    console.log(err);
+                }
+
+            }
+        };
+
+        fetchnovel();
+    }, [state]);
+    const handleNonDeleteClick = (index, e) => {
+        // Check if the click event originated from the delete button
+        if (!e.target.closest('.delete-button')) {
+            // Handle click logic here (navigate or anything else)
+            console.log("kuy")
+            // navigate(`/writer/uploadchapter`, { state: { novelid, chapter, index: index + 1 } });
+        }
+    };
+
+
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -98,23 +143,21 @@ const Viewnovel = () => {
                             </div>
 
                         </div>
-
                     </div>
                     <div className='header text-center col-8 col-md-6'>
                         <div className='head-box header-right d-flex' style={{ marginTop: 'auto' }}>
                             <button type="submit" className='form-control' onClick={handleEdit}>แก้ไข</button>
                             <button type="submit" className='form-control' onClick={handleDelete}>ลบ</button>
-
                         </div>
                     </div>
                 </div>
                 <div className='img-box'>
                     <div className='box-left'>
-                        <img src={`/uploads/novel/${novel.novel_img}`}></img>
+                        <img src={`/uploads/novel/${novel.image}`}></img>
                     </div>
                     <div className='box-right ms-5 mt-3'>
-                        <h3>{novel.novel_name}</h3>
-                        <h6>{novel.novel_desc}</h6>
+                        <h3>{novel.name}</h3>
+                        <h6>{novel.desc}</h6>
                         <h6>เขียนโดย :{novel.penname}</h6>
                     </div>
                 </div>
@@ -124,38 +167,47 @@ const Viewnovel = () => {
                         <span className=''>ตอนทั้งหมด</span>
                         <button className='ms-auto' type="submit" onClick={handleClick}>เพิ่มงานเขียน</button>
                     </div>
-                    <div className='select-box'>
+                    <div className='row chapter-box'>
+
+                        <ul className='box'>
+                            {chapters && chapters.map((chapter, index) => (
+
+
+
+                                <li>
+                                    
+                                        <div className='chapter-item' onClick={(e) => handleNonDeleteClick(index, e)}>
+                                            <div className='a number'>
+                                                {index + 1}
+                                            </div>
+                                            <div className='a chapter'>
+                                                {index + 1 + chapter.chapter_title + chapter.chapter_views}
+                                            </div>
+                                            <div className='a delete-button'>
+                                                <button type="button" onClick={(e) => { e.stopPropagation(); handleDelete(index + 1); }}>
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    
+                                </li>
+
+
+
+
+
+
+
+
+                            ))}
+
+                        </ul>
 
                     </div>
-                    <div className='row'>
 
-                    </div>
-                    <div className='row'>
-                        <div className='col'>
-                            <table className='table'>
-                                <tbody>
-                                    {chapters&&chapters.map((chapter, index) => (
-                                        
-                                        <tr key={index}>
-                                        <Link to="/writer/uploadchapter" state={{novel:state,chapter}}>
-                                            <td style={{width:'25%'}}>{chapter.chapter_topic}</td>
-                                            <td>{chapter.chapter_title}</td>
-                                            <td>{chapter.chapter_privacy}</td>
-                                            <td>{chapter.chapter_views}</td>
-                                            </Link>
-                                        </tr>
-                                        
-                                        
-                                        
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 
