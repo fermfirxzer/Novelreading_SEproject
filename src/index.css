@@ -48,6 +48,7 @@ nav a {
 
 .container-lg{
   margin:50px;
+
 }
 
 
@@ -221,7 +222,7 @@ nav a {
  
  .category-container{
   width: 100%; /* Set your desired width */
-  margin: 0 auto;
+  margin: 50px auto;
  }
  .category-name-con{
   color:#000000;
@@ -261,7 +262,20 @@ nav a {
 }
 
 
-
+.expand-btn{
+  width:100%;
+  height: 50px;
+  border-radius: 15px;
+  background-color:#dafffe;
+  color: #ffffff;
+  
+}
+.expand-btn:hover{
+  
+  background-color:#50e4df;
+  color: #000000;
+ 
+}
 
 
 
@@ -358,7 +372,7 @@ nav a {
 
 .header{
   padding: 15px ;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 600;
 }
 .reading-novel-chapter{
