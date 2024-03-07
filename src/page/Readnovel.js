@@ -8,26 +8,45 @@ import React, { useState } from 'react';
 
 import NavbarReactBootstrap from '../component/Navbar.js';
 import { Link } from 'react-router-dom';
-import Login from './login.js';
+
 import Swipercate from '../Swipercate.js';
 import '../index.css';
+import CommentNovel from '../component/CommentNovel';
+import BookIcon from '@mui/icons-material/Book';
 
 const Readnovel= () => {
-    const [showSignup, setShowSignup] = useState(false);
-    
-    const handleShowSignIn = () => {
-        console.log("signin");
-        setShowSignup(true);
-    }
-    const handleCloseSignIn = () => setShowSignup(false);
+   ;
 
-
+    const novel = {
+        writername:'larin',
+        penname: 'ระรินรัก',
+        category: 'Fantasy',
+        publishedDate: '2023-02-15',
+      };
 
     const [isClicked, setIsClicked] = useState(false);
-
     const handleClick = () => {
       setIsClicked(!isClicked);
     };
+
+    const [isBooked, setIsBooked] = useState(false);
+    const handleClickBooked = () => {
+        setIsBooked(!isBooked);
+    };
+
+    const [isFollowedPenname, setIsFollowedPenname] = useState(false);
+    const [isFollowedWriter, setIsFollowedWriter] = useState(false);
+    const handleClickFollowed = (target) => {
+        if (target === 'penname') {
+            setIsFollowedPenname(!isFollowedPenname);
+        } else if (target === 'writer') {
+            setIsFollowedWriter(!isFollowedWriter);
+        }
+    };
+
+  
+    
+
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
     const chapters = Array.from({ length:33 }, (_, index) => index + 1); // Example array of chapters
@@ -45,69 +64,100 @@ const Readnovel= () => {
     const handlePrevPage = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
+
   return (
     
-    <div style={{backgroundColor : '#f4f4f4' , marginTop: '4rem' }}>
-        <NavbarReactBootstrap onSignInClick={handleShowSignIn} />
-        {showSignup && <Login onSignInClick={handleCloseSignIn}/>}
-        <div >
-            <div className='reading-novel-container'>
-                <div className='reading-novel-img-con'>
-                    <img src="https://cdn.readawrite.com/articles/14074/14073412/thumbnail/tiny.gif?2" className='reading-novel-img'/>
-                </div>
-                <div className='reading-novel-info'>
-                    <div className='reading-novel-name'>
-                        <p >รักที่ไม่คู่ควร (มี ebook)</p>
+    <div style={{backgroundColor : '#f4f4f4' , marginTop: '4rem' }} className='px-0 mx-0'>
+        <NavbarReactBootstrap />
+       
+        <div  >
+            <div className="reading-novel-container d-lg-flex ">
+                    <div className='col-lg-4 col-md-12 px-0 mx-0'>
+                        <div className='  reading-novel-img-con '>
+                            <img src="https://cdn.readawrite.com/articles/14074/14073412/thumbnail/tiny.gif?2" className='reading-novel-img' alt="Novel Cover" />
+                        </div>
                     </div>
-                    <div className='reading-novel-author'>
-                        <img src="https://1417094351.rsc.cdn77.org/publicassets/3624374/profile_picture/profile_picture.gif?2025751278" className='author-profile'></img>
-                        <p>ระรินรัก</p>
-                        <button className='follow-btn'>
-                            ติดตาม
-                        </button>
+                    <div className='col-lg-4 col-md-12 px-0 mx-0'>
+                        <div className='reading-novel-info py-5'>
+                            <div className='reading-novel-name'>
+                                <p>รักที่ไม่คู่ควร (มี ebook)</p>
+                            </div>
+                            <div className='reading-novel-author'>
+                                <img src="https://1417094351.rsc.cdn77.org/publicassets/3624374/profile_picture/profile_picture.gif?2025751278" className='author-profile' alt="Author Profile" />
+                                <p>ระรินรัก</p>
+                                <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff',width: isFollowedPenname ? '100px':''}} onClick={() => handleClickFollowed('penname')}>
+                                    {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}  
+                                </button>
+                            </div>
+                            <div className='reading-novel-describe'>
+                                <p>sdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbnldadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndfsjfkjsdfljflsdjflsjflsdjlfsdjflsdjsdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjfl </p>
+                            </div>
+                            <div className='function-container'>
+                                <button className='heart-btn' onClick={handleClick}>
+                                    <img src={isClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
+                                </button>
+                                <button className='add-playlist'>
+                                    <BookIcon style={{  color: isBooked ? '#00cbc3' : 'black' }}></BookIcon>
+                                    <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} onClick={handleClickBooked}>
+                                        {isBooked ? 'เพิ่มแล้ว' : 'เพิ่มเข้าขั้น'}
+                                    </span>
+                                </button>
+                            <button className='readnow'>
+                                <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
+                                <a href = '/readchapter' className='text-decoration-none text-dark'>
+                                    <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
+                                </a>
+                                
+                            </button>
+                            </div>
+                        </div>
                     </div>
-                    <div className='reading-novel-describe'>
-                        <p>sdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbnldadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndfsjfkjsdfljflsdjflsjflsdjlfsdjflsdjsdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjfl </p>
-                    </div>
-                    <div className='function-container'>
-                        <button className='heart-btn' onClick={handleClick}>
-                        <img src={isClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'}alt="Icon"className='search-icon'/>
-                        </button>
-                        <button className='add-playlist'>
-                            <img src ="https://cdn-icons-png.flaticon.com/128/7794/7794603.png" className='search-icon'></img>
-                            <span style={{margin:'0px 8px'}}>เพิ่มเข้าขั้น</span>
-                        </button>
-                        <button className='readnow'>
-                            <img src ="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon'></img>
-                            <span style={{margin:'0px 8px'}}>อ่านเลย</span>
-                        </button>
-
-                    </div>
-                </div>
+                
             </div>
-
-
-            <div className='container-lg'>
-                <div className='reading-novel-infodsadsa'>
-                    <div>
-                        <span>ข้อมูลนักเขียน</span>
-                        <div></div>
-                        <div></div>
-                    </div>
-                    <div>
-                        <span>เผยแพร่</span>
-                        <div></div>
-                        <div></div>
-                        
+           
+            <div className='container-lg pb-5 mb-0'>
+                <div className='reading-novel-info mb-5'>
+                    <div className='card border-0 p-3'>
+                        <div className='card-body d-flex '>
+                            <div className="mt-2 border-end " style={{ width: '50%' }}>
+                                <h2 >ข้อมูลนักเขียน </h2>
+                                <div className='d-flex justify-content-between '>
+                                    <span><strong>นามปากกา : </strong> {novel.penname}</span>
+                                    <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000',width: isFollowedPenname ? '100px':''}} 
+                                    onClick={() => handleClickFollowed('penname')}>
+                                        {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}  
+                                    </button>
+                                </div>
+                                <div className='d-flex justify-content-between mt-2'>
+                                    <span><strong>ผู้เขียน : </strong> {novel.writername}</span>
+                                    <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000',width: isFollowedWriter ? '100px':''}} 
+                                    onClick={() => handleClickFollowed('writer')}>
+                                        {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}  
+                                    </button>
+                                </div>
+                              
+                            </div>
+                            
+                            <div className="mt-2 ms-3" style={{ width: '50%' }}>
+                                <h2>เผยแพร่ </h2>
+                                <div> 
+                                    <strong>วันที่เผยแพร่ : </strong> {novel.publishedDate}
+                                </div>
+                                <div className='mt-2'>
+                                    <strong>วันที่แก้ไขล่าสุด : </strong> {novel.publishedDate}
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className='reading-novel-chapter'>
-                    <div className='header'>
+                <div className='reading-novel-chapter pt-5'>
+                    <div className='header px-5 mx-3'>
                         ตอนทั้งหมด ({chapters.length}) 
                     </div>
-                    <div id ="chapterContainer">
+                    <div id ="chapterContainer " >
                         {currentChapters.map(index => (
-                                <div className='chapter' >
+                                <div className='chapter  px-5' >
                             
                                 <Link to="/readchapter" className="no-underline"><g style={{color:'#00cbc3', fontSize:'18px'}}>#{index}</g> กหฟกหฟกหฟกหฟ </Link>
                                 <div style={{display:'flex'}}>
@@ -143,27 +193,9 @@ const Readnovel= () => {
                         <Swipercate></Swipercate>
                     </div>
                 </div>
-                <div className='reading-novel-comment'>
-                    <div className='header'>
-                        ความคิดเห็นทั้งหมด (433)
-                    </div>
-                    <div className='comment' >
-                        บทที่ 1 กหฟกหฟกหฟกหฟ
-                    </div>
-                    <div className='comment' >
-                        บทที่ 2 กหฟกหฟกหฟกหฟ
-                    </div>
-                </div>
+                <CommentNovel></CommentNovel>
             </div>
         </div>
-        
-       
-      
-        
-       
-
-
-    
     </div>
     
   );

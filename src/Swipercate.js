@@ -65,7 +65,7 @@ const novelsData = [
 ];
 const Swipercate = () => {
     return (
-        <Swiper
+        <Swiper 
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={20}
             slidesPerView={6}
@@ -92,7 +92,7 @@ const Swipercate = () => {
                 },
               }}
         >
-            <Swiper>
+            <Swiper >
                 {novelsData.map((novel) => (
                     <SwiperSlide key={novel.id}>
                         <div className="novel-container">
