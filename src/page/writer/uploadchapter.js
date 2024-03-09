@@ -17,7 +17,7 @@ const Uploadchapter = () => {
         }
         setcount(1);
     }, [state, navigate])
-    console.log(state.chapter.chapter_id)
+    console.log(state)
     // console.log("Chapter State:", statechapter);
     const [novel, setNovel] = useState({
         novelid: state.novelid,

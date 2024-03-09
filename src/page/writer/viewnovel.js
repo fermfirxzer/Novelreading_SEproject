@@ -109,6 +109,7 @@ const Viewnovel = () => {
 
     const handleNonDeleteClick = (chapterid, e,index) => {
         
+    
         if (!e.target.closest('.delete-button')) {
             
             navigate(`/writer/uploadchapter`, { state: { novel,novelid, chapter:chapters[index],index: index + 1} });

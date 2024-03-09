@@ -158,13 +158,10 @@ const Uploadnovel = () => {
     if (!novelData.contentLevel) {
       validationErrors.push({ field: 'contentlevel', message: 'Contentlevel is required' });
     }
-
     if (validationErrors.length > 0) {
-
       validationErrors.forEach(({ field, message }) => {
         setErrorr(field, message);
       });
-
       return;
     }
     if (novelData.mainCategory === novelData.subCategory1 ||novelData.mainCategory === novelData.subCategory2 ||
@@ -196,22 +193,20 @@ const Uploadnovel = () => {
       
       const category = {
         mainCategory: novelData.mainCategory,
-        subCategory1: novelData.subCategory1 === '' ? '' : novelData.subCategory1,
-        subCategory2: novelData.subCategory2 === '' ? '' : novelData.subCategory2,
-        novelid:res.data,
+        subCategory1: novelData.subCategory1 === '' ? null : novelData.subCategory1,
+        subCategory2: novelData.subCategory2 === '' ? null : novelData.subCategory2,
+        novelid:res.data||null,
       }
-      console.log(category)
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
-      console.log(rescategory.data)
-      setError(rescategory.data);
-      
-      
-      setTimeout(() => {
-        navigate("/writer/managewriting");
-      }, 2000);
+
+      setError("Success upload");
+      // setTimeout(() => {
+      //   navigate("/writer/managewriting");
+      // }, 2000);
     } catch (err) {
       console.error("Error in Upload:", err);
-      // setError(err.response ? err.response.data : "An error occurred");
+      setError(err.response ? err.response.data : "An error occurred");
+      
     }
     
 
@@ -252,17 +247,17 @@ const Uploadnovel = () => {
     try {
       const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
       const penname = await axios.post("http://localhost:5000/api/writer/upadate_penname", penToSend, { withCredentials: true, });
-      console.log(res.data)
-      setError(res.data)
+      
+      const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
+      setError("Success update")
+      setTimeout(() => {
+        navigate("/writer/viewnovel", { state: { novelid: novelid } });
+      }, 2000);
     } catch (err) {
       setError(err.response ? err.response.data : "An error occurred");
       console.log(err)
       return;
     }
-    const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
-    setTimeout(() => {
-      navigate("/writer/viewnovel", { state: { novelid: novelid } });
-    }, 2000);
 
 
 

@@ -40,7 +40,7 @@ router.post("/writer_setprivacy/", (req, res) => {
 router.post("/writer_fetchcategory/", async (req, res) => {
     const selectNovelCategoryQuery = "SELECT * FROM novel_category WHERE novel_id=?";
     const selectCategoryQuery = "SELECT * FROM categories WHERE category_id=?";
-    console.log(req.body.novelid);
+    
     const result = [];
     try {
         const datas = await new Promise((resolve, reject) => {
@@ -73,7 +73,7 @@ router.post("/writer_fetchcategory/", async (req, res) => {
     }
 });
 router.post("/writer_fetchchapter/",(req,res)=>{
-    console.log(req.body)
+
     const q="SELECT * FROM novel_chapter WHERE novel_id=?";
     db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
@@ -85,7 +85,7 @@ router.post("/writer_fetchnovel/",(req,res)=>{
    
     db.query(q,[req.body.novelid],(err,data)=>{
         if(err)return res.status(500).json(err);
-        console.log(data)
+        
         return res.status(200).json(data);
     })
 })

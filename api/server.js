@@ -3,6 +3,7 @@ import express from 'express';
 import novel_delete from './routes/novel_delete.js';
 import novelRoutes from './routes/novel.js'
 import writerRoutes from './routes/writer.js'
+import fontRoutes from './routes/mainpage.js';
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import { db } from "./db.js";
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/novel", novelRoutes)
 app.use("/api/writer",writerRoutes);
 app.use("/api/novel_delete",novel_delete)
+app.use("/api/font",fontRoutes)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../public/uploads/novel/')
