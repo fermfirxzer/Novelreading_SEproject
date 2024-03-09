@@ -106,18 +106,21 @@ const Mainpage = () => {
     const [Lastest,setLastest]=useState(null)
     const fetchCategoryNovel = async (category, setCategory) => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchcategory/${category}`);
+            const response = await axios.get(`http://localhost:5000/api/font/fetchnovelbycategory/${category}`);
             setCategory(response.data);
         } catch (err) {
             console.log(err);
         }
     };
     const fetchlasted=async()=>{
-        // try{
-        //     const response=await axios.get()
-        // }catch(err){
-        //     console.log(err);
-        // }
+        try{
+            const limit=12;
+            const response=await axios.get(`http://localhost:5000/api/font/fetchnovellasted/${limit}`);
+            setLastest(response.data);
+            console.log(Lastest)
+        }catch(err){
+            console.log(err);
+        }
     }
     useEffect(() => {
         const categoriesToFetch = [
@@ -129,6 +132,8 @@ const Mainpage = () => {
         categoriesToFetch.forEach(async (categoryObject) => {
             await fetchCategoryNovel(categoryObject.category, categoryObject.setCategory);
         });
+        fetchlasted();
+    
     }, []);
 
    
@@ -185,6 +190,11 @@ const Mainpage = () => {
                 <div className='category-name-con mb-3'>
                     <a>Lastest Novel </a>
                 </div>
+                <div className="clearfix">
+                        <div className='category-swiper-container'>
+                            <Swipercate novelsData={Lastest}></Swipercate>
+                        </div>
+                    </div>
                 {/* <div className="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4">
                     {novelsData.slice(0, expandedRows).map((novel) => (
                         <div key={novel.id} className="col">

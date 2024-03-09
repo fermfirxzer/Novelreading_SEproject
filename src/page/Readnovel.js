@@ -14,22 +14,26 @@ import CommentNovel from '../component/CommentNovel';
 import BookIcon from '@mui/icons-material/Book';
 const Readnovel = () => {
     const { novelid } = useParams();
-    const [novelData,setNovelData] = useState(null);
+    const [novelData, setNovelData] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [chapter, setchapter] = useState(null);
     useEffect(() => {
         const fetchnovel = async () => {
-            const response=await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
-            setNovelData(response.data)
-            
+            const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
+            console.log(response.data)
+            setNovelData(response.data[0])
+            setCategory(response.data[1]);
+
+        }
+        const fetchchapter = async () => {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+            setchapter(response.data)
+            console.log(response.data)
         }
         fetchnovel();
-        
+        fetchchapter();
     }, [])
-    const novel = {
-        writername: 'larin',
-        penname: 'ระรินรัก',
-        category: 'Fantasy',
-        publishedDate: '2023-02-15',
-    };
+
 
     const [isClicked, setIsClicked] = useState(false);
     const handleClick = () => {
@@ -56,13 +60,12 @@ const Readnovel = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
-    const chapters = Array.from({ length: 33 }, (_, index) => index + 1); // Example array of chapters
 
-    const totalPages = Math.ceil(chapters.length / chaptersPerPage);
+    const totalPages = chapter?Math.ceil(chapter.length / chaptersPerPage):0;
 
     const startIndex = (currentPage - 1) * chaptersPerPage;
     const endIndex = currentPage * chaptersPerPage;
-    const currentChapters = chapters.slice(startIndex, endIndex);
+    
 
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
@@ -81,13 +84,13 @@ const Readnovel = () => {
                 <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='  reading-novel-img-con '>
-                            <img src="https://cdn.readawrite.com/articles/14074/14073412/thumbnail/tiny.gif?2" className='reading-novel-img' alt="Novel Cover" />
+                            {novelData && <img src={`/uploads/novel/${novelData.novel_img}`} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='reading-novel-info py-5'>
                             <div className='reading-novel-name'>
-                                <p>รักที่ไม่คู่ควร (มี ebook)</p>
+                                {novelData && <p>{novelData.novel_name}</p>}
                             </div>
                             <div className='reading-novel-author'>
                                 <img src="https://1417094351.rsc.cdn77.org/publicassets/3624374/profile_picture/profile_picture.gif?2025751278" className='author-profile' alt="Author Profile" />
@@ -97,7 +100,7 @@ const Readnovel = () => {
                                 </button>
                             </div>
                             <div className='reading-novel-describe'>
-                                <p>sdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbnldadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjflssdadjohwenjknsvkanbndfsjfkjsdfljflsdjflsjflsdjlfsdjflsdjsdadjohwenjknsvkanbnldfsjfkjsdfljflsdjflsjflsdjlfsdjfl </p>
+                                {novelData && <p>{novelData.novel_desc} </p>}
                             </div>
                             <div className='function-container'>
                                 <button className='heart-btn' onClick={handleClick}>
@@ -129,14 +132,14 @@ const Readnovel = () => {
                                 <div className="mt-2 border-end " style={{ width: '50%' }}>
                                     <h2 >ข้อมูลนักเขียน </h2>
                                     <div className='d-flex justify-content-between '>
-                                        <span><strong>นามปากกา : </strong> {novel.penname}</span>
+                                        {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>}
                                         <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('penname')}>
                                             {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
                                         </button>
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
-                                        <span><strong>ผู้เขียน : </strong> {novel.writername}</span>
+                                        {novelData && <span><strong>ผู้เขียน : </strong> {novelData.penname}</span>}
                                         <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('writer')}>
                                             {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}
@@ -147,45 +150,45 @@ const Readnovel = () => {
 
                                 <div className="mt-2 ms-3" style={{ width: '50%' }}>
                                     <h2>เผยแพร่ </h2>
-                                    <div>
-                                        <strong>วันที่เผยแพร่ : </strong> {novel.publishedDate}
-                                    </div>
-                                    <div className='mt-2'>
+                                    {novelData && <div>
+                                        <strong>วันที่เผยแพร่ : </strong> {novelData.novel_date}
+                                    </div>}
+                                    {/* <div className='mt-2'>
                                         <strong>วันที่แก้ไขล่าสุด : </strong> {novel.publishedDate}
-                                    </div>
+                                    </div> */}
 
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='reading-novel-chapter pt-5'>
-                        <div className='header px-5 mx-3'>
-                            ตอนทั้งหมด ({chapters.length})
-                        </div>
-                        <div id="chapterContainer " >
-                            {currentChapters.map(index => (
-                                <div className='chapter  px-5' >
-
-                                    <Link to="/readchapter" className="no-underline"><g style={{ color: '#00cbc3', fontSize: '18px' }}>#{index}</g> กหฟกหฟกหฟกหฟ </Link>
+                        {chapter && <div className='header px-5 mx-3'>
+                            ตอนทั้งหมด ({chapter.length})
+                        </div>}
+                        <div id="chapterContainer">
+                            {chapter && chapter.map(chapterItem => (
+                                <div className='chapter px-5' key={chapterItem.chapter_id}>
+                                    <Link to={`/readchapter/${novelid}/${chapterItem.chapter_id}`} className="no-underline">
+                                        <g style={{ color: '#00cbc3', fontSize: '18px' }}>#{chapterItem.chapter_id}</g> {chapterItem.chapter_title}
+                                    </Link>
                                     <div style={{ display: 'flex' }}>
                                         <div style={{ marginRight: '15px' }}>
                                             <span style={{ marginRight: '5px' }}>
-                                                <CommentTwoToneIcon></CommentTwoToneIcon>
+                                                <CommentTwoToneIcon />
                                             </span>
-                                            <span>23</span>
+                                            <span>{chapterItem.chapter_comment}</span>
                                         </div>
-                                        <div >
+                                        <div>
                                             <span style={{ marginRight: '5px' }}>
-                                                <VisibilityOutlinedIcon></VisibilityOutlinedIcon>
+                                                <VisibilityOutlinedIcon />
                                             </span>
-                                            <span>1.23k</span>
+                                            <span>{chapterItem.chapter_views}</span>
                                         </div>
-
                                     </div>
-
                                 </div>
                             ))}
                         </div>
+
                         <div id="pagination" className="chapter-btn-container">
                             <button onClick={handlePrevPage} disabled={currentPage === 1} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
                             <span>หน้าที่ {currentPage}</span>

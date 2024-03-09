@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 const Swipercate = ({ novelsData }) => {
-    console.log(novelsData)
+    // console.log(novelsData)
     return (
         <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
