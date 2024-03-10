@@ -145,10 +145,11 @@ const Readchapter = () => {
               <div className='container text-center mt-5 padding'>
                 
                 <p className='lead'>
-                  {chapter.content}
-                  {chapter.content}
-                  {chapter.content}
-                  {chapter.content}
+                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
+                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
+                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
+                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
+                 
                 </p>
               </div>
               <div className='d-flex justify-content-center container  margin'>
