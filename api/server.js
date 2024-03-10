@@ -3,6 +3,7 @@ import express from 'express';
 import novel_delete from './routes/novel_delete.js';
 import novelRoutes from './routes/novel.js'
 import writerRoutes from './routes/writer.js'
+import fontRoutes from './routes/mainpage.js';
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import { db } from "./db.js";
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/novel", novelRoutes)
 app.use("/api/writer",writerRoutes);
 app.use("/api/novel_delete",novel_delete)
+app.use("/api/font",fontRoutes)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../public/uploads/novel/')
@@ -59,18 +61,18 @@ db.connect((err) => {
 });
 
 // Example API endpoint to fetch data from MySQL
-app.get('http://localhost:5000/api/tasks', (req, res) => {
-  const query = 'SELECT branch_id FROM branches';
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error('Error querying MySQL:', err);
-      res.status(500).send('Internal Server Error');
-      return;
-    }
-    console.log('Sending JSON response:', results);
-    res.json(results);
-  });
-});
+// app.get('http://localhost:5000/api/tasks', (req, res) => {
+//   const query = 'SELECT branch_id FROM branches';
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error('Error querying MySQL:', err);
+//       res.status(500).send('Internal Server Error');
+//       return;
+//     }
+//     console.log('Sending JSON response:', results);
+//     res.json(results);
+//   });
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

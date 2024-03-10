@@ -1,6 +1,6 @@
-import React , {useState} from 'react'
+import React , {useState,useEffect} from 'react'
 import NavbarReactBootstrap from '../component/Navbar';
-
+import axios from 'axios';
 import "./readingchapter.scss"
 import BookOutlinedIcon from '@mui/icons-material/BookOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -8,10 +8,26 @@ import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBullet
 import ArrowBackIosNewOutlinedIcon from '@mui/icons-material/ArrowBackIosNewOutlined';
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import CommentNovel from '../component/CommentNovel';
+import { Link, useParams } from 'react-router-dom';
 const Readchapter = () => {
-  
-
-
+  const { novelid, chapterid } = useParams();
+  const [chapter,setChapter]=useState(null);
+  const [Allchapter,setAllchapter]=useState(null);
+  useEffect(() => {
+    const fetchchapter = async () => {
+        const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}/${chapterid}`)
+        setChapter(response.data[0])
+    
+    }
+    const Allchapter = async () => {
+      const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+      setAllchapter(response.data)
+      console.log(response.data)
+  }
+    fetchchapter();
+    Allchapter();
+}, [])
+console.log(chapter)
   const novel = {
     name:'กระทั่งตาย',
     writername:'larin',
@@ -26,16 +42,16 @@ const Readchapter = () => {
     
   };
 
-  const chapter = {
+  // const chapter1 = {
     
-      id:1,
-      chapterTopic:'บทที่ 1',
-      chapterTitle: 'บทนำ',
-      content:'<p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;เรื่องราวและที่มาของนิทานอีสป เนื่องจากอีสปมีชีวิตอยู่เมื่อหลายหลายพันปีล่วงมาแล้ว จึงยากที่จะได้ข้อมูลเกี่ยวข้องกับประวัติของอีสปที่ถูกต้องสมบูรณ์ครบถ้วน อย่างไรก็ตาม แม้จะมีข้อมูลอยู่หลายกระแส แต่นักค้นคว้าประวัติส่วนใหญ่ของอีสปก็เห็นพ้องต้องกันว่าข้อมูลต่อไปนี้ "น่าจะเป็นเรื่องราวของอีสปที่ถูกต้องมากที่สุด"&nbsp;</span></p><p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp;&nbsp;อีสป เป็นทาสชาวกรีกคนหนึ่งซึ่งมีชีวิตอยู่ในช่วงเวลา 560 - 620 ปีก่อนคริสต์ศักราช หรือ 208 ปี ก่อนพุทธศักราช (พระพุทธเจ้าประสูตรเมื่อ 80 ปี ก่อนพุทธศักราช) นับเวลาถึงปัจจุบันได้ 2,755 - 2,815 ปี เขาอาศัยอยู่ที่เมืองซาร์ดิสบนเกาะซามอสของประเทศกรีก เกาะนี้ตั้งอยู่ที่นอกชายฝั่งของประเทศตุรกีในปัจจุบัน ในสมัยกรีกโบราณชายฝั่งทะเลทั้งหมดของประเทศตุรกีก็มีชาวกรีกอาศัยอยู่อย่างหนาแน่น อีสปเป็นคนพิการ ขี่เหร่ แต่เขามีจิตใจที่งดงาม ซึ่งตรงกันข้ามกับสังขารของเขา เริ่มแรกนั้นอีสปมาจากเทรซซึ่งเป็นนครรัฐแห่งหนึ่งในสมัยโบราณ ปัจจุบันเทรซเป็นดินแดนส่วนหนึ่งของกรีกและบัลแกเรีย อีสปไปทำงานเป็นทาสที่เกาะซามอสกับนายทาส ชื่อเอียดมอน ในระหว่างที่เป็นทาส อีสปได้นำชื่อเสียงมาสู่ตนเองและนายของเขาด้วยการเป็นนักเล่านิทานผู้มีความสามารถจนเป็นที่รู้จักกันดีในท้องถิ่นนั้น ในที่สุดอีสปก็ถูกปลดปล่อยให้เป็นอิสระจากการเป็นทาส เนื่องจากความเป็นผู้ที่มีไหวพริบและสติปัญญาอันเฉียบแหลมของเขานั่นเอง&nbsp;</span></p><p><br></p>',
+  //     id:1,
+  //     chapterTopic:'บทที่ 1',
+  //     chapterTitle: 'บทนำ',
+  //     content:'<p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;เรื่องราวและที่มาของนิทานอีสป เนื่องจากอีสปมีชีวิตอยู่เมื่อหลายหลายพันปีล่วงมาแล้ว จึงยากที่จะได้ข้อมูลเกี่ยวข้องกับประวัติของอีสปที่ถูกต้องสมบูรณ์ครบถ้วน อย่างไรก็ตาม แม้จะมีข้อมูลอยู่หลายกระแส แต่นักค้นคว้าประวัติส่วนใหญ่ของอีสปก็เห็นพ้องต้องกันว่าข้อมูลต่อไปนี้ "น่าจะเป็นเรื่องราวของอีสปที่ถูกต้องมากที่สุด"&nbsp;</span></p><p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp;&nbsp;อีสป เป็นทาสชาวกรีกคนหนึ่งซึ่งมีชีวิตอยู่ในช่วงเวลา 560 - 620 ปีก่อนคริสต์ศักราช หรือ 208 ปี ก่อนพุทธศักราช (พระพุทธเจ้าประสูตรเมื่อ 80 ปี ก่อนพุทธศักราช) นับเวลาถึงปัจจุบันได้ 2,755 - 2,815 ปี เขาอาศัยอยู่ที่เมืองซาร์ดิสบนเกาะซามอสของประเทศกรีก เกาะนี้ตั้งอยู่ที่นอกชายฝั่งของประเทศตุรกีในปัจจุบัน ในสมัยกรีกโบราณชายฝั่งทะเลทั้งหมดของประเทศตุรกีก็มีชาวกรีกอาศัยอยู่อย่างหนาแน่น อีสปเป็นคนพิการ ขี่เหร่ แต่เขามีจิตใจที่งดงาม ซึ่งตรงกันข้ามกับสังขารของเขา เริ่มแรกนั้นอีสปมาจากเทรซซึ่งเป็นนครรัฐแห่งหนึ่งในสมัยโบราณ ปัจจุบันเทรซเป็นดินแดนส่วนหนึ่งของกรีกและบัลแกเรีย อีสปไปทำงานเป็นทาสที่เกาะซามอสกับนายทาส ชื่อเอียดมอน ในระหว่างที่เป็นทาส อีสปได้นำชื่อเสียงมาสู่ตนเองและนายของเขาด้วยการเป็นนักเล่านิทานผู้มีความสามารถจนเป็นที่รู้จักกันดีในท้องถิ่นนั้น ในที่สุดอีสปก็ถูกปลดปล่อยให้เป็นอิสระจากการเป็นทาส เนื่องจากความเป็นผู้ที่มีไหวพริบและสติปัญญาอันเฉียบแหลมของเขานั่นเอง&nbsp;</span></p><p><br></p>',
       
     
   
-  };
+  // };
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
 
@@ -60,16 +76,11 @@ const Readchapter = () => {
   
     const handleChapterSelect = (chapter) => {
       // Handle the selected chapter
-      console.log('Selected Chapter:', chapter);
+      
       // You can perform other actions here, such as updating state or fetching data
     };
   
-    const chapters = [
-      { id: 1, title: 'บทนำ' },
-      { id: 2, title: 'บทที่ 2 บทที่ 2' },
-      { id: 3, title: 'บทที่ 3' },
-      
-    ];
+
 
     const [isBooked, setIsBooked] = useState(false);
     const handleClickBooked = () => {
@@ -92,7 +103,7 @@ const Readchapter = () => {
                   </div>
                 
                   <div  className='mx-2 d-flex align-items-center'>
-                    {chapter.chapterTitle}
+                    {chapter&&chapter.chapter_title}
                   </div>
               </div>
               <div className='right  d-flex'>
@@ -105,13 +116,13 @@ const Readchapter = () => {
                         {showChapters && (
                           <div className="chapters-container">
                             <ul className="list-group">
-                              {chapters.map((chapter) => (
+                              {Allchapter.map((chapter) => (
                                 <li
                                   key={chapter.id}
                                   className="list-group-item"
                                   onClick={() => handleChapterSelect(chapter)}
                                 >
-                                  <a href = "/readchapter" className='text-decoration-none text-dark'>  {chapter.title}</a>
+                                  <a href = {`/readchapter/${novelid}/${chapter.chapter_id}`} className='text-decoration-none text-dark'>  {chapter.chapter_title}</a>
                                 </li>
                               ))}
                             </ul>
@@ -137,19 +148,16 @@ const Readchapter = () => {
           <div className='con-chapter d-flex justify-content-center align-items-center flex-column'>
               <div className='container text-center mt-5'>
                
-                <a className = " novelname" href = "/readnovel"><h5>เรื่อง : {novel.name}</h5></a>
-                <h4 className='mt-3'>Chapter 1  {chapter.chapterTitle}</h4>
-                <h5 className=''>โดย {novel.penname}</h5>
+                <a className = " novelname" href = "/readnovel"><h5>เรื่อง : {chapter&&chapter.novel_name}</h5></a>
+                <h4 className='mt-3'>{chapter&&chapter.chapter_title}</h4>
+                <h5 className=''>โดย {chapter&&chapter.penname}</h5>
               </div>
             
               <div className='container text-center mt-5 padding'>
                 
                 <p className='lead'>
-                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
-                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
-                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
-                  <div dangerouslySetInnerHTML={{ __html: chapter.content }} /> 
-                 
+                  {chapter&&<div dangerouslySetInnerHTML={{ __html: chapter.chapter_content }} />}
+                  
                 </p>
               </div>
               <div className='d-flex justify-content-center container  margin'>

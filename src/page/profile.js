@@ -18,22 +18,11 @@ const Profile = () => {
              ...prevState,
              newPassword: '',
              newConfirmPassword: '',
-         }));
-         
+         }));   
     };
-
-
-  
     const [currentPassword, setCurrentPassword] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
     const [enterPasswordError, setEnterPasswordError] = useState(false);
-
-
-
-  
-    
-   
-    
     const usersdatabase = 
         {
           id: 1,
@@ -247,7 +236,7 @@ const Profile = () => {
                         </Button>
                         </Modal.Footer>
                     </Modal>
-                    <div className="mb-3 row">
+                    {/* <div className="mb-3 row">
                         <label htmlFor="formName" className="col-sm-3 col-form-label">Name-surname</label>
                         <div className="col-sm-4">
                             <input type="text" className="form-control" id="formName" placeholder="Enter name"  name="Name" value={users.Name} onChange={handleChange} disabled={formDisable}/>
@@ -255,10 +244,10 @@ const Profile = () => {
                         <div className="col-sm-5">
                             <input type="text" className="form-control" id="formSurname" placeholder="Enter surname"  name="Surname" value={users.Surname} onChange={handleChange} disabled={formDisable}/>
                         </div>
-                    </div>
+                    </div> */}
                    
 
-                    <div className="mb-3 row">
+                    {/* <div className="mb-3 row">
                         <label htmlFor="formGender" className="col-sm-3 col-form-label">Gender</label>
                         <div className="col-sm-9">
                             <select className="form-select" id="formGender"  name="gender" value={users.gender} onChange={handleChange} disabled={formDisable}>
@@ -267,7 +256,7 @@ const Profile = () => {
                             <option value="female">หญิง</option>
                             </select>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="mb-3 row justify-content-end">
                         <div className="col-sm-2">
@@ -276,9 +265,9 @@ const Profile = () => {
                     </div>
                 </Form>
             </div>
-            <div className="container my-4 border-bottom ">
+            {/* <div className="container my-4 border-bottom ">
                 <h2>ที่อยู่</h2>
-            </div>
+            </div> */}
         </div>   
     );
   }
