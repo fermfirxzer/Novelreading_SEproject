@@ -55,9 +55,28 @@ router.get("/fetchchapter/:novelid",(req,res)=>{
     })
 })
 router.get("/fetchchapter/:novelid/:chapterid",(req,res)=>{
-    const chapter="SELECT novel_chapter.*,novel.novel_name,penname.penname FROM novel_chapter JOIN novel ON novel_chapter.novel_id = novel.novel_id JOIN penname ON novel.penid = penname.penid WHERE novel_chapter.novel_id = ? AND novel_chapter.chapter_id = ?";
-    db.query(chapter,[req.params.novelid,req.params.chapterid],(err,data)=>{
+    const chapter="SELECT novel_chapter.*,novel.novel_name,penname.penname FROM novel_chapter JOIN novel ON novel_chapter.novel_id = novel.novel_id JOIN penname ON novel.penid = penname.penid WHERE novel_chapter.novel_id = ? ORDER BY novel_chapter.chapter_id ASC LIMIT 1 OFFSET ?";
+    db.query(chapter,[req.params.novelid,parseInt(req.params.chapterid-1)],(err,data)=>{
         if (err) return console.log(err);
+        return res.status(200).json(data)
+    })
+})
+router.post("/upload_comment/",(req,res)=>{
+    console.log(req.body)
+    const insert="INSERT INTO comments (novel_id,writer_id,chapter_id,CommentText) VALUES (?,?,?,?)"
+    const value=[req.body.novelid,req.body.writerid,req.body.chapterid,req.body.newComment]
+    db.query(insert,value,(err,data)=>{
+        if (err) return console.log(err);
+        return res.status(200).json("Success upload comment")
+    })
+})
+
+router.get("/fetchcomment/:novelid/:chapterid",(req,res)=>{
+    console.log(req.params)
+    const fetchcomment = "SELECT comments.*, writer.writer_img, writer.writer_name,writer.display_name FROM comments JOIN writer ON comments.writer_id = writer.writer_id WHERE comments.novel_id = ? AND comments.chapter_id = ? ORDER BY comment_id ASC";
+
+    db.query(fetchcomment,[req.params.novelid,req.params.chapterid],(err,data)=>{
+        if(err)return console.log(err);
         return res.status(200).json(data)
     })
 })

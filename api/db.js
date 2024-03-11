@@ -5,4 +5,5 @@ export const db = mysql.createConnection({
     password: '',
     database: 'novelreading',
     port:3307,
+    charset: 'utf8mb4',
   });
