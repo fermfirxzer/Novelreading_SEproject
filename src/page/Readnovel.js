@@ -65,6 +65,8 @@ const Readnovel = () => {
 
     const startIndex = (currentPage - 1) * chaptersPerPage;
     const endIndex = currentPage * chaptersPerPage;
+   
+
     
 
     const handleNextPage = () => {
