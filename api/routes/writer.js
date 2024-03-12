@@ -124,7 +124,6 @@ router.post('/upload_novel', verifyToken, (req, res) => {
         });
       }
     });
-
     function insertNovel() {
       const novelValues = [
         req.body.novelData.name,
@@ -135,7 +134,6 @@ router.post('/upload_novel', verifyToken, (req, res) => {
         req.body.formattedDate,
         req.user.writer_id
       ];
-
       const novelQuery = "INSERT INTO novel(novel_name, novel_desc, penid, novel_img, novel_contentlevel, novel_date, writer_id) VALUES (?,?,?,?,?,?,?)";
 
       db.query(novelQuery, novelValues, (err, data) => {

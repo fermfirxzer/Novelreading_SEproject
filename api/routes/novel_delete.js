@@ -53,4 +53,15 @@ router.post("/deletechapter_id/",verifyToken,(req,res)=>{
     return res.status(200).json("Delete success!")
   })
 })
+router.post("/deletecomment/",verifyToken,(req,res)=>{
+  console.log(req.body);
+  const deletecomment="DELETE FROM comments WHERE comment_id=? AND novel_id=? AND chapter_id=?"
+  db.query(deletecomment,[req.body.comment_id,req.body.novel_id,req.body.chapter_id],(err,data)=>{
+    if(err){
+       console.log(err) 
+       return res.status(500).json(err);
+    }
+    return res.status(200).json("Delete comment success!")
+  })
+})
 export default router;

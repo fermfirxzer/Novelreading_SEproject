@@ -22,7 +22,7 @@ const Readchapter = () => {
     const Allchapter = async () => {
       const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
       setAllchapter(response.data)
-      console.log(response.data)
+      // console.log(response.data)
   }
     fetchchapter();
     Allchapter();
@@ -41,17 +41,6 @@ console.log(chapter)
     img:'https://1417094351.rsc.cdn77.org/publicassets/8115942/profile_picture/profile_picture.gif?169046407'
     
   };
-
-  // const chapter1 = {
-    
-  //     id:1,
-  //     chapterTopic:'บทที่ 1',
-  //     chapterTitle: 'บทนำ',
-  //     content:'<p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;เรื่องราวและที่มาของนิทานอีสป เนื่องจากอีสปมีชีวิตอยู่เมื่อหลายหลายพันปีล่วงมาแล้ว จึงยากที่จะได้ข้อมูลเกี่ยวข้องกับประวัติของอีสปที่ถูกต้องสมบูรณ์ครบถ้วน อย่างไรก็ตาม แม้จะมีข้อมูลอยู่หลายกระแส แต่นักค้นคว้าประวัติส่วนใหญ่ของอีสปก็เห็นพ้องต้องกันว่าข้อมูลต่อไปนี้ "น่าจะเป็นเรื่องราวของอีสปที่ถูกต้องมากที่สุด"&nbsp;</span></p><p class="ql-align-justify"><span style="color: rgb(0, 0, 0);">&nbsp;&nbsp;&nbsp;อีสป เป็นทาสชาวกรีกคนหนึ่งซึ่งมีชีวิตอยู่ในช่วงเวลา 560 - 620 ปีก่อนคริสต์ศักราช หรือ 208 ปี ก่อนพุทธศักราช (พระพุทธเจ้าประสูตรเมื่อ 80 ปี ก่อนพุทธศักราช) นับเวลาถึงปัจจุบันได้ 2,755 - 2,815 ปี เขาอาศัยอยู่ที่เมืองซาร์ดิสบนเกาะซามอสของประเทศกรีก เกาะนี้ตั้งอยู่ที่นอกชายฝั่งของประเทศตุรกีในปัจจุบัน ในสมัยกรีกโบราณชายฝั่งทะเลทั้งหมดของประเทศตุรกีก็มีชาวกรีกอาศัยอยู่อย่างหนาแน่น อีสปเป็นคนพิการ ขี่เหร่ แต่เขามีจิตใจที่งดงาม ซึ่งตรงกันข้ามกับสังขารของเขา เริ่มแรกนั้นอีสปมาจากเทรซซึ่งเป็นนครรัฐแห่งหนึ่งในสมัยโบราณ ปัจจุบันเทรซเป็นดินแดนส่วนหนึ่งของกรีกและบัลแกเรีย อีสปไปทำงานเป็นทาสที่เกาะซามอสกับนายทาส ชื่อเอียดมอน ในระหว่างที่เป็นทาส อีสปได้นำชื่อเสียงมาสู่ตนเองและนายของเขาด้วยการเป็นนักเล่านิทานผู้มีความสามารถจนเป็นที่รู้จักกันดีในท้องถิ่นนั้น ในที่สุดอีสปก็ถูกปลดปล่อยให้เป็นอิสระจากการเป็นทาส เนื่องจากความเป็นผู้ที่มีไหวพริบและสติปัญญาอันเฉียบแหลมของเขานั่นเอง&nbsp;</span></p><p><br></p>',
-      
-    
-  
-  // };
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
 
@@ -86,8 +75,6 @@ console.log(chapter)
     const handleClickBooked = () => {
         setIsBooked(!isBooked);
     };
-
-
 
   return (
     <div className = "" style={{marginTop:'4.5rem',backgroundColor:"#f4f4f4"}}>
@@ -194,7 +181,7 @@ console.log(chapter)
           </div>
 
       </div>
-      <CommentNovel></CommentNovel>
+      <CommentNovel novelid={novelid?novelid:''} chapterid={chapter ? chapter.chapter_id : ''}></CommentNovel>
     </div>
   
   )
