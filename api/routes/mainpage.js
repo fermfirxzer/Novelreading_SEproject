@@ -1,9 +1,8 @@
 import express from 'express';
 import { db } from "../db.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken"
 import cors from "cors";
 const router = express.Router();
+//fetch by category
 router.get("/fetchnovelbycategory/:category", (req, res) => {
 
     const fetchid = "SELECT novel_id FROM novel_category JOIN categories ON categories.category_id = novel_category.category_id WHERE categories.category_name = (?)";
@@ -24,10 +23,32 @@ router.get("/fetchnovelbycategory/:category", (req, res) => {
         })
     })
 })
+//fetch recommendation
+router.get("/fetchnovelbycategoryrandom/:category", (req, res) => {
+    const fetchNovelQuery = `
+        SELECT novel.*, penname.penname 
+        FROM novel 
+        JOIN penname ON novel.penid = penname.penid 
+        JOIN novel_category ON novel.novel_id = novel_category.novel_id 
+        JOIN categories ON novel_category.category_id = categories.category_id 
+        WHERE categories.category_name = ? AND novel.novel_privacy = 1 
+        ORDER BY RAND() 
+        LIMIT 12`;
+
+    db.query(fetchNovelQuery, [req.params.category], (err, result) => {
+        if (err) {
+            console.error("Error fetching novels:", err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+       
+        return res.status(200).json(result);
+    });
+});
 router.get("/fetchnovel/:novelid", (req, res) => {
     console.log(req.params.novelid)
     const novel = "SELECT novel.*, penname.penname FROM novel JOIN penname ON penname.penid = novel.penid WHERE novel.novel_id = ?";
     const category = "SELECT categories.category_name, novel_category.category_type FROM categories JOIN novel_category ON categories.category_id = novel_category.category_id WHERE novel_category.novel_id = ?";
+    const updateQuery = "UPDATE novel SET novel_views = novel_views + 1 WHERE novel_id = ?";
     const result=[];
     db.query(novel,[req.params.novelid],(err,data)=>{
         if (err) return console.log(err);
@@ -35,11 +56,15 @@ router.get("/fetchnovel/:novelid", (req, res) => {
         db.query(category,[req.params.novelid],(err,data)=>{
             if (err) return console.log(err);
             result.push(data);
-            
-            return res.status(200).json(result)
+            db.query(updateQuery, [req.params.novelid], (err, updateResult) => {
+                if (err) return console.log(err);
+                return res.status(200).json(result)
+            });
+           
         })
     })
 })
+//fetch lasted novel add
 router.get("/fetchnovellasted/:limit",(req,res)=>{
     const novel="SELECT * FROM novel WHERE novel_privacy=1 ORDER BY novel_date DESC LIMIT ?"
     db.query(novel,[parseInt(req.params.limit)],(err,data)=>{
@@ -47,20 +72,39 @@ router.get("/fetchnovellasted/:limit",(req,res)=>{
         return res.status(200).json(data);
     })
 })
-router.get("/fetchchapter/:novelid",(req,res)=>{
+//fetchAllchapter in readchapter
+router.get("/fetchAllchapter/:novelid",(req,res)=>{
     const chapter="SELECT * FROM novel_chapter WHERE novel_id=?";
     db.query(chapter,[req.params.novelid],(err,data)=>{
         if (err) return console.log(err);
         return res.status(200).json(data)
     })
 })
+//fetchchapter in readchapter
 router.get("/fetchchapter/:novelid/:chapterid",(req,res)=>{
     const chapter="SELECT novel_chapter.*,novel.novel_name,novel.novel_img,penname.penname FROM novel_chapter JOIN novel ON novel_chapter.novel_id = novel.novel_id JOIN penname ON novel.penid = penname.penid WHERE novel_chapter.novel_id = ? ORDER BY novel_chapter.chapter_id ASC LIMIT 1 OFFSET ?";
+    const updateviews="UPDATE novel_chapter SET chapter_views=chapter_views+1 WHERE novel_id=? AND chapter_id=?"
     db.query(chapter,[req.params.novelid,parseInt(req.params.chapterid-1)],(err,data)=>{
         if (err) return console.log(err);
-        return res.status(200).json(data)
+        db.query(updateviews,[req.params.novelid,req.params.chapterid],(err,result)=>{
+            if(err)return console.log(err);
+            return res.status(200).json(data)
+        })
+       
     })
 })
+
+
+
+
+
+
+
+
+
+
+
+
 router.post("/upload_comment/",(req,res)=>{
     console.log(req.body)
     const insert="INSERT INTO comments (novel_id,writer_id,chapter_id,CommentText) VALUES (?,?,?,?)"
@@ -72,7 +116,7 @@ router.post("/upload_comment/",(req,res)=>{
 })
 router.post("/update_comment/",(req,res)=>{
     console.log(res.body)
-    const updata="UPDATE comments SET CommentText=? WHERE comment_id=? AND writer_id=?"
+    const updata="UPDATE comments SET CommentText=?,Timestamp=NOW() WHERE comment_id=? AND writer_id=?"
     db.query(updata,[req.body.editingcommentText,req.body.editingcommentid,req.body.writerid],(err,data)=>{
         if(err)return res.status(500).json("Internal server error" );
         return res.status(200).json("Update comment success");
@@ -80,7 +124,7 @@ router.post("/update_comment/",(req,res)=>{
 })
 router.get("/fetchcomment/:novelid/:chapterid",(req,res)=>{
     console.log(req.params)
-    const fetchcomment = "SELECT comments.*, writer.writer_img, writer.writer_name,writer.display_name FROM comments JOIN writer ON comments.writer_id = writer.writer_id WHERE comments.novel_id = ? AND comments.chapter_id = ? ORDER BY comment_id ASC";
+    const fetchcomment = "SELECT comments.*, writer.writer_img, writer.writer_name,writer.display_name FROM comments JOIN writer ON comments.writer_id = writer.writer_id WHERE comments.novel_id = ? AND comments.chapter_id = ? ORDER BY comment_id DESC";
 
     db.query(fetchcomment,[req.params.novelid,req.params.chapterid],(err,data)=>{
         if(err)return console.log(err);

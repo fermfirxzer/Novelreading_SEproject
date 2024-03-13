@@ -20,7 +20,7 @@ const Readchapter = () => {
     
     }
     const Allchapter = async () => {
-      const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+      const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
       setAllchapter(response.data)
       // console.log(response.data)
   }
@@ -28,15 +28,6 @@ const Readchapter = () => {
     Allchapter();
 }, [])
 console.log(chapter)
-  const novel = {
-    name:'กระทั่งตาย',
-    writername:'larin',
-    penname: 'ระรินรัก',
-    category: 'Fantasy',
-    publishedDate: '2023-02-15',
-    img:'https://cdn.readawrite.com/articles/13963/13962695/thumbnail/tiny.gif?2'
-  };
-  
   const writer = {
     img:'https://1417094351.rsc.cdn77.org/publicassets/8115942/profile_picture/profile_picture.gif?169046407'
     

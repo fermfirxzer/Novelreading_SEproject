@@ -17,24 +17,42 @@ const Readnovel = () => {
     const [novelData, setNovelData] = useState(null);
     const [category, setCategory] = useState(null);
     const [chapter, setchapter] = useState(null);
+    const [recommend,setrecommend]=useState(null);
     useEffect(() => {
         const fetchnovel = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
             console.log(response.data)
             setNovelData(response.data[0])
             setCategory(response.data[1]);
-
         }
         const fetchchapter = async () => {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+            const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
             setchapter(response.data)
             console.log(response.data)
         }
         fetchnovel();
         fetchchapter();
-    }, [])
-
-
+        
+    }, [novelid])
+    useEffect(()=>{
+        const fetchRecommendations=async()=>{
+            if (category && category.length > 0) {
+                const category_tosend = category[0].category_name;
+                try {
+                    const response = await axios.get(`http://localhost:5000/api/font/fetchnovelbycategoryrandom/${category_tosend}`);
+                    setrecommend(response.data);
+                } catch (err) {
+                    console.log(err);
+                }
+            }    
+           
+        }
+        if (novelData) {
+            console.log(category[0].category_name)
+            fetchRecommendations();
+        }
+    },[novelData,category])
+    
     const [isClicked, setIsClicked] = useState(false);
     const handleClick = () => {
         setIsClicked(!isClicked);
@@ -54,10 +72,6 @@ const Readnovel = () => {
             setIsFollowedWriter(!isFollowedWriter);
         }
     };
-
-
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
 
@@ -84,7 +98,7 @@ const Readnovel = () => {
                 <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='  reading-novel-img-con '>
-                            {novelData && <img src={`/uploads/novel/${novelData.novel_img}`} className='reading-novel-img' alt="Novel Cover" />}
+                            {novelData && <img src={novelData.novel_img!=null?`/uploads/novel/${novelData.novel_img}`:"/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
@@ -187,6 +201,7 @@ const Readnovel = () => {
                                     </div>
                                 </div>
                             ))}
+                            {!chapter && <p>Loading...</p>}
                         </div>
 
                         <div id="pagination" className="chapter-btn-container">
@@ -199,11 +214,11 @@ const Readnovel = () => {
                         <div className='header'>
                             เรื่องที่คุณอาจสนใจ
                         </div>
-                        <div className='related-novel'>
-                            <Swipercate></Swipercate>
-                        </div>
+                        {recommend&&<div className='related-novel'>
+                            <Swipercate novelsData={recommend}></Swipercate>
+                        </div>}
                     </div>
-                    <CommentNovel></CommentNovel>
+                    <CommentNovel novelid={novelid} chapterid={0}></CommentNovel>
                 </div>
             </div>
         </div>
