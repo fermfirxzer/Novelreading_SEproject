@@ -7,6 +7,8 @@ import { AuthContext } from '../context/authContextuser';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import { Co2Sharp } from '@mui/icons-material';
+import { response } from 'express';
 const CommentNovel = ({ novelid, chapterid }) => {
     const { currentUser } = useContext(AuthContext)
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
@@ -108,9 +110,27 @@ const CommentNovel = ({ novelid, chapterid }) => {
         });
         // setNewComment('');
     };
-    const handleEditComment = (comment) => {
-
+    const [editingcommentid, setEditingCommentId] = useState(null)
+    const [editingcommentText, setEditedCommentText] = useState('');
+    const handleEditComment = (commentid) => {
+        setEditingCommentId(commentid);
+        setEditedCommentText('');
     }
+    const handlecancel = (comment) => {
+        setEditingCommentId(null);
+        setEditedCommentText('');
+    }
+    const handleUpdateComment = async() => {
+        const dataTosend={ novelid, chapterid, editingcommentText,editingcommentid, writerid: currentUser.writer_id};
+        try{
+            const response=await axios.post("http://localhost:5000/api/font/upload_comment/",dataTosend);
+            setErrcomment(response.data)
+            // fetchcomment();
+        }catch(err){
+            setErrcomment(response.err)
+            console.log(err)
+        }
+      };
     const handleDeleteComment = async (comment) => {
         try {
             const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment, { withCredentials: true, });
@@ -121,11 +141,10 @@ const CommentNovel = ({ novelid, chapterid }) => {
             console.log(err);
         }
     }
-
     const handleAddEmoji = (emoji) => {
         setNewComment(prevComment => prevComment + emoji);
     };
-
+    
     const [showemojis, setShowemojis] = useState(false);
 
     const emojiList = ['😂', '😊', '❤️', '😀', '🥳', '😎', '🤩', '🤣', '👍', '😭', '🙏', '😘', '🥰', '😍', '🎉', '🌟'];
@@ -194,7 +213,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
 
                     <div className='reading-novel-comment pb-5 px-4'>
                         <div className="container mt-5">
-                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({sampleComments.length})</div>
+                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({Allcomment?currentComment.length:0})</div>
                             {Allcomment && currentComment.map((comment, index) => (
                                 <div className='card mb-3 mt-4' key={index}>
                                     <div className="card-body d-flex justify-content-between">
@@ -214,7 +233,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                             <p className='text-end'>{format(new Date(comment.Timestamp), 'yyyy-MM-dd HH:mm:ss')}</p>
                                             <div className=''>
                                                 {comment.writer_id === currentUser.writer_id && (<>
-                                                    <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment)}>Edit</button>
+                                                    <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment.comment_id)}>Edit</button>
                                                     <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delte</button>
                                                 </>
                                                 )}
@@ -224,19 +243,19 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                     </div>
 
                                     <div className=''>
-                                        {1 && (
+                                        {editingcommentid===comment.comment_id && (
                                             <>
-                                            <div>
-                                                <textarea className='form-control'
-                                                    // value={editedCommentText}
-                                                    onChange={1}
-                                                />
-                                                {/* <button onClick={handleUpdateComment}>Save</button> */}
-                                                
-                                            </div>
-                                            <div className=''>
-                                                <button className='follow-btn text-black mt-3 mb-3'nClick={1}>Submit</button>
-                                                <button className='follow-btn text-black mt-3 mb-3'nClick={1}>Cancel</button>
+                                                <div>
+                                                    <textarea className='form-control'
+                                                        value={editingcommentText}
+                                                        onChange={(e)=>setEditedCommentText(e.target.value)}
+                                                    />
+
+
+                                                </div>
+                                                <div className=''>
+                                                    <button className='follow-btn text-black mt-3 mb-3' onClick={handleUpdateComment}>Submit</button>
+                                                    <button className='follow-btn text-black mt-3 mb-3' onClick={handlecancel}>Cancel</button>
                                                 </div>
                                             </>
                                         )}

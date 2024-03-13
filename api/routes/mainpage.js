@@ -1,7 +1,7 @@
 import express from 'express';
+import { db } from "../db.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
-import { db } from "../db.js";
 import cors from "cors";
 const router = express.Router();
 router.get("/fetchnovelbycategory/:category", (req, res) => {
@@ -55,7 +55,7 @@ router.get("/fetchchapter/:novelid",(req,res)=>{
     })
 })
 router.get("/fetchchapter/:novelid/:chapterid",(req,res)=>{
-    const chapter="SELECT novel_chapter.*,novel.novel_name,penname.penname FROM novel_chapter JOIN novel ON novel_chapter.novel_id = novel.novel_id JOIN penname ON novel.penid = penname.penid WHERE novel_chapter.novel_id = ? ORDER BY novel_chapter.chapter_id ASC LIMIT 1 OFFSET ?";
+    const chapter="SELECT novel_chapter.*,novel.novel_name,novel.novel_img,penname.penname FROM novel_chapter JOIN novel ON novel_chapter.novel_id = novel.novel_id JOIN penname ON novel.penid = penname.penid WHERE novel_chapter.novel_id = ? ORDER BY novel_chapter.chapter_id ASC LIMIT 1 OFFSET ?";
     db.query(chapter,[req.params.novelid,parseInt(req.params.chapterid-1)],(err,data)=>{
         if (err) return console.log(err);
         return res.status(200).json(data)
@@ -70,7 +70,14 @@ router.post("/upload_comment/",(req,res)=>{
         return res.status(200).json("Success upload comment")
     })
 })
-
+router.post("/update_comment/",(req,res)=>{
+    console.log(res.body)
+    const updata="UPDATE comments SET CommentText=? WHERE comment_id=? AND writer_id=?"
+    db.query(updata,[req.body.editingcommentText,req.body.editingcommentid,req.body.writerid],(err,data)=>{
+        if(err)return res.status(500).json("Internal server error" );
+        return res.status(200).json("Update comment success");
+    })
+})
 router.get("/fetchcomment/:novelid/:chapterid",(req,res)=>{
     console.log(req.params)
     const fetchcomment = "SELECT comments.*, writer.writer_img, writer.writer_name,writer.display_name FROM comments JOIN writer ON comments.writer_id = writer.writer_id WHERE comments.novel_id = ? AND comments.chapter_id = ? ORDER BY comment_id ASC";
@@ -80,4 +87,5 @@ router.get("/fetchcomment/:novelid/:chapterid",(req,res)=>{
         return res.status(200).json(data)
     })
 })
+
 export default router;
