@@ -49,7 +49,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                         </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
+                        <Dropdown.Item href="/myreading">My Reading</Dropdown.Item>
                         <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item href="#/action-4">Logout</Dropdown.Item>
@@ -103,7 +103,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                         </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
+                        <Dropdown.Item href="/myreading">My Reading</Dropdown.Item>
                         <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item href="#/action-4" onClick={onClicklogout}>Logout</Dropdown.Item>

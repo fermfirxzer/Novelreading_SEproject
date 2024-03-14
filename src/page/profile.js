@@ -114,7 +114,7 @@ const Profile = () => {
                       </Dropdown.Toggle>
                       <Dropdown.Menu className="dropdown-menu" >
                         <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">My Reading</Dropdown.Item>
+                        <Dropdown.Item href="/myreading">My Reading</Dropdown.Item>
                         <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
                       </Dropdown.Menu>
                 </Dropdown>
