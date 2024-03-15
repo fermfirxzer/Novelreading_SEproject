@@ -1,10 +1,8 @@
 
 
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../context/authContextuser';
 import axios from 'axios';
 import NavbarReactBootstrap from '../component/Navbar.js';
 import { Link, useParams } from 'react-router-dom';
@@ -12,12 +10,40 @@ import Swipercate from '../Swipercate.js';
 import '../index.css';
 import CommentNovel from '../component/CommentNovel';
 import BookIcon from '@mui/icons-material/Book';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 const Readnovel = () => {
     const { novelid } = useParams();
+    const { currentUser } = useContext(AuthContext)
     const [novelData, setNovelData] = useState(null);
     const [category, setCategory] = useState(null);
     const [chapter, setchapter] = useState(null);
-    const [recommend,setrecommend]=useState(null);
+    const [recommend, setrecommend] = useState(null);
+    const fetchbookmark = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmark/${currentUser.writer_id}/${novelid}`);
+            console.log(response.data)
+            setIsBooked(response.data);
+            
+        } catch (err) {
+            console.log(err)
+
+        }
+
+
+    }
+    const fetchlike=async()=>{
+        try {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchlike/${currentUser.writer_id}/${novelid}`);
+            console.log(response.data)
+            setIslikeClicked(response.data);
+        } catch (err) {
+            console.log(err)
+
+        }
+    }
     useEffect(() => {
         const fetchnovel = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
@@ -30,12 +56,14 @@ const Readnovel = () => {
             setchapter(response.data)
             console.log(response.data)
         }
+
         fetchnovel();
         fetchchapter();
-        
+        fetchbookmark();
+        fetchlike();
     }, [novelid])
-    useEffect(()=>{
-        const fetchRecommendations=async()=>{
+    useEffect(() => {
+        const fetchRecommendations = async () => {
             if (category && category.length > 0) {
                 const category_tosend = category[0].category_name;
                 try {
@@ -44,23 +72,47 @@ const Readnovel = () => {
                 } catch (err) {
                     console.log(err);
                 }
-            }    
-           
+            }
+
         }
         if (novelData) {
             console.log(category[0].category_name)
             fetchRecommendations();
         }
-    },[novelData,category])
-    
-    const [isClicked, setIsClicked] = useState(false);
-    const handleClick = () => {
-        setIsClicked(!isClicked);
+    }, [novelData, category])
+
+    const [islikeClicked, setIslikeClicked] = useState(false);
+    const handlelikeClick = async() => {
+        try {
+            if (!islikeClicked) {
+                setIslikeClicked(true);
+                await axios.post("http://localhost:5000/api/font/addlike/", { writerid: currentUser.writer_id, novelid: novelid });
+            } else {
+                setIslikeClicked(false);
+                await axios.post("http://localhost:5000/api/font/removelike/", { writerid: currentUser.writer_id, novelid: novelid });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+       
     };
 
     const [isBooked, setIsBooked] = useState(false);
-    const handleClickBooked = () => {
-        setIsBooked(!isBooked);
+    const handleClickBooked = async () => {
+        try {
+            if (!isBooked) {
+                setIsBooked(true);
+                await axios.post("http://localhost:5000/api/font/addbookmark/", { writerid: currentUser.writer_id, novelid: novelid });
+            } else {
+                setIsBooked(false);
+                await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: novelid });
+                
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        console.log(isBooked)
     };
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
@@ -75,13 +127,13 @@ const Readnovel = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
 
-    const totalPages = chapter?Math.ceil(chapter.length / chaptersPerPage):0;
+    const totalPages = chapter ? Math.ceil(chapter.length / chaptersPerPage) : 0;
 
     const startIndex = (currentPage - 1) * chaptersPerPage;
     const endIndex = currentPage * chaptersPerPage;
-   
 
-    
+
+
 
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
@@ -96,11 +148,11 @@ const Readnovel = () => {
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0'>
             <NavbarReactBootstrap />
 
-            <div  >
+            <div>
                 <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='  reading-novel-img-con '>
-                            {novelData && <img src={novelData.novel_img!=null?`/uploads/novel/${novelData.novel_img}`:"/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
+                            {novelData && <img src={novelData.novel_img != null ? `/uploads/novel/${novelData.novel_img}` : "/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
@@ -119,8 +171,8 @@ const Readnovel = () => {
                                 {novelData && <p>{novelData.novel_desc} </p>}
                             </div>
                             <div className='function-container'>
-                                <button className='heart-btn' onClick={handleClick}>
-                                    <img src={isClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
+                                <button className='heart-btn' onClick={handlelikeClick}>
+                                    <img src={islikeClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
                                 </button>
                                 <button className='add-playlist'>
                                     <BookIcon style={{ color: isBooked ? '#00cbc3' : 'black' }}></BookIcon>
@@ -203,7 +255,7 @@ const Readnovel = () => {
                                     </div>
                                 </div>
                             ))}
-                            {!chapter && <p>Loading...</p>}
+                            {!chapter && <p className='ms-5'>Loading...</p>}
                         </div>
 
                         <div id="pagination" className="chapter-btn-container">
@@ -216,7 +268,7 @@ const Readnovel = () => {
                         <div className='header'>
                             เรื่องที่คุณอาจสนใจ
                         </div>
-                        {recommend&&<div className='related-novel'>
+                        {recommend && <div className='related-novel'>
                             <Swipercate novelsData={recommend}></Swipercate>
                         </div>}
                     </div>

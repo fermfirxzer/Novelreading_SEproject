@@ -143,6 +143,61 @@ router.get("/fetchwriter/:writerid",(req,res)=>{
         return res.status(200).json(data[0])
     })
 })
+router.get("/fetchbookmark/:writerid/:novelid",(req,res)=>{
+    const select="SELECT * FROM bookmarks WHERE novel_id=? AND writer_id=?";
+    db.query(select,[req.params.novelid,req.params.writerid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+
+        if(data.length>0){
+            return res.status(200).json(true)
+        }else{
+            return res.status(200).json(false)
+        }
+    })
+})
+router.get("/fetchlike/:writerid/:novelid",(req,res)=>{
+    const select="SELECT * FROM novel_likes WHERE novel_id=? AND writer_id=?";
+    db.query(select,[req.params.novelid,req.params.writerid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+
+        if(data.length>0){
+            return res.status(200).json(true)
+        }else{
+            return res.status(200).json(false)
+        }
+    })
+})
+router.post("/addbookmark/",(req,res)=>{
+    const insert="INSERT into bookmarks (writer_id,novel_id) VALUES (?,?)";
+    db.query(insert,[req.body.writerid,req.body.novelid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+        return res.status(200);
+    })
+})
+router.post("/removebookmark/",(req,res)=>{
+    
+    const insert="DELETE FROM bookmarks WHERE writer_id=? AND novel_id=?";
+    db.query(insert,[req.body.writerid,req.body.novelid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+        return res.status(200);
+    })
+})
+router.post("/addlike/",(req,res)=>{
+    const insert="INSERT into novel_likes (writer_id,novel_id) VALUES (?,?)";
+    db.query(insert,[req.body.writerid,req.body.novelid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+        return res.status(200);
+    })
+})
+router.post("/removelike/",(req,res)=>{
+    
+    const insert="DELETE FROM novel_likes WHERE writer_id=? AND novel_id=?";
+    db.query(insert,[req.body.writerid,req.body.novelid],(err,data)=>{
+        if (err)return res.status(400).json(err);
+        return res.status(200);
+    })
+})
+
 router.post("/update_writerinfo/",(req,res)=>{
     console.log(req.body)
 })
@@ -168,4 +223,5 @@ router.post("/update_writerpassword/",(req,res)=>{
     })
     
 })
+
 export default router;

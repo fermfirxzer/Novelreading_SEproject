@@ -66,7 +66,6 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
         <Navbar.Collapse id="basic-navbar-nav" style = {{justifyContent:'space-between'}}>
           <Nav className="mr-auto flex navleft" >
             <Nav.Link href="/novel" className = "bordercustom" >นิยาย</Nav.Link>
-            <Nav.Link href="/cartoon" className = "bordercustom">การ์ตูน</Nav.Link>
            
           </Nav>
           
@@ -99,7 +98,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                       <Dropdown.Menu className="dropdown-menu">
                         <Dropdown.Item href="/profile" className='w-auto'>
                             <img src = "https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn"/>
-                            <span className='mx-3'>display name</span>
+                            <span className='mx-3'>{currentUser.writer_name}</span>
                         </Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>

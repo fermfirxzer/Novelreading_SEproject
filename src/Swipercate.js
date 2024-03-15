@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 const Swipercate = ({ novelsData }) => {
-    // console.log(novelsData)
+    
     return (
         <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -16,8 +16,8 @@ const Swipercate = ({ novelsData }) => {
             navigation
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log('slide change')}
+            // onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log('slide change')}
             breakpoints={{
                 320: {
                     slidesPerView: 2,
