@@ -21,7 +21,7 @@ app.use("/api/novel", novelRoutes)
 app.use("/api/writer",writerRoutes);
 app.use("/api/novel_delete",novel_delete)
 app.use("/api/font",fontRoutes)
-const storage = multer.diskStorage({
+const novel = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../public/uploads/novel/')
   },
@@ -29,8 +29,16 @@ const storage = multer.diskStorage({
     cb(null, file.originalname)
   }
 })
-const upload = multer({ storage: storage })
-app.post("/api/upload", upload.single('file'), function (req, res) {
+const profile = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../public/uploads/profile/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const uploadnovel = multer({ storage: novel })
+app.post("/api/upload", uploadnovel.single('file'), function (req, res) {
   
   if (!req.file) {
     return res.status(400).json({ error: "No file provided" });
@@ -39,6 +47,22 @@ app.post("/api/upload", upload.single('file'), function (req, res) {
   res.status(200).json(file.filename)
 
 })
+
+const uploadprofile = multer({ storage: profile })
+
+app.post("/api/uploadprofile", uploadprofile.single('file'), function (req, res) {
+  
+  if (!req.file) {
+    return res.status(400).json({ error: "No file provided" });
+  }
+  const file = req.file;
+  res.status(200).json(file.filename)
+
+})
+
+
+
+
 app.delete("/api/delete/:filename", function (req, res) {
   console.log("this is delete")
   const filename = req.params.filename;
@@ -52,6 +76,7 @@ app.delete("/api/delete/:filename", function (req, res) {
     res.status(200).json({ message: "File deleted successfully" });
   });
 });
+
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
@@ -59,6 +84,12 @@ db.connect((err) => {
   }
   console.log('Connected to MySQL');
 });
+
+
+
+
+
+
 
 // Example API endpoint to fetch data from MySQL
 // app.get('http://localhost:5000/api/tasks', (req, res) => {

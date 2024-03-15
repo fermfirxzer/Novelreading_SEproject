@@ -40,6 +40,7 @@ const Uploadnovel = () => {
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
+
     setCount(1)
     if (selectedFile) {
       const fileType = selectedFile.type;
@@ -54,6 +55,7 @@ const Uploadnovel = () => {
         image: selectedFile
       }));
     }
+    console.log(novelData.image)
   };
   // useEffect(() => {
   //   const fetchnovel = async () => {
@@ -198,7 +200,6 @@ const Uploadnovel = () => {
         novelid:res.data||null,
       }
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
-
       setError("Success upload");
       // setTimeout(() => {
       //   navigate("/writer/managewriting");

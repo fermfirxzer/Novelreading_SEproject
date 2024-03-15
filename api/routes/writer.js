@@ -16,6 +16,7 @@ router.post('/register', (req, res) => {
     return res.status(400).json("Invalid email address");
   }
   if (!/[a-z]/.test(req.body.password) || !/[A-Z]/.test(req.body.password)) return res.status(400).json("Password must contain both uppercase and lowercase characters");
+  if (req.body.password.length < 4 || req.body.password.length > 12) return res.status(400).json("Password must be 4-12 characters long")
   if (req.body.password != req.body.confirmpassword) return res.status(400).json("Password and ConfirmPassword not matching")
   let q = "SELECT * FROM writer WHERE writer_email=?";
   db.query(q, [req.body.email], (err, data) => {
@@ -354,7 +355,7 @@ router.post('/upadate_penname', verifyToken, (req, res) => {
 //upload Chapter
 ////////////////////////////////////////////////////////////////////////////////////
 router.post("/upload_chapter/", (req, res) => {
-  console.log("upload", req.body)
+  const updatechaptercount="UPDATE novel SET novel_chaptercount=novel_chaptercount+1 WHERE novel_id=?"
   if (!req.body.novelid) return res.status(400).json("An error occurred");
   const maxChapterIdQuery = "SELECT MAX(chapter_id) as maxChapterId FROM novel_chapter WHERE novel_id=?";
   db.query(maxChapterIdQuery, [req.body.novelid], (err, data) => {
@@ -372,7 +373,12 @@ router.post("/upload_chapter/", (req, res) => {
     ]
     db.query(q, value, (err, data) => {
       if (err) return res.status(500).json(err);
-      return res.status(200).json("success insert")
+      db.query(updatechaptercount,[req.body.novelid],(err,result)=>{
+        if (err) return res.status(500).json(err);
+        return res.status(200).json("success insert")
+      })
+      
+      
     })
   })
 })

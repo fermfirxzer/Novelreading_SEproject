@@ -15,6 +15,7 @@ import Register  from './page/writer/register.js';
 import Profile from './page/profile.js';
 import Viewnovel from './page/writer/viewnovel.js';
 import Uploadchapter from './page/writer/uploadchapter.js';
+import Search from './page/search.js';
 function App() {
     
   
@@ -34,6 +35,7 @@ function App() {
             <Route path="/profile" element={<Profile/>} />
             <Route path="/writer/viewnovel" element={<Viewnovel/>} />
             <Route path="/writer/uploadchapter" element={<Uploadchapter />} />
+            <Route path="/search" element={<Search />} />
           </Routes>
       </Router>
     

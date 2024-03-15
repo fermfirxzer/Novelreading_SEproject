@@ -237,11 +237,11 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                             </div>
                                         </div>
                                         <div className=''>
-                                            <p className='text-end'>formatDistanceToNow({format(new Date(comment.Timestamp), 'yyyy-MM-dd HH:mm:ss')})</p>
+                                            <p className='text-end'>{formatDistanceToNow(new Date(comment.Timestamp))}</p>
                                             <div className=''>
                                                 {comment.writer_id === currentUser.writer_id && (<>
                                                     <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment.comment_id)}>Edit</button>
-                                                    <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delte</button>
+                                                    <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delete</button>
                                                 </>
                                                 )}
                                             </div>

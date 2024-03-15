@@ -1,5 +1,6 @@
 import express from 'express';
 import { db } from "../db.js";
+import bcrypt from "bcrypt";
 import cors from "cors";
 const router = express.Router();
 //fetch by category
@@ -132,4 +133,39 @@ router.get("/fetchcomment/:novelid/:chapterid",(req,res)=>{
     })
 })
 
+
+
+
+router.get("/fetchwriter/:writerid",(req,res)=>{
+    const selectwriter="SELECT writer_id,writer_name,writer_email,writer_img,display_name FROM writer WHERE writer_id=?";
+    db.query(selectwriter,[req.params.writerid],(err,data)=>{
+        if(err)return console.log(err);
+        return res.status(200).json(data[0])
+    })
+})
+router.post("/update_writerinfo/",(req,res)=>{
+    console.log(req.body)
+})
+router.post("/update_writerpassword/",(req,res)=>{
+    
+    console.log(req.body.password,req.body.newPassword,req.body.newConfirmPassword)
+    if (!req.body.password || !req.body.newPassword || !req.body.newConfirmPassword)return res.status(400).json("Please fill in all information");
+    if (req.body.newPassword.length < 4 || req.body.newPassword.length > 12) return res.status(400).json("Password must be 4-12 characters long")
+    if (!/[a-z]/.test(req.body.newPassword) || !/[A-Z]/.test(req.body.newPassword)) return res.status(400).json("Password must contain both uppercase and lowercase characters");
+    if (req.body.newPassword !== req.body.newConfirmPassword) return res.status(400).json("Password and ConfirmPassword not matching")
+    const selectpassword="SELECT writer_password FROM writer WHERE writer_id=?";
+    const updatepassword="UPDATE writer SET writer_password=? WHERE writer_id=?"
+    db.query(selectpassword,[req.body.writerid],(err,data)=>{
+        if(err)return res.status(400).json(err);
+        const ispasswordcorrect = bcrypt.compareSync(req.body.password, data[0].writer_password);
+        if (!ispasswordcorrect) return res.status(400).json("Wrong Old password!");
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(req.body.newPassword,salt);
+        db.query(updatepassword,[hash,req.body.writerid],(err,data)=>{
+            if(err)return res.status(400).json(err);
+            return res.status(200).json("Password change Success!");
+        })
+    })
+    
+})
 export default router;

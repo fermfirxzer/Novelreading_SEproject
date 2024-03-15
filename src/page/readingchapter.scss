@@ -62,3 +62,22 @@
     margin-top: 100px;
     margin-bottom: 50px;
 }
+.header{
+
+}
+.search-right{
+    color: white;
+    .search-item{
+        padding: 1rem;
+        background-color: #1e293b;
+        margin-top: 15px;
+    }
+    .genre-box{
+        display: flex;
+        color: #94A3b8;
+        width: 50px;
+        padding: 4px 10px 4px 6px;
+        background-color: #475569;
+        border: none;
+    }
+}
