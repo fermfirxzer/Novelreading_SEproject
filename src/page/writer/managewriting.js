@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import NavbarReactBootstrap from '../../component/Navbar';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Dropdown, Button, Container } from 'react-bootstrap';
 import Select from 'react-select';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -18,10 +18,9 @@ const Managewriting = () => {
 
     const { currentUser } = useContext(AuthContext)
     const [novelsData, setNovelsData] = useState([]);
-    const [checkedNovels, setCheckedNovels] = useState(new Set());
-    const [selectedOptions, setSelectedOptions] = useState({});
+    
     const [totalpage, setTotalpage] = useState(0);
-    const [isChecked, setIsChecked] = useState(false);
+   
     const [page, setPage] = useState(0);
     const writerid = currentUser.writer_id;
     const navigate=useNavigate()
@@ -47,43 +46,10 @@ const Managewriting = () => {
 
     }, [page,novelsData.novel_privacy])
 
-    const toggleCheckbox = (novelId) => {
-        setCheckedNovels((prevChecked) => {
-            const updatedChecked = new Set(prevChecked);
-            if (prevChecked.has(novelId)) {
-                updatedChecked.delete(novelId);
-            } else {
-                updatedChecked.add(novelId);
-            }
-
-            return updatedChecked;
-        });
-    };
-
-    const handleCheckboxChangeAll = () => {
-        // const allNovelIds = novelsData.map(novel => novel.novel_id);
-        // const updatedChecked = new Set(isChecked ? [] : allNovelIds);
-        // setCheckedNovels(updatedChecked);
-        // setIsChecked(!isChecked);
-    };
+  
 
 
 
-    const [selectedOption, setSelectedOption] = useState(null);
-
-    const handleDropdownChangeAll = (selectedOption) => {
-        const updatedChecked = new Set(checkedNovels);
-
-        for (const novelId of updatedChecked) {
-            setSelectedOptions((prevOptions) => ({
-                ...prevOptions,
-                [novelId]: selectedOption
-            }));
-        }
-
-        setSelectedOption(selectedOption);
-
-    };
 
     const handleDropdownChange=async(option,novel_id)=>{
         const novel_privacy=option.value;
@@ -133,13 +99,34 @@ const Managewriting = () => {
         { value: 0, label: <div>< CircleIcon className='dot' style={{ color: "#eee" }} /> ไม่เผยแพร่</div> },
     ];
 
+
+
+
+    const [sortBy, setSortBy] = useState('latest');
+   
+    const handleSortChange = (value) => {
+        setSortBy(value);
+    };
+       
+   
+
   return (
     <div style={{ marginTop: '5rem' }}>
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
         <Container style={{width:'65%'}}>
+                
                 <div className='headtopic'>
-                    Writing
-                    <ExpandMoreIcon></ExpandMoreIcon>
+                    <Dropdown   className='mt-2' >
+                        My Writing
+                        <Dropdown.Toggle className = "dropdown-custom" variant="primary" id="dropdown-basic "  >
+                            <ExpandMoreIcon style={{color:"black"}}></ExpandMoreIcon> 
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu className="dropdown-menu" >
+                            <Dropdown.Item href="/writer/managewriting">My Writing</Dropdown.Item>
+                            <Dropdown.Item href="/myreading">My Reading</Dropdown.Item>
+                            <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
                 <div className='flex'>
                     <div className='head-writing'>
@@ -155,22 +142,23 @@ const Managewriting = () => {
                 </div>
                 <div className='flex'>
                     <div className='manage-btn-container'>
-                        <div className='checkbox-con'>
-                            <Form.Check
-                                type="checkbox"
-                                className="custom-checkbox"
-                                onChange={handleCheckboxChangeAll}
-                            />
-
-                        </div>
-                        <div className='Select-con'>
-                            <Select
-                                options={options}
-                                value={selectedOption}
-                                onChange={handleDropdownChangeAll}
-                                isDisabled={!checkedNovels.size > 0}
-
-                            />
+                        <div className=''>
+                            <div className='mt-5'>
+                                    <Dropdown className="mt-2 mx-2"> 
+                                        <div className="d-flex align-items-center text-center ">
+                                            <h5>{sortBy === 'latest' ? 'ใหม่สุด' : sortBy === 'oldest' ? 'เก่าสุด' : 'ยอดนิยม'}</h5> 
+                                            <Dropdown.Toggle className="dropdown-custom " variant="primary" id="dropdown-sort">
+                                                <ExpandMoreIcon style={{color:"black"}}></ExpandMoreIcon> 
+                                            </Dropdown.Toggle>
+                                        </div>
+                                        <Dropdown.Menu className="dropdown-menu" align="end">
+                                            <Dropdown.Item onClick={() => handleSortChange('latest')}>ใหม่สุด</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleSortChange('oldest')}>เก่าสุด</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleSortChange('mostlike')}>ยอดนิยม</Dropdown.Item>
+                                            
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,16 +171,7 @@ const Managewriting = () => {
                         <div className='manage-writing-container'>
 
                             <div className='container-left'>
-                                <div className='checkbox-con'>
-                                    <Form.Check
-                                        type="checkbox"
-                                        className="custom-checkbox"
-                                        value={novel.novel_id}
-                                        checked={checkedNovels.has(novel.novel_id)}
-                                        onChange={() => toggleCheckbox(novel.novel_id)}
-                                    />
-                                </div>
-                                {/* <img src="/image1.jpg" alt="imgnovel" className='novel-img-manage'/> */}
+                           
                                 <img src={`/uploads/novel/${novel.novel_img}`} alt="imgnovel" className='novel-img-manage' />
                                 <div className='describe-con'>
                                     <div className='describe'>
@@ -233,7 +212,7 @@ const Managewriting = () => {
                 ))}
                 <div className='row mb-5 flex'>
                     <div className='col-md-2 col-4 text-center mr-4'>
-                        <button type="button" className='btn btn-secondary btn-block' onClick={handleNewerClick}> Newer</button>
+                        <button type="button" className='btn btn-secondary btn-block' onClick={handleNewerClick}> Previous</button>
                        
                     </div>
                     <div className='col-md-8 col-4'>
@@ -245,7 +224,7 @@ const Managewriting = () => {
                         </select>
                     </div>
                     <div className='col-md-2 col-4 text-center'>
-                        <button type="button" className='btn btn-secondary btn-block' onClick={handleOlderClick}> Older</button>
+                        <button type="button" className='btn btn-secondary btn-block' onClick={handleOlderClick}> Next</button>
                        
                     </div>
                 </div>

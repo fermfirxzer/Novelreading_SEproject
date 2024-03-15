@@ -23,11 +23,6 @@ const Myreading = () => {
 
 
 
-    const [sortBy, setSortBy] = useState('latest');
-    const handleSortChange2 = (value) => {
-        setSortBy(value);
-      };
-       
   
   
     // Sample novels data
@@ -37,6 +32,14 @@ const Myreading = () => {
         { id: 3, title: 'ddd', author: 'Author 3', date: '2023-03-20', chapters: 8, views: 150, likes: 60 ,img:"https://www.osemocphoto.com/collectManga/13758/13758_cover.jpg?ver=1"},
       ];
     
+
+
+      
+    const [sortBy, setSortBy] = useState('latest');
+    const handleSortChange2 = (value) => {
+        setSortBy(value);
+    };
+       
     // Sort novels based on selected option
     let sortedNovels = [...novelsData];
     if (sortBy === 'latest') {
@@ -140,11 +143,10 @@ const Myreading = () => {
                     <h3>ชั้นหนังสือ</h3>
                 </span>
                 <span className={`clickable-tab ${activeTab === 'follow' ? 'active' : ''}`} onClick={() => handleTabClick('follow')}>
-                    <h3>ติดตาม</h3>
+                    <h3>นิยายที่ถูกใจ</h3>
                 </span>
             </div>
             <div className="container min-height">
-                {activeTab === 'books' && (
                     <div className="container min-height ">
                         <div className='mb-3'>
                                 <Dropdown className="mt-2 mx-2"> 
@@ -201,9 +203,10 @@ const Myreading = () => {
                             ))}
                         </div>
                     </div>
-                )}
+                
 
-                {activeTab === 'follow' && (
+                {/* {activeTab === 'follow' && (
+                  
                     <div className="container my-5 d-flex justify-content-center ">
                        
                         <div className="col-md-5 border-con mx-5">
@@ -246,7 +249,7 @@ const Myreading = () => {
                             ))}
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
 
            

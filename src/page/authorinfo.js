@@ -58,15 +58,10 @@ const Authorinfo = () => {
                   </div>
                  
                 </div>
-                {/* <div className="">
-                    <button className="btn btn-primary" onClick={handleFollowClick}>
-                      Follow
-                    </button>
-                </div> */}
             </div>
         </div>
         <div>
-          <h1 className="border-bottom mb-5">ผลงาน บลูเบลล์วี่</h1>
+          <h1 className="border-bottom my-5">ผลงาน บลูเบลล์วี่</h1>
           <div className='mb-3'>
               <Dropdown className="mt-2 mx-2"> 
                   <div className="d-flex align-items-center text-center ">
