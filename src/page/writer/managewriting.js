@@ -5,6 +5,7 @@ import Select from 'react-select';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircleIcon from '@mui/icons-material/Circle';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+
 import "./managewrting.scss"
 import "./authorupload.scss"
 import axios from 'axios';
@@ -130,7 +131,6 @@ const Managewriting = () => {
     const options = [
         { value: 1, label: <div><CircleIcon className='dot' /> เผยแพร่</div> },
         { value: 0, label: <div>< CircleIcon className='dot' style={{ color: "#eee" }} /> ไม่เผยแพร่</div> },
-        { value: 2, label: <div>< CircleIcon className='dot' style={{ color: "red" }} /> ลบ</div> },
     ];
 
   return (
@@ -234,6 +234,7 @@ const Managewriting = () => {
                 <div className='row mb-5 flex'>
                     <div className='col-md-2 col-4 text-center mr-4'>
                         <button type="button" className='btn btn-secondary btn-block' onClick={handleNewerClick}> Newer</button>
+                       
                     </div>
                     <div className='col-md-8 col-4'>
                         <select className='form-control' onChange={handlePageChange} value={page}>
@@ -245,6 +246,7 @@ const Managewriting = () => {
                     </div>
                     <div className='col-md-2 col-4 text-center'>
                         <button type="button" className='btn btn-secondary btn-block' onClick={handleOlderClick}> Older</button>
+                       
                     </div>
                 </div>
             </Container>

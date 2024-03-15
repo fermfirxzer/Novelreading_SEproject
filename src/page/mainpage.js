@@ -136,7 +136,7 @@ const Mainpage = () => {
     
     }, []);
 
-   
+    
     return (
         <div style={{ marginTop: '4rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap />
@@ -225,6 +225,7 @@ const Mainpage = () => {
                     </button>
                 )} */}
             </div>
+         
 
 
 

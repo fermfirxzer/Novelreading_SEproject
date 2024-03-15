@@ -170,8 +170,8 @@ const Uploadchapter = () => {
                             <input type="text" className='form-control' name='title' value={chapter.title} onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'></input>
                             {errtitle && <p className='error'>{errtitle}</p>}
                         </div>
-                        <div className='col-2 chapter-right paddingtopbottom10' onClick={deletechapter}>
-                            <button type='submit'>Delete</button>
+                        <div className='col-2 chapter-right paddingtopbottom10' >
+                            <button type='submit' style={{backgroundColor:'#00cbc3',color:"#fff"}} onClick={deletechapter} className='btn btn-danger border-0'>Delete</button>
                         </div>
                     </div>
 
@@ -193,7 +193,7 @@ const Uploadchapter = () => {
                         </div>
                     </div>
                 </div>
-                <div className='chapter-content backtheme mt-4 p-3'>
+                <div className='chapter-content backtheme mt-4 p-3 '>
                     <div className='header'>
                         <h3>เนื้อหาที่บันทึก</h3>
                     </div>
@@ -202,13 +202,13 @@ const Uploadchapter = () => {
                         <div dangerouslySetInnerHTML={{ __html: content }} />
                     </div>
                 </div>
-                <div className='form-control text-center'>
+                <div className='text-center mt-5'>
                     {errsubmit && <p className='error'>{errsubmit}</p>}
                     <div className='d-inline-block mr-2'>
-                        <button className='form-control'>ยกเลิก</button>
+                        <button style={{width:"10rem",backgroundColor:'#fff',borderColor:"#dfdfdf"}} className='form-control border-1 rounded-pill p-2 mx-3'>ยกเลิก</button>
                     </div>
                     <div className='d-inline-block'>
-                        <button className='form-control' onClick={state.chapter ? update : handlesubmit}>บันทึก</button>
+                        <button style={{backgroundColor:'#00cbc3',color:"#fff",width:"10rem"}} className='form-control btn  border-0 rounded-pill p-2 mx-3' onClick={state.chapter ? update : handlesubmit}>บันทึก</button>
                     </div>
                 </div>
             </div>

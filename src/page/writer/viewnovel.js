@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import "./managewrting.scss"
+import "./viewnovel.scss"
 import NavbarReactBootstrap from '../../component/Navbar';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
+import CommentIcon from '@mui/icons-material/Comment';
+import CircleIcon from '@mui/icons-material/Circle';
+import Select from 'react-select';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 const Viewnovel = () => {
@@ -148,6 +154,9 @@ const Viewnovel = () => {
         });
     }
     console.log(chapters)
+
+
+    
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -176,7 +185,7 @@ const Viewnovel = () => {
                     <div className='header text-center col-8 col-md-6'>
                         <div className='head-box header-right d-flex' style={{ marginTop: 'auto' }}>
                             <button type="submit" className='form-control' onClick={handleEdit}>แก้ไข</button>
-                            <button type="submit" className='form-control' onClick={handleDelete}>ลบ</button>
+                            <button type="submit" className='form-control' style={{backgroundColor:"#00cbc3" ,color:"#fff"}} onClick={handleDelete}>ลบ</button>
                         </div>
                     </div>
                 </div>
@@ -190,47 +199,41 @@ const Viewnovel = () => {
                         <h6>เขียนโดย :{novel.penname}</h6>
                     </div>
                 </div>
-                <div className='novel-box'>
-                    <h3>จัดการงานเขียน</h3>
+                <div className='novel-box my-5'>
+                    <div className='d-flex justify-content-center my-5'><h2 >จัดการตอน</h2></div>
                     <div className='novel-box-header'>
-                        <span className=''>ตอนทั้งหมด</span>
-                        <button className='ms-auto' type="submit" onClick={handleClick}>เพิ่มงานเขียน</button>
+                        <span className=''><h2>ตอนทั้งหมด</h2></span>
+                        <button className='ms-auto authorupload-btn' type="submit" onClick={handleClick}>เพิ่มตอนใหม่</button>
                     </div>
-                    <div className='row chapter-box'>
+                    <div className='row chapter-box' style={{marginBottom:"15rem"}}>
 
                         <ul className='box'>
                             {chapters && chapters.map((chapter, index) => (
-
-
-
                                 <li>
 
                                     <div className='chapter-item' onClick={(e) => handleNonDeleteClick(chapter.chapter_id, e,index)}>
-                                        <div className='a number'>
-                                            {index + 1}
+                                        <div className='a number' style={{color:"#00cbc3"}}>
+                                            #{index + 1}
                                         </div>
                                         <div className='a chapter'>
                                             {chapter.chapter_title}
                                         </div>
-                                        <div className='a views'>
-                                            {"จำนวนการดู : " + chapter.chapter_views}
+                                        <div className='a views '>
+                                            <VisibilityTwoToneIcon className='mx-2' />{chapter.chapter_views}
                                         </div>
+                                        <div className='a views'>
+                                            <CommentIcon style={{color:'#0009'}} className='mx-2' />{chapter.chapter_views}
+                                        </div>
+                                      
                                         <div className='a delete-button'>
-                                            <button type="button" onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>
-                                                Delete
+                                            <button style={{backgroundColor:'#00cbc3',color:"#fff"}} type="button" className='btn btn-danger border-0' onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>
+                                                <DeleteIcon/>
                                             </button>
+                                            
                                         </div>
                                     </div>
 
                                 </li>
-
-
-
-
-
-
-
-
                             ))}
 
                         </ul>
