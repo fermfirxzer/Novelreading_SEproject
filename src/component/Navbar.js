@@ -31,9 +31,9 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
         <Navbar.Toggle  className= "flex align-items-center " aria-controls="basic-navbar-nav" >
                 {currentUser && ( 
                   <div className = "flex align-item-center" >
-                    <Nav.Link href="/notifications" onClick={handleIconClick}  style={{ margin:'5px',color: 'black', background: '#dddddd', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    {/* <Nav.Link href="/notifications" onClick={handleIconClick}  style={{ margin:'5px',color: 'black', background: '#dddddd', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <FaBell />
-                    </Nav.Link>
+                    </Nav.Link> */}
                     <Nav.Link href="/writer/managewriting" onClick={handleIconClick}  style={{margin:'5px', color: 'black', background: '#dddddd', borderRadius: '50%',  width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <ModeIcon/>
                     </Nav.Link>
@@ -66,6 +66,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
         <Navbar.Collapse id="basic-navbar-nav" style = {{justifyContent:'space-between'}}>
           <Nav className="mr-auto flex navleft" >
             <Nav.Link href="/novel" className = "bordercustom" >นิยาย</Nav.Link>
+            
            
           </Nav>
           
@@ -83,9 +84,9 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
               )}
               {currentUser && ( 
                 <div className = "d-none d-lg-flex" style={{right: '50px' }}>
-                  <Nav.Link href="/notifications" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  {/* <Nav.Link href="/notifications" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <FaBell />
-                  </Nav.Link>
+                  </Nav.Link> */}
                   <Nav.Link href="/writer/managewriting" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <ModeIcon className="search-btn"/>
                   </Nav.Link>

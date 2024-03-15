@@ -11,17 +11,15 @@ const Footer = () => {
           <h4>ดูเนื้อหา</h4>
           <ul>
             <li><a href="/">นิยาย</a></li>
-            <li><a href="#">แฟนฟิค</a></li>
-            <li><a href="#">การ์ตูน</a></li>
             <li><a href="#">หมวดหมู่นิยาย</a></li>
           </ul>
         </div>
         <div className="footer-col">
           <h4>เมนูของฉัน</h4>
           <ul>
-            <li><a href="#">My Reading</a></li>
-            <li><a href="#">อ่านล่าสุด</a></li>
+            <li><a href="/writer/myreading">My Reading</a></li>
             <li><a href="/writer/managewriting">My Writing</a></li>
+            <li><a href="/writer/profile">My Profile</a></li>
             <li><a href="/writer/managewriting">เพิ่มงานเขียนใหม่</a></li>
           </ul>
         </div>
