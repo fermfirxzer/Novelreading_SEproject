@@ -270,13 +270,13 @@ nav a {
   height: 50px;
   border-radius: 15px;
   background-color:#dafffe;
-  color: #ffffff;
   
+  color: #000000;
 }
 .expand-btn:hover{
   
-  background-color:#50e4df;
-  color: #000000;
+  background-color:#50e4dfc2;
+  color: #ffffff;
  
 }
 
@@ -431,4 +431,13 @@ nav a {
 
 .bgcolor{
    background-color: #0f172a;
+}
+
+
+.catebtn{
+  background-color: #fdfdfd;
+  border:1px solid #000000;
+  color: #000000;
+  width:auto;
+  min-width:50px;
 }
