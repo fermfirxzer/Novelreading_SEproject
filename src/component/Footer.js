@@ -11,7 +11,7 @@ const Footer = () => {
           <h4>ดูเนื้อหา</h4>
           <ul>
             <li><a href="/">นิยาย</a></li>
-            <li><a href="#">หมวดหมู่นิยาย</a></li>
+            <li><a href="/novel">หมวดหมู่นิยาย</a></li>
           </ul>
         </div>
         <div className="footer-col">
