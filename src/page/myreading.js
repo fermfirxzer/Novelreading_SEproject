@@ -77,10 +77,10 @@ const Myreading = () => {
             setnovel(sortedNovels);
         }
     };
-    
-    
+
+
     const handleDelete = (id) => {
-        if(activeTab=="books"){   
+        if (activeTab == "books") {
             Swal.fire({
                 title: 'ลบออกจากชั้นหนังสือ?',
                 text: 'ต้องการลบออกจากชั้นหนังสือหรือไม่?',
@@ -90,67 +90,66 @@ const Myreading = () => {
                 cancelButtonColor: '#3085d6',
                 cancelButtonText: 'ไม่ลบ',
                 confirmButtonText: 'ลบ',
-            }).then(async(result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    try{
-                    await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: id });
-                    fetchbookmarknovel();
-                    Swal.fire({
-                        icon: "success",
-                        title: "Remove Bookmark!",
-                        text: "Remove Bookmark success.",
-                       
-                    });
-                    
-                    }catch (err) {
-                        console.error(err); 
+                    try {
+                        await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: id });
+                        fetchbookmarknovel();
+                        Swal.fire({
+                            icon: "success",
+                            title: "ลบออกจากชั้นหนังสือ",
+                            text: "ลบออกจากชั้นหนังสือสำเร็จ",
+
+                        });
+
+                    } catch (err) {
+                        console.error(err);
                         Swal.fire({
                             icon: 'error',
                             title: 'เกิดข้อผิดพลาดในการลบ',
                             text: 'เกิดข้อผิดพลาดขณะลบออกจากชั้นหนังสือ',
                         });
                     }
-                    
+
                 }
-                
+
             });
-            
-        }else if(activeTab=="likes"){
+
+        } else if (activeTab == "likes") {
             Swal.fire({
-                title: 'ลบออกจากชั้นหนังสือ?',
-                text: 'ต้องการลบออกจากชั้นหนังสือหรือไม่?',
+                title: 'ลบออกจากนิยายที่ชอบ?',
+                text: 'ลบออกจากนิยายที่ชอบใช่หรือไม่?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
                 cancelButtonText: 'ไม่ลบ',
                 confirmButtonText: 'ลบ',
-            }).then(async(result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    try{
-                    await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: id });
-                    fetchlikenovel();
-                    Swal.fire({
-                        icon: "success",
-                        title: "Remove Likes!",
-                        text: "Remove Likes success.",
-                       
-                    });
-                    
-                    }catch (err) {
-                        console.error(err); 
+                    try {
+                        await axios.post("http://localhost:5000/api/font/removelike/", { writerid: currentUser.writer_id, novelid: id });
+                        fetchlikenovel();
+                        Swal.fire({
+                            icon: "success",
+                            title: "ลบออกจากนิยายที่ชอบ",
+                            text: "ลบออกจากนิยายที่ชอบสำเร็จ",
+                        });
+
+                    } catch (err) {
+                        console.error(err);
                         Swal.fire({
                             icon: 'error',
                             title: 'เกิดข้อผิดพลาดในการลบ',
                             text: 'เกิดข้อผิดพลาดขณะลบออกจากชั้นหนังสือ',
                         });
                     }
-                    
+
                 }
-                
+
             });
         }
-        
+
     };
     return (
         <div style={{ marginTop: '5rem', marginBottom: '5rem' }}>

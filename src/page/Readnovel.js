@@ -174,9 +174,9 @@ const Readnovel = () => {
                                 <button className='heart-btn' onClick={handlelikeClick}>
                                     <img src={islikeClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
                                 </button>
-                                <button className='add-playlist'>
+                                <button className='add-playlist'onClick={handleClickBooked}>
                                     <BookIcon style={{ color: isBooked ? '#00cbc3' : 'black' }}></BookIcon>
-                                    <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} onClick={handleClickBooked}>
+                                    <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} >
                                         {isBooked ? 'เพิ่มแล้ว' : 'เพิ่มเข้าขั้น'}
                                     </span>
                                 </button>

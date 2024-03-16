@@ -4,6 +4,7 @@ import novel_delete from './routes/novel_delete.js';
 import novelRoutes from './routes/novel.js'
 import writerRoutes from './routes/writer.js'
 import fontRoutes from './routes/mainpage.js';
+import searchRoutes from './routes/search.js';
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import { db } from "./db.js";
@@ -17,6 +18,7 @@ const port = 5000;
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.json());
+app.use("/api/search", searchRoutes)
 app.use("/api/novel", novelRoutes)
 app.use("/api/writer",writerRoutes);
 app.use("/api/novel_delete",novel_delete)
