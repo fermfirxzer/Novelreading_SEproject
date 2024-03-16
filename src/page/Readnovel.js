@@ -47,9 +47,13 @@ const Readnovel = () => {
     useEffect(() => {
         const fetchnovel = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
-            console.log(response.data)
-            setNovelData(response.data[0])
-            setCategory(response.data[1]);
+            if(response.data.length>1){
+                setNovelData(response.data[0])
+                setCategory(response.data[1]);
+            }else{
+                setNovelData(response.data[0])
+            }
+           
         }
         const fetchchapter = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
@@ -76,7 +80,7 @@ const Readnovel = () => {
 
         }
         if (novelData) {
-            console.log(category[0].category_name)
+            // console.log(category[0].category_name)
             fetchRecommendations();
         }
     }, [novelData, category])
@@ -143,20 +147,6 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
-    const mainCategories = [
-        "Love novel",
-        "Fantasy",
-        "Sci-fi",
-        "Investigate",
-        "Mysterious",
-        "Horror",
-        "Girl Love",
-        "Boy Love",
-        "Action",
-       
-        
-      ];
-
     
     return (
 
@@ -209,10 +199,10 @@ const Readnovel = () => {
                 </div>
                 <div className='container pb-3' >
                     <div className='container d-flex p-3' style={{backgroundColor:"#fff"}}> 
-                        {mainCategories.map((category, index) => (
+                        {category&&category.map((category, index) => (
                             <div key={index} className='mx-2'>
-                                <a href = "/search">
-                                    <button className="catebtn rounded-pill p-1 px-2" >{category} </button>
+                                <a href = {`/search/${category.category_name}`}>
+                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
                                 </a>
                             </div>
                         ))}

@@ -134,11 +134,41 @@ const Uploadnovel = () => {
       case 'contentlevel':
         setErrorcontentlevel(message);
         break;
-      // handle other form fields...
+      case 'error':
+        setError(message)
       default:
         break;
     }
   };
+  function validateNovelData(novelData) {
+    const validationErrors = [];
+  
+    if (novelData.name==='') {
+      validationErrors.push({ field: 'name', message: 'Name is required' });
+    }
+    if (novelData.description==='') {
+      validationErrors.push({ field: 'description', message: 'Description is required' });
+    }
+    if (!novelData.mainCategory || novelData.mainCategory === '') {
+      validationErrors.push({ field: 'maincategory', message: 'Main category is required' });
+    }
+    if (!novelData.contentLevel) {
+      validationErrors.push({ field: 'contentlevel', message: 'Content level is required' });
+    }
+  
+    if (validationErrors.length > 0) {
+      return validationErrors;
+    }
+  
+    if (novelData.mainCategory === novelData.subCategory1 ||novelData.mainCategory === novelData.subCategory2) {
+      validationErrors.push({ field: 'category', message: "Main category cannot be the same as subcategories" });
+    }
+    if (novelData.subCategory1 === novelData.subCategory2 && novelData.subCategory1!=='') {
+      validationErrors.push({ field: 'error', message: "Sub category cannot be the same" });
+    }
+    return validationErrors;
+  }
+  
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log("this is upload")
@@ -147,29 +177,11 @@ const Uploadnovel = () => {
     setErrordesc(null);
     setErrormaincategory(null);
     setErrorcontentlevel(null);
-    const validationErrors = [];
-    if (!novelData.name) {
-      validationErrors.push({ field: 'name', message: 'Name is required' });
-    }
-    if (!novelData.description) {
-      validationErrors.push({ field: 'description', message: 'Description is required' });
-    }
-    if (!novelData.mainCategory || novelData.mainCategory == '') {
-      validationErrors.push({ field: 'maincategory', message: 'Maincategory is required' });
-    }
-    if (!novelData.contentLevel) {
-      validationErrors.push({ field: 'contentlevel', message: 'Contentlevel is required' });
-    }
+    const validationErrors = validateNovelData(novelData);
     if (validationErrors.length > 0) {
       validationErrors.forEach(({ field, message }) => {
         setErrorr(field, message);
       });
-      return;
-    }
-    if (novelData.mainCategory === novelData.subCategory1 ||novelData.mainCategory === novelData.subCategory2 ||
-    (novelData.subCategory1 === novelData.subCategory2 &&(novelData.subCategory1 !== '' || novelData.subCategory2 !== ''))
-    ) {
-      setError("Category can't be the same");
       return;
     }
     const currentDate = new Date();
@@ -192,41 +204,43 @@ const Uploadnovel = () => {
     console.log(dataToSend)
     try {
       const res = await axios.post("http://localhost:5000/api/writer/upload_novel", dataToSend, { withCredentials: true, });
-      
       const category = {
         mainCategory: novelData.mainCategory,
-        subCategory1: novelData.subCategory1 === '' ? null : novelData.subCategory1,
-        subCategory2: novelData.subCategory2 === '' ? null : novelData.subCategory2,
-        novelid:res.data||null,
+        subCategory1: novelData.subCategory1,
+        subCategory2: novelData.subCategory2,
+        novelid: res.data || null,
       }
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
       setError("Success upload");
-      // setTimeout(() => {
-      //   navigate("/writer/managewriting");
-      // }, 2000);
+      setTimeout(() => {
+        navigate("/writer/managewriting");
+      }, 2000);
     } catch (err) {
       console.error("Error in Upload:", err);
       setError(err.response ? err.response.data : "An error occurred");
-      
+
     }
-    
+
 
   };
   const update = async e => {
-    console.log("kida")
+
     e.preventDefault()
-    if (!novelData.mainCategory || novelData.mainCategory == '') {
-      setErrormaincategory('Maincategory is required');
-      return;
-    }
-    if (novelData.mainCategory == novelData.subCategory1 || novelData.mainCategory == novelData.subCategory2 ||
-      (novelData.subCategory1 == novelData.subCategory2)) {
-      setError("category can't be the same");
+    setError(null)
+    setErrorname(null);
+    setErrordesc(null);
+    setErrormaincategory(null);
+    setErrorcontentlevel(null);
+    const validationErrors = validateNovelData(novelData);
+    if (validationErrors.length > 0) {
+      validationErrors.forEach(({ field, message }) => {
+        setErrorr(field, message);
+      });
       return;
     }
 
 
-    console.log("this update")
+    
 
     let imageUrl = null;
     if (novelData.image != null) {
@@ -247,29 +261,13 @@ const Uploadnovel = () => {
     }
     try {
       const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
-      const penname = await axios.post("http://localhost:5000/api/writer/upadate_penname", penToSend, { withCredentials: true, });
-      
+      const penname = await axios.post("http://localhost:5000/api/writer/update_penname", penToSend, { withCredentials: true, });
       const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
       setError("Success update")
-      setTimeout(() => {
-        navigate("/writer/viewnovel", { state: { novelid: novelid } });
-      }, 2000);
     } catch (err) {
       setError(err.response ? err.response.data : "An error occurred");
       console.log(err)
-      return;
     }
-
-
-
-    // try {
-    //   // console.log(oldimage)
-    //   // if(oldimage!==null){
-    //   //   await axios.delete(`http://localhost:5000/api/delete/${oldimage}`);
-    //   // }
-    // } catch (err) {
-    //   console.log(err)
-    // }
 
   }
   const subCategories = [

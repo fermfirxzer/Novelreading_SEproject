@@ -149,25 +149,28 @@ router.post('/upload_novel', verifyToken, (req, res) => {
   });
 });
 router.post("/upload_category", verifyToken, async (req, res) => {
-  console.log("this is "+req.body)
-  try {
-    const select = "SELECT category_id FROM `categories` WHERE category_name=?";
+  console.log(req.body)
+    const select = "SELECT category_id FROM categories WHERE category_name=?";
     const insert = "INSERT INTO novel_category (novel_id, category_id, category_type) VALUES (?, ?, ?)";
     const result = [];
 
     const getCategoryID = async (categoryName) => {
+      if(categoryName!==null&&categoryName!==''){
+
       return new Promise((resolve, reject) => {
         db.query(select, [categoryName], (err, data) => {
           if (err) {
             reject(err);
           } else {
             
-            resolve(data[0] ? data[0].category_id : null);
+            resolve(data[0] ? data[0].category_id :0);
           }
         });
+      
       });
     };
-
+    return 0;
+  }
     result.push(await getCategoryID(req.body.mainCategory), "main");
     result.push(await getCategoryID(req.body.subCategory1), "subCategory1");
     result.push(await getCategoryID(req.body.subCategory2), "subCategory2");
@@ -176,17 +179,17 @@ router.post("/upload_category", verifyToken, async (req, res) => {
     for (let i = 0; i < result.length; i += 2) {
       const categoryID = result[i];
       const categoryType = result[i + 1];
-
-      if (categoryID !== undefined && categoryID !== null) {
-        await db.query(insert, [novelID, categoryID, categoryType]);
+      if (categoryID !== undefined && categoryID !== null&&categoryID!==0) {
+        await db.query(insert, [novelID, categoryID, categoryType],(err,data)=>{
+          if(err){
+            console.log(err)
+            return res.status(400).json(err);
+        }});
       }
     }
 
     res.status(200).json({ success: true, message: "Novel categories uploaded successfully" });
-  } catch (error) {
-    console.error("Error uploading novel categories:", error);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
+  
 });
 
 // router.post("/upload_category", verifyToken, async (req, res) => {
@@ -231,18 +234,7 @@ router.post("/upload_category", verifyToken, async (req, res) => {
 //   }
 // });
 
-// Utility function to promisify db.query
-function queryPromise(query, values) {
-  return new Promise((resolve, reject) => {
-    db.query(query, values, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
-}
+// Utility function to promisify db.quer
 
 router.post('/update_novel', verifyToken, (req, res) => {
 
@@ -284,6 +276,7 @@ router.post('/updata_category', verifyToken, async (req, res) => {
     // Fetch category_ids for each category using callbacks
     for (let i = 0; i < categories.length; i++) {
       const category = categories[i];
+      if(category!==null){
       db.query(selectQuery, [category], (err, data) => {
         if (err) {
           console.error(err);
@@ -297,10 +290,10 @@ router.post('/updata_category', verifyToken, async (req, res) => {
         }
       });
     }
+    }
     // Wait for the queries to complete (not ideal but works with callbacks)
-    await new Promise((resolve) => setTimeout(resolve, 100));  // Adjust the delay as needed
+    // await new Promise((resolve) => setTimeout(resolve, 100));  // Adjust the delay as needed
     // Sort categoryData based on the original order
-    categoryData.sort((a, b) => a.order - b.order);
     // Update novel_category table with the new category_ids
     db.query(deleteQuery, [req.body.novelid], (err, result) => {
       if (err) console.error(err);
@@ -321,7 +314,7 @@ router.post('/updata_category', verifyToken, async (req, res) => {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-router.post('/upadate_penname', verifyToken, (req, res) => {
+router.post('/update_penname', verifyToken, (req, res) => {
   
   const select = "SELECT penid FROM penname WHERE penname=?";
   const update = "UPDATE novel SET penid=? WHERE novel_id=?"

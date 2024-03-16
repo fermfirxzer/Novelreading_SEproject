@@ -76,7 +76,7 @@ const Search = () => {
                                             <Card.Body>
                                                 <div className='d-flex flex-column justify-content-between' style={{ height: "100%" }} >
                                                     <div>
-                                                        <a href="/readnovel" className='no-underline'>
+                                                        <a href={`/readnovel/${novel.novel_id}`} className='no-underline'>
                                                             <Card.Subtitle>{novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 25)}...` : novel.novel_name}</Card.Subtitle>
                                                         </a>
                                                     </div>

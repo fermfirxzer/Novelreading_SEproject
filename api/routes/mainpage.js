@@ -302,18 +302,32 @@ router.get("/noveltotalpage/",(req,res)=>{
         return res.status(200).json( totalPages);
     })
 })
-router.get("/novelgetnovel/:page",(req,res)=>{
+router.get("/novelgetnovel/:page/:order",(req,res)=>{
     const page = req.params.page || 0;
     const limit = 30;
     const OFFSET = page * limit;
-    const select="SELECT novel.novel_id,novel.novel_name,novel.novel_chaptercount,penname.penname,novel.novel_rating FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 LIMIT ? OFFSET ?";
-    db.query(select, [limit, OFFSET], (err, data) => {
-        if (err) {
-            console.log(err)
-            return res.status(500).json(err);
-        }
+    if(req.params.order==="lastest"){
+        const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_id DESC LIMIT ? OFFSET ?";
+        db.query(select, [limit, OFFSET], (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json(err);
+            }
+            
+            return res.status(200).json(data)
+        })
+    }else if(req.params.order==="mostview"){
         
-        return res.status(200).json(data)
-    })
+        const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_views DESC LIMIT ? OFFSET ?";
+        db.query(select, [limit, OFFSET], (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json(err);
+            }
+            
+            return res.status(200).json(data)
+        })
+    }
+    
 })
 export default router;
