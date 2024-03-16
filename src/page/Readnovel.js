@@ -63,8 +63,6 @@ const Readnovel = () => {
 
     const totalPages = chapter?Math.ceil(chapter.length / chaptersPerPage):0;
 
-    const startIndex = (currentPage - 1) * chaptersPerPage;
-    const endIndex = currentPage * chaptersPerPage;
    
 
     
@@ -77,6 +75,21 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
+    const mainCategories = [
+        "Love novel",
+        "Fantasy",
+        "Sci-fi",
+        "Investigate",
+        "Mysterious",
+        "Horror",
+        "Girl Love",
+        "Boy Love",
+        "Action",
+       
+        
+      ];
+
+    
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0'>
@@ -126,8 +139,18 @@ const Readnovel = () => {
                     </div>
 
                 </div>
-
-                <div className='container-lg pb-5 mb-0'>
+                <div className='container pb-3' >
+                    <div className='container d-flex p-3' style={{backgroundColor:"#fff"}}> 
+                        {mainCategories.map((category, index) => (
+                            <div key={index} className='mx-2'>
+                                <a href = "/search">
+                                    <button className="catebtn rounded-pill p-1 px-2" >{category} </button>
+                                </a>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className='container-lg pb-5 mb-0' >
                     <div className='reading-novel-info mb-5'>
                         <div className='card border-0 p-3'>
                             <div className='card-body d-flex '>

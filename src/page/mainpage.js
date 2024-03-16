@@ -219,11 +219,14 @@ const Mainpage = () => {
                             </div>
                         ))} 
                     </div>  */}
-                {/* {expandedRows < novelsData.length && (
-                    <button className="border-0 expand-btn mt-3 " onClick={handleExpand}>
-                        Show More<ExpandMoreSharpIcon />
-                    </button>
-                )} */}
+                {expandedRows < novelsData.length && (
+                    <a href ="/novel">
+                        <button className="border-0 expand-btn mt-3 ">
+                            ดูเพิ่มเติม<ExpandMoreSharpIcon />
+                        </button>
+                    </a>
+                   
+                )}
             </div>
          
 
