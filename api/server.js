@@ -4,6 +4,7 @@ import novel_delete from './routes/novel_delete.js';
 import novelRoutes from './routes/novel.js'
 import writerRoutes from './routes/writer.js'
 import fontRoutes from './routes/mainpage.js';
+import searchRoutes from './routes/search.js';
 import cookieParser from "cookie-parser"
 import cors from "cors";
 import { db } from "./db.js";
@@ -17,11 +18,12 @@ const port = 5000;
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.json());
+app.use("/api/search", searchRoutes)
 app.use("/api/novel", novelRoutes)
 app.use("/api/writer",writerRoutes);
 app.use("/api/novel_delete",novel_delete)
 app.use("/api/font",fontRoutes)
-const storage = multer.diskStorage({
+const novel = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../public/uploads/novel/')
   },
@@ -29,8 +31,16 @@ const storage = multer.diskStorage({
     cb(null, file.originalname)
   }
 })
-const upload = multer({ storage: storage })
-app.post("/api/upload", upload.single('file'), function (req, res) {
+const profile = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '../public/uploads/profile/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const uploadnovel = multer({ storage: novel })
+app.post("/api/upload", uploadnovel.single('file'), function (req, res) {
   
   if (!req.file) {
     return res.status(400).json({ error: "No file provided" });
@@ -39,6 +49,22 @@ app.post("/api/upload", upload.single('file'), function (req, res) {
   res.status(200).json(file.filename)
 
 })
+
+const uploadprofile = multer({ storage: profile })
+
+app.post("/api/uploadprofile", uploadprofile.single('file'), function (req, res) {
+  
+  if (!req.file) {
+    return res.status(400).json({ error: "No file provided" });
+  }
+  const file = req.file;
+  res.status(200).json(file.filename)
+
+})
+
+
+
+
 app.delete("/api/delete/:filename", function (req, res) {
   console.log("this is delete")
   const filename = req.params.filename;
@@ -52,6 +78,7 @@ app.delete("/api/delete/:filename", function (req, res) {
     res.status(200).json({ message: "File deleted successfully" });
   });
 });
+
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
@@ -59,6 +86,12 @@ db.connect((err) => {
   }
   console.log('Connected to MySQL');
 });
+
+
+
+
+
+
 
 // Example API endpoint to fetch data from MySQL
 // app.get('http://localhost:5000/api/tasks', (req, res) => {

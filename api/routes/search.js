@@ -1,12 +1,52 @@
-// import express from 'express';
-// import bcrypt from "bcrypt";
-// import jwt from "jsonwebtoken"
-// import { db } from "../db.js";
+import express from 'express';
+import { db } from "../db.js";
 
-// const router = express.Router();
-// router.get("/", (req, res) => {
-    
-// });
+const router = express.Router();
+router.get("/:value/:category", (req, res) => {
+    console.log(req.params)
+    let search_term; // Declare search_term variable here
+
+    if (req.params.value === 'null') {
+        search_term = `%%`;
+    } else {
+        search_term = `%${req.params.value}%`;
+    }
+    if(req.params.category!=='null'){
+    const novelQuery = "SELECT * FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?) LIMIT 50";
+    const categoryQuery = "SELECT category_id FROM categories WHERE category_name = ?";
+     // Search term with wildcards
+    db.query(categoryQuery, [req.params.category], (err, categoryData) => {
+        if (err) {
+            return res.status(400).json(err);
+        }
+        const categoryId = categoryData[0].category_id;
+        db.query(novelQuery, [search_term, categoryId], (err, novelData) => {
+            if (err) {
+                return res.status(400).json(err);
+            }
+            return res.status(200).jsonp(novelData) // Send the search results
+        });
+    });
+    }
+    else {
+        console.log(search_term)
+        const novelQuery="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,novel.novel_views,novel.novel_rating,novel.novel_date,penname.penname FROM novel JOIN penname ON novel.penid=penname.penid WHERE novel_name LIKE ? AND novel_privacy=1 LIMIT 50"
+        db.query(novelQuery, [search_term], (err, novelData) => {
+            if (err) {
+                return res.status(400).json(err);
+            }
+            return res.status(200).jsonp(novelData) // Send the search results
+        });
+    }
+
+});
+
+
+
+export default router;
+
+
+
 // router.post("/register",(req,res)=>{
 //     const q="SELECT * FROM user WHERE user_email=? || user_name=?";
 //     if(req.body.password!=req.body.confirmpassword)return res.status(400).json("Password and ConfirmPassword not matching")
@@ -55,5 +95,3 @@
 //     .status(200)
 //     .json({message:"Successfully logged Out"})
 // })
-
-// export default router;

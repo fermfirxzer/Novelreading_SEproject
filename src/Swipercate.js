@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 const Swipercate = ({ novelsData }) => {
-    // console.log(novelsData)
+    
     return (
         <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -16,8 +16,8 @@ const Swipercate = ({ novelsData }) => {
             navigation
             pagination={{ clickable: true }}
             scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log('slide change')}
+            // onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log('slide change')}
             breakpoints={{
                 320: {
                     slidesPerView: 2,
@@ -46,13 +46,14 @@ const Swipercate = ({ novelsData }) => {
                             <div className='d-flex flex-column justify-content-between' style={{height: "6.5rem"}} >
                                 <div className="novel-name mt-1">
                                     <Link to={`/readnovel/${novel.novel_id}`} className="no-underline">
-                                        {novel.novel_name.length > 50 ? `${novel.novel_name.slice(0, 40)}...` : novel.novel_name}
+                                        {novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 30)}...` : novel.novel_name}
                                     </Link>
                                 </div>
                                 <div className=''>
                                     <div className="novel-author">
                                         <Link to="/authorinfo" className="no-underline author">
                                             {novel.penname}
+
                                         </Link>
                                     </div>
                                     <div className="novel-info">

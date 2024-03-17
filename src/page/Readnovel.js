@@ -1,10 +1,8 @@
 
 
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import React, { useEffect, useState } from 'react';
+
+import React, { useEffect, useState, useContext } from 'react';
+import { AuthContext } from '../context/authContextuser';
 import axios from 'axios';
 import NavbarReactBootstrap from '../component/Navbar.js';
 import { Link, useParams } from 'react-router-dom';
@@ -12,37 +10,113 @@ import Swipercate from '../Swipercate.js';
 import '../index.css';
 import CommentNovel from '../component/CommentNovel';
 import BookIcon from '@mui/icons-material/Book';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 const Readnovel = () => {
     const { novelid } = useParams();
+    const { currentUser } = useContext(AuthContext)
     const [novelData, setNovelData] = useState(null);
     const [category, setCategory] = useState(null);
     const [chapter, setchapter] = useState(null);
+    const [recommend, setrecommend] = useState(null);
+    const fetchbookmark = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmark/${currentUser.writer_id}/${novelid}`);
+            console.log(response.data)
+            setIsBooked(response.data);
+            
+        } catch (err) {
+            console.log(err)
+
+        }
+
+
+    }
+    const fetchlike=async()=>{
+        try {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchlike/${currentUser.writer_id}/${novelid}`);
+            console.log(response.data)
+            setIslikeClicked(response.data);
+        } catch (err) {
+            console.log(err)
+
+        }
+    }
     useEffect(() => {
         const fetchnovel = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
-            console.log(response.data)
-            setNovelData(response.data[0])
-            setCategory(response.data[1]);
-
+            if(response.data.length>1){
+                setNovelData(response.data[0])
+                setCategory(response.data[1]);
+            }else{
+                setNovelData(response.data[0])
+            }
+           
         }
         const fetchchapter = async () => {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+            const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
             setchapter(response.data)
             console.log(response.data)
         }
+
         fetchnovel();
         fetchchapter();
-    }, [])
+        fetchbookmark();
+        fetchlike();
+    }, [novelid])
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            if (category && category.length > 0) {
+                const category_tosend = category[0].category_name;
+                try {
+                    const response = await axios.get(`http://localhost:5000/api/font/fetchnovelbycategoryrandom/${category_tosend}`);
+                    setrecommend(response.data);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
 
+        }
+        if (novelData) {
+            // console.log(category[0].category_name)
+            fetchRecommendations();
+        }
+    }, [novelData, category])
 
-    const [isClicked, setIsClicked] = useState(false);
-    const handleClick = () => {
-        setIsClicked(!isClicked);
+    const [islikeClicked, setIslikeClicked] = useState(false);
+    const handlelikeClick = async() => {
+        try {
+            if (!islikeClicked) {
+                setIslikeClicked(true);
+                await axios.post("http://localhost:5000/api/font/addlike/", { writerid: currentUser.writer_id, novelid: novelid });
+            } else {
+                setIslikeClicked(false);
+                await axios.post("http://localhost:5000/api/font/removelike/", { writerid: currentUser.writer_id, novelid: novelid });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+       
     };
 
     const [isBooked, setIsBooked] = useState(false);
-    const handleClickBooked = () => {
-        setIsBooked(!isBooked);
+    const handleClickBooked = async () => {
+        try {
+            if (!isBooked) {
+                setIsBooked(true);
+                await axios.post("http://localhost:5000/api/font/addbookmark/", { writerid: currentUser.writer_id, novelid: novelid });
+            } else {
+                setIsBooked(false);
+                await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: novelid });
+                
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+        console.log(isBooked)
     };
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
@@ -54,18 +128,16 @@ const Readnovel = () => {
             setIsFollowedWriter(!isFollowedWriter);
         }
     };
-
-
-
-
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
 
-    const totalPages = chapter?Math.ceil(chapter.length / chaptersPerPage):0;
+    const totalPages = chapter ? Math.ceil(chapter.length / chaptersPerPage) : 0;
 
-   
+    const startIndex = (currentPage - 1) * chaptersPerPage;
+    const endIndex = currentPage * chaptersPerPage;
 
-    
+
+
 
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
@@ -75,31 +147,17 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
-    const mainCategories = [
-        "Love novel",
-        "Fantasy",
-        "Sci-fi",
-        "Investigate",
-        "Mysterious",
-        "Horror",
-        "Girl Love",
-        "Boy Love",
-        "Action",
-       
-        
-      ];
-
     
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
             <NavbarReactBootstrap />
 
-            <div  >
-                <div className="reading-novel-container d-lg-flex  ">
+            <div>
+                <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='  reading-novel-img-con '>
-                            {novelData && <img src={`/uploads/novel/${novelData.novel_img}`} className='reading-novel-img' alt="Novel Cover" />}
+                            {novelData && <img src={novelData.novel_img != null ? `/uploads/novel/${novelData.novel_img}` : "/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
@@ -118,12 +176,12 @@ const Readnovel = () => {
                                 {novelData && <p>{novelData.novel_desc} </p>}
                             </div>
                             <div className='function-container'>
-                                <button className='heart-btn' onClick={handleClick}>
-                                    <img src={isClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
+                                <button className='heart-btn' onClick={handlelikeClick}>
+                                    <img src={islikeClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
                                 </button>
-                                <button className='add-playlist'>
+                                <button className='add-playlist'onClick={handleClickBooked}>
                                     <BookIcon style={{ color: isBooked ? '#00cbc3' : 'black' }}></BookIcon>
-                                    <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} onClick={handleClickBooked}>
+                                    <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} >
                                         {isBooked ? 'เพิ่มแล้ว' : 'เพิ่มเข้าขั้น'}
                                     </span>
                                 </button>
@@ -141,10 +199,10 @@ const Readnovel = () => {
                 </div>
                 <div className='container pb-3' >
                     <div className='container d-flex p-3' style={{backgroundColor:"#fff"}}> 
-                        {mainCategories.map((category, index) => (
+                        {category&&category.map((category, index) => (
                             <div key={index} className='mx-2'>
-                                <a href = "/search">
-                                    <button className="catebtn rounded-pill p-1 px-2" >{category} </button>
+                                <a href = {`/search/${category.category_name}`}>
+                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
                                 </a>
                             </div>
                         ))}
@@ -212,6 +270,7 @@ const Readnovel = () => {
                                     </div>
                                 </div>
                             ))}
+                            {!chapter && <p className='ms-5'>Loading...</p>}
                         </div>
 
                         <div id="pagination" className="chapter-btn-container">
@@ -224,11 +283,11 @@ const Readnovel = () => {
                         <div className='header'>
                             เรื่องที่คุณอาจสนใจ
                         </div>
-                        <div className='related-novel'>
-                            <Swipercate></Swipercate>
-                        </div>
+                        {recommend && <div className='related-novel'>
+                            <Swipercate novelsData={recommend}></Swipercate>
+                        </div>}
                     </div>
-                    <CommentNovel></CommentNovel>
+                    <CommentNovel novelid={novelid} chapterid={0}></CommentNovel>
                 </div>
             </div>
         </div>

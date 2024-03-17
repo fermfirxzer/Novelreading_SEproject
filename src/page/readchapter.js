@@ -20,7 +20,7 @@ const Readchapter = () => {
     
     }
     const Allchapter = async () => {
-      const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}`)
+      const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
       setAllchapter(response.data)
       // console.log(response.data)
   }
@@ -28,15 +28,6 @@ const Readchapter = () => {
     Allchapter();
 }, [])
 console.log(chapter)
-  const novel = {
-    name:'กระทั่งตาย',
-    writername:'larin',
-    penname: 'ระรินรัก',
-    category: 'Fantasy',
-    publishedDate: '2023-02-15',
-    img:'https://cdn.readawrite.com/articles/13963/13962695/thumbnail/tiny.gif?2'
-  };
-  
   const writer = {
     img:'https://1417094351.rsc.cdn77.org/publicassets/8115942/profile_picture/profile_picture.gif?169046407'
     
@@ -150,15 +141,15 @@ console.log(chapter)
               <div className='d-flex justify-content-center container  margin'>
                 
                     <div className='me-3'>
-                      <img className = "novelImg" src={novel.img}></img>
+                      <img className = "novelImg" src={chapter&&chapter.novel_img!==null?`/uploads/novel/${chapter.novel_img}`:"/uploads/novel/osu icon.jpg"} alt="Novel Img"/>
                     </div>
                     
                     <div className='ms-3'> 
                       <div>
-                          <h4>{novel.name}</h4>
+                          <h4>{chapter&&chapter.novel_name}</h4>
                           <div className='d-flex'>
                             <img  className = "writerImg me-2" src={writer.img}></img>
-                            <span><strong> </strong> {novel.penname}</span>
+                            <span><strong> </strong> {chapter&&chapter.penname}</span>
                             <button className='follow-btn ms-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000',width: isFollowedPenname ? '100px':''}} 
                               onClick={() => handleClickFollowed()}>
                               {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}  

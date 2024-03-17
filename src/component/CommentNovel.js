@@ -5,8 +5,10 @@ import axios from 'axios';
 import '../index.css';
 import { AuthContext } from '../context/authContextuser';
 import Swal from 'sweetalert2';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import { Co2Sharp } from '@mui/icons-material';
+
 const CommentNovel = ({ novelid, chapterid }) => {
     const { currentUser } = useContext(AuthContext)
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
@@ -60,13 +62,14 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const totalPagesComments = Allcomment ? Math.ceil(Allcomment.length / commentPerPage) : 0;
     const currentComment = Allcomment ? Allcomment.slice(startIndexComment, endIndexComment) : 0;
     const fetchcomment = async () => {
+        if(novelid !== undefined && chapterid !== undefined){
         try {
             const response = await axios.get(`http://localhost:5000/api/font/fetchcomment/${novelid}/${chapterid}`);
             console.log(response.data)
             setAllcomment(response.data)
         } catch (err) {
             console.log(err)
-        }
+        }}
 
     }
     useEffect(() => {
@@ -96,6 +99,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
 
                     setErrcomment(response.data)
                     Swal.fire('เพิ่มความคิดเห็นแล้ว!', '', 'success');
+                    fetchcomment();
                 } catch (err) {
                     Swal.fire({
                         title: "Error",
@@ -108,24 +112,46 @@ const CommentNovel = ({ novelid, chapterid }) => {
         });
         // setNewComment('');
     };
-    const handleEditComment = (comment) => {
-
+    const [editingcommentid, setEditingCommentId] = useState(null)
+    const [editingcommentText, setEditedCommentText] = useState('');
+    const handleEditComment = (commentid) => {
+        setEditingCommentId(commentid);
+        setEditedCommentText('');
     }
-    const handleDeleteComment = async (comment) => {
-        try {
-            const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment, { withCredentials: true, });
+    const handlecancel = (comment) => {
+        setEditingCommentId(null);
+        setEditedCommentText('');
+    }
+    const handleUpdateComment = async() => {
+        const dataTosend={ editingcommentText,editingcommentid, writerid: currentUser.writer_id};
+        console.log(dataTosend)
+        try{
+            const response=await axios.post("http://localhost:5000/api/font/update_comment/",dataTosend);
             setErrcomment(response.data)
+            fetchcomment();
+            setEditingCommentId(0);
+            setEditedCommentText('');
+        }catch(err){
+            setErrcomment(err.response ? err.response.data : "An error occurred");
+            console.log(err)
+        }
+      };
+    const handleDeleteComment = async (comment) => {
+        console.log(comment);
+        try {
+            const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment);
+            setErrcomment(response.data)
+    
             fetchcomment();
         } catch (err) {
             setErrcomment(err.response)
             console.log(err);
         }
     }
-
     const handleAddEmoji = (emoji) => {
         setNewComment(prevComment => prevComment + emoji);
     };
-
+    
     const [showemojis, setShowemojis] = useState(false);
 
     const emojiList = ['😂', '😊', '❤️', '😀', '🥳', '😎', '🤩', '🤣', '👍', '😭', '🙏', '😘', '🥰', '😍', '🎉', '🌟'];
@@ -194,7 +220,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
 
                     <div className='reading-novel-comment pb-5 px-4'>
                         <div className="container mt-5">
-                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({sampleComments.length})</div>
+                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({Allcomment?Allcomment.length:0})</div>
                             {Allcomment && currentComment.map((comment, index) => (
                                 <div className='card mb-3 mt-4' key={index}>
                                     <div className="card-body d-flex justify-content-between">
@@ -206,16 +232,16 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                                 style={{ width: '50px', height: '50px', marginRight: '1.5rem' }}
                                             />
                                             <div className='ml-5'>
-                                                <h5 className="card-title">{comment.display_name == '' ? comment.writer_name : comment.display_name}</h5>
+                                                <h5 className="card-title">{comment.display_name == ''||comment.display_name==null ? comment.writer_name : comment.display_name}</h5>
                                                 <p className="card-text">{comment.CommentText}</p>
                                             </div>
                                         </div>
                                         <div className=''>
-                                            <p className='text-end'>{format(new Date(comment.Timestamp), 'yyyy-MM-dd HH:mm:ss')}</p>
+                                            <p className='text-end'>{formatDistanceToNow(new Date(comment.Timestamp))}</p>
                                             <div className=''>
                                                 {comment.writer_id === currentUser.writer_id && (<>
-                                                    <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment)}>Edit</button>
-                                                    <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delte</button>
+                                                    <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment.comment_id)}>Edit</button>
+                                                    <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delete</button>
                                                 </>
                                                 )}
                                             </div>
@@ -224,19 +250,19 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                     </div>
 
                                     <div className=''>
-                                        {1 && (
+                                        {editingcommentid===comment.comment_id && (
                                             <>
-                                            <div>
-                                                <textarea className='form-control'
-                                                    // value={editedCommentText}
-                                                    onChange={1}
-                                                />
-                                                {/* <button onClick={handleUpdateComment}>Save</button> */}
-                                                
-                                            </div>
-                                            <div className=''>
-                                                <button className='follow-btn text-black mt-3 mb-3'nClick={1}>Submit</button>
-                                                <button className='follow-btn text-black mt-3 mb-3'nClick={1}>Cancel</button>
+                                                <div>
+                                                    <textarea className='form-control'
+                                                        value={editingcommentText}
+                                                        onChange={(e)=>setEditedCommentText(e.target.value)}
+                                                    />
+
+
+                                                </div>
+                                                <div className=''>
+                                                    <button className='follow-btn text-black mt-3 mb-3' onClick={handleUpdateComment}>Submit</button>
+                                                    <button className='follow-btn text-black mt-3 mb-3' onClick={handlecancel}>Cancel</button>
                                                 </div>
                                             </>
                                         )}

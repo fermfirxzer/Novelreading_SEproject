@@ -139,7 +139,7 @@ const Mainpage = () => {
 
     
     return (
-        <div style={{ marginTop: '4rem', marginBottom: '15rem' }}>
+        <div className = "" style={{ marginTop: '4rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap />
             {/* <Swiperslide></Swiperslide> */}
             <div className=' container coverPage background'>
@@ -168,7 +168,7 @@ const Mainpage = () => {
 
                 <div className='category-container'>
                     <div className='category-name-con'>
-                        <a>Love Novel</a>
+                        <p>Love Novel</p>
                     </div>
                     <div className="clearfix">
                         <div className='category-swiper-container'>
@@ -178,7 +178,7 @@ const Mainpage = () => {
                 </div>
                 <div className='category-container'>
                     <div className='category-name-con'>
-                        <a >Sci-fi</a>
+                        <p>Sci-fi</p>
                     </div>
                     <div className="clearfix">
                         <div className='category-swiper-container'>
@@ -241,14 +241,14 @@ const Mainpage = () => {
                             </div>
                         ))} 
                     </div>  */}
-                {expandedRows < novelsData.length && (
+              
                     <a href ="/novel">
                         <button className="border-0 expand-btn mt-3 ">
                             ดูเพิ่มเติม<ExpandMoreSharpIcon />
                         </button>
                     </a>
                    
-                )}
+              
             </div>
          
 
