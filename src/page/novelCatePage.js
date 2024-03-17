@@ -108,7 +108,7 @@ const NovelCatePage = () => {
       };
 
     return (
-        <div style={{ marginTop: '4rem', marginBottom: '15rem'}} >
+        <div    style={{ marginTop: '4rem', marginBottom: '15rem'}} >
             <NavbarReactBootstrap />
             <div className='container category-name-con mb-5' style={{ marginTop: '8rem',fontSize:"2rem"}}>
                 <a>นิยายทั้งหมด</a>

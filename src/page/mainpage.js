@@ -16,6 +16,7 @@ import FormatListBulletedTwoToneIcon from '@mui/icons-material/FormatListBullete
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import ExpandMoreSharpIcon from '@mui/icons-material/ExpandMoreSharp';
 import axios from 'axios';
+import coverImage from '../tempsnip-removebg-preview.png'; // Path to your image
 
 const Mainpage = () => {
 
@@ -140,8 +141,29 @@ const Mainpage = () => {
     return (
         <div style={{ marginTop: '4rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap />
-            <Swiperslide></Swiperslide>
-
+            {/* <Swiperslide></Swiperslide> */}
+            <div className=' container coverPage background'>
+                <div className='container d-flex justify-content-between align-items-center'>
+                    <div className='mx-5'>
+                        <div className='TextCon'>
+                            <div className='coverPageText' style={{ marginBottom: "-2rem" }}>
+                                NOVEL
+                            </div>
+                            <div className='coverPageText'>
+                                READING
+                            </div>
+                        </div>
+                       
+                        <div style={{fontSize:"2rem" , color:"#ffffff"}} >
+                            "Explore Worlds, One Page at a Time"
+                        </div>
+                       
+                    </div>
+                    <img src = {coverImage} style={{height:"15rem"}}></img>
+                </div>
+               
+                
+            </div>
             <div className="container-lg mb-5">
 
                 <div className='category-container'>
