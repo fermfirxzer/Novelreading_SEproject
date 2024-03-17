@@ -1,6 +1,5 @@
 import React, { useState,useContext } from 'react';
 import { Navbar, Nav, Dropdown } from 'react-bootstrap';
-import {  FaBell } from 'react-icons/fa'; 
 import { useNavigate } from 'react-router-dom';
 import ModeIcon from '@mui/icons-material/Mode';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -26,8 +25,8 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
   
   return (
     <>
-      <Navbar className= "fixed-top " bg="light" variant="dark" expand="lg" style={{  borderBottom: '1px solid black', padding: '15px', width:'100%'}}>
-        <Navbar.Brand href="/" style={{ color: 'black', marginLeft: '30px' }}>NovelReading</Navbar.Brand>
+      <Navbar className= "fixed-top "   expand="lg" style={{ backgroundColor:"#030916", borderBottom: '1px solid black', padding: '15px', width:'100%'}}>
+        <Navbar.Brand href="/" style={{  marginLeft: '30px',color:"#fff" }}>NovelReading</Navbar.Brand>
         <Navbar.Toggle  className= "flex align-items-center " aria-controls="basic-navbar-nav" >
                 {currentUser && ( 
                   <div className = "flex align-item-center" >
