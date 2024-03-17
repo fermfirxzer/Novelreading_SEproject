@@ -92,11 +92,11 @@ const Readnovel = () => {
     
     return (
 
-        <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0'>
+        <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
             <NavbarReactBootstrap />
 
             <div  >
-                <div className="reading-novel-container d-lg-flex ">
+                <div className="reading-novel-container d-lg-flex  ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
                         <div className='  reading-novel-img-con '>
                             {novelData && <img src={`/uploads/novel/${novelData.novel_img}`} className='reading-novel-img' alt="Novel Cover" />}
