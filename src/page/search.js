@@ -63,8 +63,8 @@ const Search = () => {
                             Explore
                         </div>
                         <div className='body'>
-                            <div className='card d-flex'>
-                                <div className='row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 ms-3'>
+                            <div className='card'>
+                                <div className='row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4'>
                                 {novel && novel.map((novel) => (
                                     <div key={novel.novel_id} className="col">
                                         <Card style={{ width: '11.5rem', height: '20rem' }}>
