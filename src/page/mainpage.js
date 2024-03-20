@@ -65,7 +65,7 @@ const Mainpage = () => {
 
     
     return (
-        <div style={{ marginTop: '4rem', marginBottom: '15rem' }}>
+        <div className = "" style={{ marginTop: '4rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap />
             <div className=' container coverPage background'>
                 <div className='container d-flex justify-content-between align-items-center'>
@@ -93,7 +93,7 @@ const Mainpage = () => {
 
                 <div className='category-container'>
                     <div className='category-name-con'>
-                        <a>Love Novel</a>
+                        <p>Love Novel</p>
                     </div>
                     <div className="clearfix">
                         <div className='category-swiper-container'>
@@ -103,7 +103,7 @@ const Mainpage = () => {
                 </div>
                 <div className='category-container'>
                     <div className='category-name-con'>
-                        <a >Sci-fi</a>
+                        <p>Sci-fi</p>
                     </div>
                     <div className="clearfix">
                         <div className='category-swiper-container'>
@@ -142,12 +142,38 @@ const Mainpage = () => {
                             <Swipercate novelsData={Lastest}></Swipercate>
                         </div>
                     </div>
-                
+                    {/* <div className="row row-cols-1 row-cols-md-3 row-cols-lg-6 g-4">
+                        {novelsData.slice(0, expandedRows).map((novel) => (
+                            <div key={novel.id} className="col">
+                                <Card style={{ width: '12rem' }}>
+                                    <div className='mb-2'>
+                                        <a href="/readnovel">
+                                            <img src={novel.imageUrl} style={{ width: '100%' }} alt="Description" />
+                                        </a>
+                                    </div>
+                                    <Card.Body >
+
+                                        <a href="/readnovel" className='no-underline'>
+                                            <Card.Subtitle >{novel.name}</Card.Subtitle>
+                                        </a>
+                                        <a href="/authorinfo" className='no-underline author'>
+                                            <Card.Subtitle className="mt-1 mb-2 ">{novel.author}</Card.Subtitle>
+                                        </a>
+
+                                        <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}> <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} /> {novel.chapterCount}  <FavoriteSharpIcon style={{ color: '#a1a1a1' }} /> {novel.rating}</Card.Text>
+                                    </Card.Body>
+                                </Card>
+                            </div>
+                        ))} 
+                    </div>  */}
+              
                     <a href ="/novel">
                         <button className="border-0 expand-btn mt-3 ">
                             ดูเพิ่มเติม<ExpandMoreSharpIcon />
                         </button>
                     </a>
+                   
+              
             </div>
             
         </div>

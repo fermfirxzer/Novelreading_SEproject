@@ -20,9 +20,9 @@ app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
 app.use(express.json());
 app.use("/api/search", searchRoutes)
 app.use("/api/novel", novelRoutes)
-app.use("/api/writer",writerRoutes);
-app.use("/api/novel_delete",novel_delete)
-app.use("/api/font",fontRoutes)
+app.use("/api/writer", writerRoutes);
+app.use("/api/novel_delete", novel_delete)
+app.use("/api/font", fontRoutes)
 const novel = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '../public/uploads/novel/')
@@ -40,27 +40,34 @@ const profile = multer.diskStorage({
   }
 })
 const uploadnovel = multer({ storage: novel })
-app.post("/api/upload", uploadnovel.single('file'), function (req, res) {
-  
+app.post("/api/upload", (req, res, next) => {
+  // Middleware ที่ตรวจสอบไฟล์ก่อน
   if (!req.file) {
     return res.status(400).json({ error: "No file provided" });
   }
+  // ถ้ามีไฟล์ ไปยัง middleware การอัปโหลดไฟล์
+  next();
+}, uploadnovel.single('file'), (req, res) => {
+  // ทำงานหลังจาก middleware การอัปโหลดไฟล์
   const file = req.file;
-  res.status(200).json(file.filename)
+  console.log(file);
+  res.status(200).json(file.filename);
+});
 
-})
 
 const uploadprofile = multer({ storage: profile })
 
-app.post("/api/uploadprofile", uploadprofile.single('file'), function (req, res) {
-  
+app.post("/api/uploadprofile", (req, res, next) => {
+
   if (!req.file) {
     return res.status(400).json({ error: "No file provided" });
   }
+  next();
+}, uploadprofile.single('file'), (req, res) => {
   const file = req.file;
-  res.status(200).json(file.filename)
-
-})
+  console.log(file);
+  res.status(200).json(file.filename);
+});
 
 
 

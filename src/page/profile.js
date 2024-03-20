@@ -31,7 +31,7 @@ const Profile = () => {
                 console.log(currentUser.writer_id)
                 const response = await axios.get(`http://localhost:5000/api/font/fetchwriter/${currentUser.writer_id}`)
                 setWriter(response.data);
-
+                setProfileImage(response.data.writer_img)
             } catch (err) {
                 console.log(err);
             }
@@ -44,11 +44,11 @@ const Profile = () => {
         e.preventDefault();
         setConfirmPasswordError(null)
         setEnterPasswordError(null)
-        const dataTosend={
-            password:password.password,
+        const dataTosend = {
+            password: password.password,
             newPassword: password.newPassword,
             newConfirmPassword: password.newConfirmPassword,
-            writerid:currentUser.writer_id
+            writerid: currentUser.writer_id
         }
         try {
             const res = await axios.post("http://localhost:5000/api/font/update_writerpassword/", dataTosend)
@@ -64,7 +64,7 @@ const Profile = () => {
     };
     const [confirmPasswordError, setConfirmPasswordError] = useState(false);
     const [enterPasswordError, setEnterPasswordError] = useState(false);
-    const [enterInfoError,setEnterInfoError]=useState(null)
+    const [enterInfoError, setEnterInfoError] = useState(null)
     const [password, setPassword] = useState({
         password: "",
         newPassword: "",
@@ -99,58 +99,60 @@ const Profile = () => {
         // }
 
     };
-    const [temp,setTemp]=useState(null)
+    const [temp, setTemp] = useState(null)
     const [profileImage, setProfileImage] = useState(writer ? writer.writer_img : null);
     const handleImageChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
-          const fileType = selectedFile.type;
-          if (!fileType.startsWith('image/')) {
-            // Not an image file, handle error or inform user
-            alert('Please select an image file.');
-            return;
-          }
-          setTemp(selectedFile)
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setProfileImage(reader.result);
-          };
-          reader.readAsDataURL(selectedFile);
+            const fileType = selectedFile.type;
+            if (!fileType.startsWith('image/')) {
+                // Not an image file, handle error or inform user
+                alert('Please select an image file.');
+                return;
+            }
+            setTemp(selectedFile)
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProfileImage(reader.result);
+            };
+            reader.readAsDataURL(selectedFile);
         }
-      };
-    const upload = async e => {
+    };
+    const upload = async () => {
+
         try {
-          const formData = new FormData();
-          console.log(profileImage)
-          formData.append("file", profileImage)
-          // console.log(formData)
-          const res = await axios.post("http://localhost:5000/api/uploadprofile", formData)
-          return res.data
+            const formData = new FormData();
+            formData.append("file", temp)
+
+            const res = await axios.post("http://localhost:5000/api/uploadprofile", formData)
         } catch (err) {
-          console.log(err)
-          // setError(err.response ? err.response.data : "An error occurred");
+
         }
-      }
-      const UpdateInfo=async e=>{
+
+    }
+    const UpdateInfo = async e => {
         e.preventDefault();
         setEnterInfoError(null);
-        let profile=null;
         console.log(temp)
-        // if(profileImage!=null){
-        //     profile=await upload();
-        // }
-        const dataTosend={
+        let profile = null;
+        if (temp != null) {
+            profile = await upload();
+            if (profile == null) {
+                profile=temp.name;
+            }
+        }
+        const dataTosend = {
             writer,
-            img:profile,
+            img: profile,
         }
         console.log(dataTosend)
-        // try{
-        //     const res = await axios.post("http://localhost:5000/api/font/update_writerinfo/", writer)
-        //     setEnterInfoError(res.data);
-        // }catch(err){
-        //     console.error(err);
-        //     setEnterInfoError(err.response ? err.response.data : "An error occurred");
-        // }
+        try{
+            const res = await axios.post("http://localhost:5000/api/font/update_writerinfo/",dataTosend)
+            setEnterInfoError(res.data);
+        }catch(err){
+            console.error(err);
+            setEnterInfoError(err.response ? err.response.data : "An error occurred");
+        }
     }
     const handleSubmit = (e) => {
 
@@ -162,7 +164,7 @@ const Profile = () => {
     }
 
     return (
-        <div style={{ marginTop: '5rem', marginBottom: '5rem' }}>
+        <div style={{ marginTop: '7rem', marginBottom: '5rem' }}>
             <NavbarReactBootstrap ></NavbarReactBootstrap>
             <div className='container headtopic'>
                 <Dropdown align="end" className='mt-2 mx-2 ' >
@@ -182,7 +184,7 @@ const Profile = () => {
                     <div className="flex align-items-center">
                         <div className="flex position-relative">
 
-                            <img src={profileImage ? profileImage : "/uploads/novel/osu icon.jpg"} className="profile-img " />
+                            <img src={profileImage ? `/uploads/novel/${profileImage}` : "/uploads/novel/osu icon.jpg"} className="profile-img " />
 
 
                             <label htmlFor="image-upload" className="position-absolute camera-icon">
@@ -254,10 +256,10 @@ const Profile = () => {
                         </div>
                     </div>
                     <div className="mb-3 row">
-                    {enterInfoError && (
-                                <Alert variant="danger" className="mt-3">
-                                    {enterInfoError}
-                                </Alert>
+                        {enterInfoError && (
+                            <Alert variant="danger" className="mt-3">
+                                {enterInfoError}
+                            </Alert>
                         )}
                     </div>
                     <Modal show={showpassword} onHide={handleClosepassword}>
@@ -270,17 +272,17 @@ const Profile = () => {
                                     <Form.Label>รหัสผ่านเดิม</Form.Label>
                                     <Form.Control type="password" placeholder="รหัสผ่านเดิม" name="password"
                                         value={password.password}
-                                        onChange={(e) => setPassword({...password, [e.target.name]: e.target.value })}
+                                        onChange={(e) => setPassword({ ...password, [e.target.name]: e.target.value })}
 
                                         required />
                                 </Form.Group>
                                 <Form.Group controlId="formNewPassword">
                                     <Form.Label>รหัสผ่านใหม่</Form.Label>
-                                    <Form.Control type="password" placeholder="รหัสผ่านใหม่" name="newPassword" value={password.newPassword} onChange={(e) => setPassword({ ...password,[e.target.name]: e.target.value })} required />
+                                    <Form.Control type="password" placeholder="รหัสผ่านใหม่" name="newPassword" value={password.newPassword} onChange={(e) => setPassword({ ...password, [e.target.name]: e.target.value })} required />
                                 </Form.Group>
                                 <Form.Group controlId="formConfirmPassword">
                                     <Form.Label>ยืนยันรหัสผ่านใหม่</Form.Label>
-                                    <Form.Control type="password" placeholder="ยืนยันรหัสผ่านใหม่" name="newConfirmPassword" value={password.newConfirmPassword} onChange={(e) => setPassword({...password, [e.target.name]: e.target.value })} required />
+                                    <Form.Control type="password" placeholder="ยืนยันรหัสผ่านใหม่" name="newConfirmPassword" value={password.newConfirmPassword} onChange={(e) => setPassword({ ...password, [e.target.name]: e.target.value })} required />
                                 </Form.Group>
                             </Form>
                             {confirmPasswordError && (

@@ -30,9 +30,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
         <Navbar.Toggle  className= "flex align-items-center " aria-controls="basic-navbar-nav" >
                 {currentUser && ( 
                   <div className = "flex align-item-center" >
-                    {/* <Nav.Link href="/notifications" onClick={handleIconClick}  style={{ margin:'5px',color: 'black', background: '#dddddd', borderRadius: '50%', width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <FaBell />
-                    </Nav.Link> */}
+                    
                     <Nav.Link href="/writer/managewriting" onClick={handleIconClick}  style={{margin:'5px', color: 'black', background: '#dddddd', borderRadius: '50%',  width: '35px', height: '35px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <ModeIcon/>
                     </Nav.Link>
@@ -57,7 +55,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
                   </div>
                 )} 
              
-               <MenuIcon className='mt-2 mx-2' style={{ color: 'black' }} />  
+               <MenuIcon className='mt-2 mx-2' style={{ color: '#fff' }} />  
         </Navbar.Toggle>
         
     
@@ -65,27 +63,23 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
         <Navbar.Collapse id="basic-navbar-nav" style = {{justifyContent:'space-between'}}>
           <Nav className="mr-auto flex navleft" >
             <Nav.Link href="/novel" className = "bordercustom" >นิยาย</Nav.Link>
-            
-           
           </Nav>
           
           <Nav className="ml-auto navright">
               <div className="search-container">
-                  {showSearch && (
-                    <input id="searchinput" type="text" placeholder="Search" className="search-input" />
-                  )}
-                  <button className="search-btn " onClick={toggleSearch} style={{ cursor: 'pointer' }}>
-                    <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="Button Image" />
-                  </button>
+                  <a href = "/search">
+                    <button className="search-btn " onClick={toggleSearch} style={{ cursor: 'pointer' }}>
+                      <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="Button Image" />
+                    </button>
+                  </a>
+                 
               </div>      
               {!currentUser && (
               <Nav.Link href="/writer/login" className="bordercustom">เข้าสู่ระบบ / สมัครสมาชิก</Nav.Link>
               )}
               {currentUser && ( 
                 <div className = "d-none d-lg-flex" style={{right: '50px' }}>
-                  {/* <Nav.Link href="/notifications" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <FaBell />
-                  </Nav.Link> */}
+                 
                   <Nav.Link href="/writer/managewriting" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <ModeIcon className="search-btn"/>
                   </Nav.Link>

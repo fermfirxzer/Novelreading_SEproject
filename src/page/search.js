@@ -15,12 +15,12 @@ const Search = () => {
     const [category, setCategory] = useState(initialCategory || null);
     const [novel, setnovel] = useState(null);
     const handlecategoryClick = (name) => {
-        if(name===category){
+        if (name === category) {
             setCategory(null);
-        }else{
+        } else {
             setCategory(name);
         }
-        
+
     };
     console.log(value)
     const mainCategories = [
@@ -50,9 +50,9 @@ const Search = () => {
             console.log(err);
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         search()
-    },[])
+    }, [])
     return (
         <div style={{ marginTop: '7rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap></NavbarReactBootstrap>
@@ -65,38 +65,38 @@ const Search = () => {
                         <div className='body'>
                             <div className='card'>
                                 <div className='row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4'>
-                                {novel && novel.map((novel) => (
-                                    <div key={novel.novel_id} className="col">
-                                        <Card style={{ width: '11.5rem', height: '20rem' }}>
-                                            <div className=''>
-                                                <a href={`/readnovel/${novel.novel_id}`}>
-                                                    <img src={novel.novel_img ? `/uploads/novel/${novel.novel_img}` : "/uploads/novel/osu icon.jpg"} style={{ height: '13rem', width: "100%" }} alt="Description" />
-                                                </a>
-                                            </div>
-                                            <Card.Body>
-                                                <div className='d-flex flex-column justify-content-between' style={{ height: "100%" }} >
-                                                    <div>
-                                                        <a href={`/readnovel/${novel.novel_id}`} className='no-underline'>
-                                                            <Card.Subtitle>{novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 25)}...` : novel.novel_name}</Card.Subtitle>
-                                                        </a>
-                                                    </div>
-                                                    <div>
-                                                        <a href="/authorinfo" className='no-underline author'>
-                                                            <Card.Subtitle className="mt-1">{novel.penname}</Card.Subtitle>
-                                                        </a>
-                                                        <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
-                                                            <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
-                                                            {novel.novel_chaptercount}
-                                                            <FavoriteSharpIcon style={{ color: '#a1a1a1' }} />
-                                                            {novel.novel_rating}
-                                                        </Card.Text>
-                                                    </div>
-
+                                    {novel && novel.map((novel) => (
+                                        <div key={novel.novel_id} className="col">
+                                            <Card style={{ width: '11.5rem', height: '20rem' }}>
+                                                <div className=''>
+                                                    <a href={`/readnovel/${novel.novel_id}`}>
+                                                        <img src={novel.novel_img ? `/uploads/novel/${novel.novel_img}` : "/uploads/novel/osu icon.jpg"} style={{ height: '13rem', width: "100%" }} alt="Description" />
+                                                    </a>
                                                 </div>
-                                            </Card.Body>
-                                        </Card>
-                                    </div>
-                                ))}
+                                                <Card.Body>
+                                                    <div className='d-flex flex-column justify-content-between' style={{ height: "100%" }} >
+                                                        <div>
+                                                            <a href={`/readnovel/${novel.novel_id}`} className='no-underline'>
+                                                                <Card.Subtitle>{novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 25)}...` : novel.novel_name}</Card.Subtitle>
+                                                            </a>
+                                                        </div>
+                                                        <div>
+                                                            <a href="/authorinfo" className='no-underline author'>
+                                                                <Card.Subtitle className="mt-1">{novel.penname}</Card.Subtitle>
+                                                            </a>
+                                                            <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
+                                                                <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
+                                                                {novel.novel_chaptercount}
+                                                                <FavoriteSharpIcon style={{ color: '#a1a1a1' }} />
+                                                                {novel.novel_rating}
+                                                            </Card.Text>
+                                                        </div>
+
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -104,7 +104,25 @@ const Search = () => {
                     <div className='col-lg-3'>
                         <div className='search-right'>
                             <div className=''>
-                                <input className='form-control' type='text' name="value" onChange={(e) => setValue(e.target.value)}></input>
+                                <div className='search-item'>
+                                    <div className='search-head'>
+                                        Search
+                                    </div>
+                                    <hr></hr>
+                                    <input
+                                        className='form-control'
+                                        type='text'
+                                        name="value"
+                                        onChange={(e) => setValue(e.target.value)}
+                                        onKeyPress={(e) => {
+                                            if (e.key === 'Enter') {
+                                                search();
+                                            }
+                                        }}
+                                    ></input>
+                                    
+                                </div>
+                                
                             </div>
                             <div className='search-item'>
                                 <div className='search-head'>
@@ -133,9 +151,9 @@ const Search = () => {
                                 </div>
 
                             </div>
-                            <div className='search-item'>
+                            {/* <div className='search-item'>
                                 <button className='form-control search-btn' onClick={() => search()}>Search</button>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

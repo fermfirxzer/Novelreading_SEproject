@@ -103,17 +103,14 @@ const Uploadnovel = () => {
   const handleImageClick = () => {
     document.getElementById('novel-image-input').click();
   };
-  const upload = async e => {
+  const upload = async () => {
     try {
       const formData = new FormData();
       formData.append("file", novelData.image)
-      // console.log(formData)
       const res = await axios.post("http://localhost:5000/api/upload", formData)
-      return res.data
-
+      return res.data;
     } catch (err) {
-      // console.log(err)
-      // setError(err.response ? err.response.data : "An error occurred");
+      return null;
     }
   }
   const [errname, setErrorname] = useState(null);
@@ -142,11 +139,11 @@ const Uploadnovel = () => {
   };
   function validateNovelData(novelData) {
     const validationErrors = [];
-  
-    if (novelData.name==='') {
+
+    if (novelData.name === '') {
       validationErrors.push({ field: 'name', message: 'Name is required' });
     }
-    if (novelData.description==='') {
+    if (novelData.description === '') {
       validationErrors.push({ field: 'description', message: 'Description is required' });
     }
     if (!novelData.mainCategory || novelData.mainCategory === '') {
@@ -155,20 +152,19 @@ const Uploadnovel = () => {
     if (!novelData.contentLevel) {
       validationErrors.push({ field: 'contentlevel', message: 'Content level is required' });
     }
-  
+
     if (validationErrors.length > 0) {
       return validationErrors;
     }
-  
-    if (novelData.mainCategory === novelData.subCategory1 ||novelData.mainCategory === novelData.subCategory2) {
+
+    if (novelData.mainCategory === novelData.subCategory1 || novelData.mainCategory === novelData.subCategory2) {
       validationErrors.push({ field: 'category', message: "Main category cannot be the same as subcategories" });
     }
-    if (novelData.subCategory1 === novelData.subCategory2 && novelData.subCategory1!=='') {
+    if (novelData.subCategory1 === novelData.subCategory2 && novelData.subCategory1 !== '') {
       validationErrors.push({ field: 'error', message: "Sub category cannot be the same" });
     }
     return validationErrors;
   }
-  
   const handleSubmit = async (e) => {
     e.preventDefault()
     console.log("this is upload")
@@ -189,6 +185,9 @@ const Uploadnovel = () => {
     let imageUrl = null;
     if (novelData.image != null) {
       imageUrl = await upload();
+      if (imageUrl == null) {
+        imageUrl = novelData.image.name;
+      }
     }
     console.log(formattedDate)
     let penname = novelData.penname;
@@ -218,13 +217,9 @@ const Uploadnovel = () => {
     } catch (err) {
       console.error("Error in Upload:", err);
       setError(err.response ? err.response.data : "An error occurred");
-
     }
-
-
   };
   const update = async e => {
-
     e.preventDefault()
     setError(null)
     setErrorname(null);
@@ -238,23 +233,19 @@ const Uploadnovel = () => {
       });
       return;
     }
-
-
-    
-
     let imageUrl = null;
     if (novelData.image != null) {
       imageUrl = await upload();
-      if (imageUrl === undefined) {
-        imageUrl = null;
+      if (imageUrl == null) {
+        imageUrl = novelData.image.name;
       }
     }
-
     const dataToSend = {
       novelData: novelData,
       novelid: novelid,
       imageUrl: imageUrl
     };
+    console.log(dataToSend)
     const penToSend = {
       novelid: novelid,
       penname: novelData.penname,
@@ -268,7 +259,6 @@ const Uploadnovel = () => {
       setError(err.response ? err.response.data : "An error occurred");
       console.log(err)
     }
-
   }
   const subCategories = [
     'Romantic',

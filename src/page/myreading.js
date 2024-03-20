@@ -152,7 +152,7 @@ const Myreading = () => {
 
     };
     return (
-        <div style={{ marginTop: '5rem', marginBottom: '5rem' }}>
+        <div style={{ marginTop: '7rem', marginBottom: '5rem' }}>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
             <div className='container headtopic'>
                 <Dropdown className='mt-2 mx-2 ' >

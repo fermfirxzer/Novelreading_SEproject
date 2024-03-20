@@ -187,7 +187,7 @@ nav a {
    
   }
   .search-container{
-    margin:0px 20px;
+   
   }
  .search-btn,.all-btn{
   background-color: #dddddd;
@@ -231,7 +231,7 @@ nav a {
   font-size: 25px;
   font-weight:600;
   min-width: 50px;
-    width: 100px;
+  width: auto;
   
  }
  .category-image{

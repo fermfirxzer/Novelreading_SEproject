@@ -62,14 +62,15 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const totalPagesComments = Allcomment ? Math.ceil(Allcomment.length / commentPerPage) : 0;
     const currentComment = Allcomment ? Allcomment.slice(startIndexComment, endIndexComment) : 0;
     const fetchcomment = async () => {
-        if(novelid !== undefined && chapterid !== undefined){
-        try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchcomment/${novelid}/${chapterid}`);
-            console.log(response.data)
-            setAllcomment(response.data)
-        } catch (err) {
-            console.log(err)
-        }}
+        if (novelid !== undefined && chapterid !== undefined) {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/font/fetchcomment/${novelid}/${chapterid}`);
+                console.log(response.data)
+                setAllcomment(response.data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
 
     }
     useEffect(() => {
@@ -122,26 +123,26 @@ const CommentNovel = ({ novelid, chapterid }) => {
         setEditingCommentId(null);
         setEditedCommentText('');
     }
-    const handleUpdateComment = async() => {
-        const dataTosend={ editingcommentText,editingcommentid, writerid: currentUser.writer_id};
+    const handleUpdateComment = async () => {
+        const dataTosend = { editingcommentText, editingcommentid, writerid: currentUser.writer_id };
         console.log(dataTosend)
-        try{
-            const response=await axios.post("http://localhost:5000/api/font/update_comment/",dataTosend);
+        try {
+            const response = await axios.post("http://localhost:5000/api/font/update_comment/", dataTosend);
             setErrcomment(response.data)
             fetchcomment();
             setEditingCommentId(0);
             setEditedCommentText('');
-        }catch(err){
+        } catch (err) {
             setErrcomment(err.response ? err.response.data : "An error occurred");
             console.log(err)
         }
-      };
+    };
     const handleDeleteComment = async (comment) => {
         console.log(comment);
         try {
             const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment);
             setErrcomment(response.data)
-    
+
             fetchcomment();
         } catch (err) {
             setErrcomment(err.response)
@@ -151,7 +152,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const handleAddEmoji = (emoji) => {
         setNewComment(prevComment => prevComment + emoji);
     };
-    
+
     const [showemojis, setShowemojis] = useState(false);
 
     const emojiList = ['😂', '😊', '❤️', '😀', '🥳', '😎', '🤩', '🤣', '👍', '😭', '🙏', '😘', '🥰', '😍', '🎉', '🌟'];
@@ -159,6 +160,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
 
         setShowemojis(!showemojis);
     };
+    
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0'>
@@ -204,7 +206,6 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                 )}
 
                             </div>
-
                             <div className='d-flex flex-column justify-content-center mt-5 align-items-center'>
                                 <div>
                                     {Errcomment && <p className='text-danger'>{Errcomment}</p>}
@@ -214,13 +215,12 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                     ส่งความคิดเห็น
                                 </button>
                             </div>
-
                         </div>
                     </div>
 
                     <div className='reading-novel-comment pb-5 px-4'>
                         <div className="container mt-5">
-                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({Allcomment?Allcomment.length:0})</div>
+                            <div className='header pt-5'>ความคิดเห็นทั้งหมด ({Allcomment ? Allcomment.length : 0})</div>
                             {Allcomment && currentComment.map((comment, index) => (
                                 <div className='card mb-3 mt-4' key={index}>
                                     <div className="card-body d-flex justify-content-between">
@@ -232,14 +232,14 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                                 style={{ width: '50px', height: '50px', marginRight: '1.5rem' }}
                                             />
                                             <div className='ml-5'>
-                                                <h5 className="card-title">{comment.display_name == ''||comment.display_name==null ? comment.writer_name : comment.display_name}</h5>
+                                                <h5 className="card-title">{comment.display_name == '' || comment.display_name == null ? comment.writer_name : comment.display_name}</h5>
                                                 <p className="card-text">{comment.CommentText}</p>
                                             </div>
                                         </div>
                                         <div className=''>
                                             <p className='text-end'>{formatDistanceToNow(new Date(comment.Timestamp))}</p>
                                             <div className=''>
-                                                {comment.writer_id === currentUser.writer_id && (<>
+                                                {currentUser && comment.writer_id === currentUser.writer_id && (<>
                                                     <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment.comment_id)}>Edit</button>
                                                     <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delete</button>
                                                 </>
@@ -250,12 +250,12 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                     </div>
 
                                     <div className=''>
-                                        {editingcommentid===comment.comment_id && (
+                                        {editingcommentid === comment.comment_id && (
                                             <>
                                                 <div>
                                                     <textarea className='form-control'
                                                         value={editingcommentText}
-                                                        onChange={(e)=>setEditedCommentText(e.target.value)}
+                                                        onChange={(e) => setEditedCommentText(e.target.value)}
                                                     />
 
 
@@ -273,7 +273,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
                             <div id="pagination" className="chapter-btn-container">
                                 <button onClick={handlePrevPageComment} disabled={currentPageComment === 1} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
                                 <span>หน้าที่ {currentPageComment}</span>
-                                <button onClick={handleNextPageComment} disabled={currentPageComment === totalPagesComments} className='chapter-btn'><NavigateNextIcon></NavigateNextIcon></button>
+                                <button onClick={handleNextPageComment} disabled={currentPageComment=== totalPagesComments||totalPagesComments==0} className='chapter-btn'><NavigateNextIcon></NavigateNextIcon></button>
                             </div>
                         </div>
                     </div>

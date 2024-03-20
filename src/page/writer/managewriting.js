@@ -111,11 +111,12 @@ const Managewriting = () => {
    
 
   return (
-    <div style={{ marginTop: '5rem' }}>
+    <div style={{ marginTop: '7rem' }}>
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
         <Container style={{width:'65%'}}>
-                
-                <div className='headtopic'>
+            
+                <div className='flex align-items-center'>
+                    <div className='headtopic'>
                     <Dropdown   className='mt-2' >
                         My Writing
                         <Dropdown.Toggle className = "dropdown-custom" variant="primary" id="dropdown-basic "  >
@@ -127,10 +128,6 @@ const Managewriting = () => {
                             <Dropdown.Item href="/profile">My Profile</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                </div>
-                <div className='flex'>
-                    <div className='head-writing'>
-                        <h2>จัดการงานเขียน</h2>
                     </div>
                     <div>
                         <Link to="/writer/upload" style={{ textDecoration: 'none', color: 'black' }}>
