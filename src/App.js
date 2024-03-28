@@ -16,7 +16,7 @@ import Profile from './page/profile.js';
 import Viewnovel from './page/writer/viewnovel.js';
 import Uploadchapter from './page/writer/uploadchapter.js';
 import Myreading from './page/myreading.js';
-import NovelCatePage from './page/novelCatePage.js';
+import Novel from './page/novel.js';
 import Search from './page/search.js';
 function App() {
     
@@ -38,7 +38,8 @@ function App() {
             <Route path="/writer/viewnovel" element={<Viewnovel/>} />
             <Route path="/writer/uploadchapter" element={<Uploadchapter />} />
             <Route path="/myreading" element={<Myreading/>}/>
-            <Route path="/novel" element={<NovelCatePage/>}/>
+            <Route path="/novel" element={<Novel/>}/>
+            <Route path="/novel/:penname" element={<Novel/>}/>
             <Route path="/search" element={<Search/>}/>
             <Route path="/search/:category" element={<Search/>}/>
           </Routes>

@@ -8,42 +8,36 @@ import { Card } from 'react-bootstrap';
 
 import NavbarReactBootstrap from '../component/Navbar.js';
 
-import Swipercate from '../Swipercate.js';
 
 import '../index.css';
 import FormatListBulletedTwoToneIcon from '@mui/icons-material/FormatListBulletedTwoTone';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 
-const NovelCatePage = () => {
-
-    const [expandedRows, setExpandedRows] = useState(18);
-
-    const handleExpand = () => {
-        setExpandedRows(expandedRows + 15);
-    };
+const Novel = () => {
 
     const mainCategories = [
-    'Romantic',
-    'Funny',
-    'Drama',
-    'Boy love',
-    'Girl love',
-    'Period',
-    'Feel good',
-    'Short story',
-    'Action',
-    'Mysterious',
-    'Love novel',
-    'Fantasy',
-    'Sci-fi',
-    'Investigate',
-    'Horror',
+        'Romantic',
+        'Funny',
+        'Drama',
+        'Boy love',
+        'Girl love',
+        'Period',
+        'Feel good',
+        'Short story',
+        'Action',
+        'Mysterious',
+        'Love novel',
+        'Fantasy',
+        'Sci-fi',
+        'Investigate',
+        'Horror',
 
-  ];
-
-
+    ];
+    const penname = useParams().penname || null;
+    console.log(penname)
     const getRandomColor = () => {
         const colors = [
             "#FF0000", "#FF5733", "#FFC300", "#FFED97", "#80FFDB",
@@ -75,26 +69,47 @@ const NovelCatePage = () => {
     const [novel, setNovel] = useState(null);
     const [totalPages, setTotalpage] = useState(0)
     const [page, setPage] = useState(0);
-    const fetchtotalpage = async () => {
-        const totalpage = await axios.get("http://localhost:5000/api/font/noveltotalpage/");
-        setTotalpage(totalpage.data);
-    }
-    const [activeTab, setActiveTab] = useState('mostview');
-    const fetchData = async (tab) => {
+    const fetchtotalpage = async (tab) => {
+
         try {
-            const getnovel = await axios.get(`http://localhost:5000/api/font/novelgetnovel/${page}/${tab}`)
-            setNovel(getnovel.data);
-            console.log(novel)
+            const totalpage = await axios.get(`http://localhost:5000/api/font/noveltotalpage/${tab}`);
+            setTotalpage(totalpage.data);
+            console.log(totalpage.data)
         } catch (err) {
-            console.log(err);
+            console.log(err)
+        }
+
+    }
+    const [activeTab, setActiveTab] = useState(penname != null ? "penname" : "mostview");
+    const fetchData = async (tab) => {
+        if (tab == "mostview" || tab == "lastest") {
+            try {
+                const getnovel = await axios.get(`http://localhost:5000/api/font/novelgetnovel/${page}/${tab}/${penname}`)
+                setNovel(getnovel.data);
+            } catch (err) {
+                console.log(err);
+            }
+        } else if (tab == "penname") {
+            if (penname == null) {
+                setNovel(null);
+                setTotalpage(0);
+            } else {
+                try {
+                    const getnovel = await axios.get(`http://localhost:5000/api/font/novelgetnovel/${page}/${tab}/${penname}`)
+                    setNovel(getnovel.data);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
         }
     }
+
     useEffect(() => {
         fetchData(activeTab);
     }, [page])
     useEffect(() => {
-        fetchtotalpage();
-        fetchData("mostview");
+        fetchtotalpage(activeTab);
+        fetchData(activeTab);
     }, [])
 
 
@@ -102,10 +117,14 @@ const NovelCatePage = () => {
         setActiveTab(tab);
         if (tab === "mostview") {
             fetchData("mostview");
+            fetchtotalpage("mostviews");
+        } else if (tab == "penname") {
+            fetchData("penname");
+            fetchtotalpage("penname");
         } else {
             fetchData("lastest");
+            fetchtotalpage("lastest");
         }
-        setPage(0)
     };
     const handlePageChange = (e) => {
         setPage(Number(e.target.value));
@@ -135,43 +154,59 @@ const NovelCatePage = () => {
                 <span className={`clickable-tab ${activeTab === 'lastest' ? 'active' : ''}`} onClick={() => handleTabClick('lastest')}>
                     <h3>มาใหม่</h3>
                 </span>
+                <span className={`clickable-tab ${activeTab === 'penname' ? 'active' : ''}`} onClick={() => handleTabClick('penname')}>
+                    <h3>ผู้เขียน</h3>
+                </span>
             </div>
             <div className="container my-3">
                 <div className="row">
                     <div className="col-md-9">
                         <div className="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
-                            {novel && novel.map((novel) => (
-                                <div key={novel.novel_id} className="col">
-                                    <Card style={{ width: '11.5rem', height: '20rem' }}>
-                                        <div className=''>
-                                            <a href={`/readnovel/${novel.novel_id}`}>
-                                                <img src={novel.novel_img ? `/uploads/novel/${novel.novel_img}` : "/uploads/novel/osu icon.jpg"} style={{ height: '13rem', width: "100%" }} alt="Description" />
-                                            </a>
-                                        </div>
-                                        <Card.Body>
-                                            <div className='d-flex flex-column justify-content-between' style={{ height: "100%" }} >
-                                                <div>
-                                                    <a href={`/readnovel/${novel.novel_id}`} className='no-underline'>
-                                                        <Card.Subtitle>{novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 25)}...` : novel.novel_name}</Card.Subtitle>
-                                                    </a>
-                                                </div>
-                                                <div>
-                                                    <a href="/authorinfo" className='no-underline author'>
-                                                        <Card.Subtitle className="mt-1">{novel.penname.length > 20 ? `${novel.penname.slice(0, 15)}...` : novel.penname}</Card.Subtitle>
-                                                    </a>
-                                                    <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
-                                                        <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
-                                                        {novel.novel_chaptercount}
-                                                        <FavoriteSharpIcon style={{ color: '#a1a1a1' }} />
-                                                        {novel.novel_rating}
-                                                    </Card.Text>
-                                                </div>
-
+                            {novel && novel.length > 0 ? (
+                                novel.map((novel) => (
+                                    <div key={novel.novel_id} className="col">
+                                        <Card style={{ width: '11.5rem', height: '20rem' }}>
+                                            <div className=''>
+                                                <a href={`/readnovel/${novel.novel_id}`}>
+                                                    <img src={novel.novel_img ? `/uploads/novel/${novel.novel_img}` : "/uploads/novel/osu icon.jpg"} style={{ height: '13rem', width: "100%" }} alt="Description" />
+                                                </a>
                                             </div>
-                                        </Card.Body>
-                                    </Card>
+                                            <Card.Body>
+                                                <div className='d-flex flex-column justify-content-between' style={{ height: "100%" }} >
+                                                    <div>
+                                                        <a href={`/readnovel/${novel.novel_id}`} className='no-underline'>
+                                                            <Card.Subtitle>{novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 25)}...` : novel.novel_name}</Card.Subtitle>
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <a href="/authorinfo" className='no-underline author'>
+                                                            <Card.Subtitle className="mt-1">{novel.penname.length > 20 ? `${novel.penname.slice(0, 15)}...` : novel.penname}</Card.Subtitle>
+                                                        </a>
+                                                        <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
+                                                            <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
+                                                            {novel.novel_chaptercount}
+                                                            <FavoriteSharpIcon style={{ color: '#a1a1a1' }} />
+                                                            {novel.novel_rating}
+                                                            <span>
+                                                                <img
+                                                                    src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
+                                                                    className=""
+                                                                    alt="Description"
+                                                                />
+                                                            </span>
+                                                            <span>{novel.novel_views}</span>
+                                                        </Card.Text>
+                                                    </div>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col">
+                                    <p>No novels found.</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                         <div className='row mt-5 flex'>
                             <div className='col-md-2 col-4 text-center mr-4'>
@@ -213,4 +248,4 @@ const NovelCatePage = () => {
     );
 };
 
-export default NovelCatePage;
+export default Novel;

@@ -226,7 +226,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                     <div className="card-body d-flex justify-content-between">
                                         <div className='flex'>
                                             <img
-                                                src={comment.writer_img ? comment.writer_img : `/uploads/novel/osu icon.jpg`}
+                                                src={comment.writer_img ? `/uploads/profile/${comment.writer_img}` : `/uploads/novel/osu icon.jpg`}
                                                 className="rounded-circle mr-3"
                                                 alt="Profile"
                                                 style={{ width: '50px', height: '50px', marginRight: '1.5rem' }}

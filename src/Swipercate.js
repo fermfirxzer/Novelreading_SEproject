@@ -52,7 +52,7 @@ const Swipercate = ({ novelsData }) => {
                                 <div className=''>
                                     <div className="novel-author">
                                         <Link to="/authorinfo" className="no-underline author">
-                                            {novel.penname}
+                                        {novel.penname&&novel.penname.length>15? `${novel.penname.slice(0, 15)}...` : novel.penname}
 
                                         </Link>
                                     </div>
@@ -73,6 +73,14 @@ const Swipercate = ({ novelsData }) => {
                                             />
                                         </span>
                                         <span>{novel.novel_rating}k</span>
+                                        <span>
+                                            <img
+                                                src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
+                                                className=""
+                                                alt="Description"
+                                            />
+                                        </span>
+                                        <span>{novel.novel_views}</span>
                                     </div>
                                 </div>
                             

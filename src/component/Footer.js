@@ -10,8 +10,8 @@ const Footer = () => {
         <div className="footer-col">
           <h4>ดูเนื้อหา</h4>
           <ul>
-            <li><a href="/">นิยาย</a></li>
-            <li><a href="/novel">หมวดหมู่นิยาย</a></li>
+            <li><a href="/novel">นิยาย</a></li>
+            <li><a href="/search">ค้นหานิยาย</a></li>
           </ul>
         </div>
         <div className="footer-col">
@@ -19,8 +19,8 @@ const Footer = () => {
           <ul>
             <li><a href="/writer/myreading">My Reading</a></li>
             <li><a href="/writer/managewriting">My Writing</a></li>
-            <li><a href="/writer/profile">My Profile</a></li>
-            <li><a href="/writer/managewriting">เพิ่มงานเขียนใหม่</a></li>
+            <li><a href="/profile">My Profile</a></li>
+            <li><a href="/writer/upload">เพิ่มงานเขียนใหม่</a></li>
           </ul>
         </div>
         <div className="footer-col">

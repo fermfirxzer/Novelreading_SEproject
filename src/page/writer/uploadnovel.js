@@ -158,7 +158,7 @@ const Uploadnovel = () => {
     }
 
     if (novelData.mainCategory === novelData.subCategory1 || novelData.mainCategory === novelData.subCategory2) {
-      validationErrors.push({ field: 'category', message: "Main category cannot be the same as subcategories" });
+      validationErrors.push({ field: 'error', message: "Main category cannot be the same as subcategories" });
     }
     if (novelData.subCategory1 === novelData.subCategory2 && novelData.subCategory1 !== '') {
       validationErrors.push({ field: 'error', message: "Sub category cannot be the same" });

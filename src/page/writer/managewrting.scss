@@ -189,7 +189,7 @@
 
         .head-box {
             height: 100px;
-            border: solid 1px #e6e6e6;
+            
             padding: 20px;
 
             h3 {
@@ -307,12 +307,10 @@
         .chapter-input {
             .chapter-left {
                 height: 125px;
-                border: solid 1px #e6e6e6;
+                // border: solid 1px #e6e6e6;
             }
 
-            .chapter-right {
-                border: solid 1px #e6e6e6;
-            }
+            
         }
     }
 

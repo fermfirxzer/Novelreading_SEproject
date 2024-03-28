@@ -52,7 +52,7 @@ const Search = () => {
     }
     useEffect(() => {
         search()
-    }, [])
+    }, [category])
     return (
         <div style={{ marginTop: '7rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap></NavbarReactBootstrap>
@@ -113,6 +113,7 @@ const Search = () => {
                                         className='form-control'
                                         type='text'
                                         name="value"
+                                        placeholder='Search by novel name'
                                         onChange={(e) => setValue(e.target.value)}
                                         onKeyPress={(e) => {
                                             if (e.key === 'Enter') {

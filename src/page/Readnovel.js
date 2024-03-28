@@ -218,18 +218,18 @@ const Readnovel = () => {
                                 <div className="mt-2 border-end " style={{ width: '50%' }}>
                                     <h2 >ข้อมูลนักเขียน </h2>
                                     <div className='d-flex justify-content-between '>
-                                        {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>}
-                                        <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
+                                        {/* {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>} */}
+                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('penname')}>
                                             {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button>
+                                        </button> */}
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
-                                        {novelData && <span><strong>ผู้เขียน : </strong> {novelData.penname}</span>}
-                                        <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
+                                        {novelData && <span><strong>ผู้เขียน : </strong><a  className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
+                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('writer')}>
                                             {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button>
+                                        </button> */}
                                     </div>
 
                                 </div>

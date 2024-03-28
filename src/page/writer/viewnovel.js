@@ -17,6 +17,7 @@ const Viewnovel = () => {
     const [novel, setNovel] = useState({});
     const [novelid, setNovelid] = useState(state.novelid)
     const [chapters, setchapters] = useState(null)
+    const [category, setCategory] = useState(null);
     const navigate = useNavigate()
     const handleClick = () => {
         navigate("/writer/uploadchapter", { state: { novel, novelid } })
@@ -24,6 +25,17 @@ const Viewnovel = () => {
     const handleEdit = () => {
         navigate("/writer/upload", { state: { novel, novelid } })
     }
+    useEffect(() => {
+        const fetchnovel = async () => {
+            const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
+            if (response.data.length > 1) {
+                setCategory(response.data[1]);
+            }
+        }
+        fetchnovel();
+
+    }, [novelid])
+    console.log(category)
     const handleDelete = async () => {
         Swal.fire({
             title: "Are you sure?",
@@ -113,12 +125,12 @@ const Viewnovel = () => {
         fetchnovel();
     }, [state]);
 
-    const handleNonDeleteClick = (chapterid, e,index) => {
-        
-    
+    const handleNonDeleteClick = (chapterid, e, index) => {
+
+
         if (!e.target.closest('.delete-button')) {
-            
-            navigate(`/writer/uploadchapter`, { state: { novel,novelid, chapter:chapters[index],index: index + 1} });
+
+            navigate(`/writer/uploadchapter`, { state: { novel, novelid, chapter: chapters[index], index: index + 1 } });
         }
     };
     const handleDeleteChapter = (chapterid) => {
@@ -139,8 +151,8 @@ const Viewnovel = () => {
                     icon: "success"
                 });
                 try {
-                      await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novelid, chapterid }, { withCredentials: true, });
-                      fetchData();
+                    await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novelid, chapterid }, { withCredentials: true, });
+                    fetchData();
                 } catch (error) {
                     console.error("Error deleting novel:", error);
                     Swal.fire({
@@ -156,7 +168,7 @@ const Viewnovel = () => {
     console.log(chapters)
 
 
-    
+
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -169,23 +181,12 @@ const Viewnovel = () => {
                 <div className='row'>
 
                     <div className='header col-8 col-md-6'>
-                        <div className='head-box'>
-                            <h3>ตั้งค่าสถานะเรื่อง</h3>
-                            <div className='row'>
-                                <div className='col-6'>
-                                    <h6>สถานะเรื่อง :</h6>
-                                </div>
-                                <div className='col-6 text-end'>
-                                    <h6>สถานะเรื่อง :</h6>
-                                </div>
-                            </div>
 
-                        </div>
                     </div>
                     <div className='header text-center col-8 col-md-6'>
                         <div className='head-box header-right d-flex' style={{ marginTop: 'auto' }}>
                             <button type="submit" className='form-control' onClick={handleEdit}>แก้ไข</button>
-                            <button type="submit" className='form-control' style={{backgroundColor:"#00cbc3" ,color:"#fff"}} onClick={handleDelete}>ลบ</button>
+                            <button type="submit" className='form-control' style={{ backgroundColor: "#00cbc3", color: "#fff" }} onClick={handleDelete}>ลบ</button>
                         </div>
                     </div>
                 </div>
@@ -200,19 +201,28 @@ const Viewnovel = () => {
                     </div>
                 </div>
                 <div className='novel-box my-5'>
+                    <div className='d-flex'>
+                        {category && category.map((category, index) => (
+                            <div key={index} className='mx-2'>
+                                <a href={`/search/${category.category_name}`}>
+                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
+                                </a>
+                            </div>
+                        ))}
+                    </div>
                     <div className='d-flex justify-content-center my-5'><h2 >จัดการตอน</h2></div>
                     <div className='novel-box-header'>
                         <span className=''><h2>ตอนทั้งหมด</h2></span>
                         <button className='ms-auto authorupload-btn' type="submit" onClick={handleClick}>เพิ่มตอนใหม่</button>
                     </div>
-                    <div className='row chapter-box' style={{marginBottom:"15rem"}}>
+                    <div className='row chapter-box' style={{ marginBottom: "15rem" }}>
 
                         <ul className='box'>
                             {chapters && chapters.map((chapter, index) => (
                                 <li>
 
-                                    <div className='chapter-item' onClick={(e) => handleNonDeleteClick(chapter.chapter_id, e,index)}>
-                                        <div className='a number' style={{color:"#00cbc3"}}>
+                                    <div className='chapter-item' onClick={(e) => handleNonDeleteClick(chapter.chapter_id, e, index)}>
+                                        <div className='a number' style={{ color: "#00cbc3" }}>
                                             #{index + 1}
                                         </div>
                                         <div className='a chapter'>
@@ -222,14 +232,14 @@ const Viewnovel = () => {
                                             <VisibilityTwoToneIcon className='mx-2' />{chapter.chapter_views}
                                         </div>
                                         <div className='a views'>
-                                            <CommentIcon style={{color:'#0009'}} className='mx-2' />{chapter.chapter_views}
+                                            <CommentIcon style={{ color: '#0009' }} className='mx-2' />{chapter.chapter_views}
                                         </div>
-                                      
+
                                         <div className='a delete-button'>
-                                            <button style={{backgroundColor:'#00cbc3',color:"#fff"}} type="button" className='btn btn-danger border-0' onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>
-                                                <DeleteIcon/>
+                                            <button style={{ backgroundColor: '#00cbc3', color: "#fff" }} type="button" className='btn btn-danger border-0' onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>
+                                                <DeleteIcon />
                                             </button>
-                                            
+
                                         </div>
                                     </div>
 

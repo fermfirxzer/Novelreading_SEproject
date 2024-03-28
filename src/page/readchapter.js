@@ -27,11 +27,7 @@ const Readchapter = () => {
     fetchchapter();
     Allchapter();
 }, [])
-console.log(chapter)
-  const writer = {
-    img:'https://1417094351.rsc.cdn77.org/publicassets/8115942/profile_picture/profile_picture.gif?169046407'
-    
-  };
+console.log(Allchapter)
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
 
@@ -75,11 +71,10 @@ console.log(chapter)
               <div className='left d-flex'>
                   <div  className='hover-bg d-flex align-items-center justify-content-center'>
                       <div  className='text-center mx-2 mt-3 '>
-                          <a href = "/readnovel"><HomeOutlinedIcon className='icon'/></a>
+                          <a href = "/novel"><HomeOutlinedIcon className='icon'/></a>
                           <p className = "text-icon">หน้าหลัก</p>
                       </div>
                   </div>
-                
                   <div  className='mx-2 d-flex align-items-center'>
                     {chapter&&chapter.chapter_title}
                   </div>
@@ -109,7 +104,7 @@ console.log(chapter)
                      
                     </div>
                   </div>
-                  <div  className='hover-bg d-flex align-items-center justify-content-center' onClick={handleClickBooked}>
+                  {/* <div  className='hover-bg d-flex align-items-center justify-content-center' onClick={handleClickBooked}>
                     <div  className='mx-2 text-center '>
                    
                       <BookOutlinedIcon className='icon' style={{  color: isBooked ? '#00cbc3' : '' }}></BookOutlinedIcon>  
@@ -118,7 +113,7 @@ console.log(chapter)
                       </div>
                     </div>
                    
-                  </div>
+                  </div> */}
                 
               </div>
               
@@ -126,7 +121,7 @@ console.log(chapter)
           <div className='con-chapter d-flex justify-content-center align-items-center flex-column'>
               <div className='container text-center mt-5'>
                
-                <a className = " novelname" href = "/readnovel"><h5>เรื่อง : {chapter&&chapter.novel_name}</h5></a>
+                <a className = " novelname" href = {`/readnovel/${novelid}`}><h5>เรื่อง : {chapter&&chapter.novel_name}</h5></a>
                 <h4 className='mt-3'>{chapter&&chapter.chapter_title}</h4>
                 <h5 className=''>โดย {chapter&&chapter.penname}</h5>
               </div>
@@ -148,7 +143,7 @@ console.log(chapter)
                       <div>
                           <h4>{chapter&&chapter.novel_name}</h4>
                           <div className='d-flex'>
-                            <img  className = "writerImg me-2" src={writer.img}></img>
+                            {/* <img  className = "writerImg me-2" src={chapter.novel_img?`/uploads/novel/${chapter.novel_img}`:`/uploads/novel/osu icon.jpg`}></img> */}
                             <span><strong> </strong> {chapter&&chapter.penname}</span>
                             <button className='follow-btn ms-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000',width: isFollowedPenname ? '100px':''}} 
                               onClick={() => handleClickFollowed()}>
@@ -159,14 +154,14 @@ console.log(chapter)
                       </div>
                     </div> 
               </div>
-              <div className=' container text-center margin d-flex'>
-                <div className = 'd-flex justify-content-center' style={{width:'30%'}}>
-                  <ArrowBackIosNewOutlinedIcon/>
-                  <h4>ตอนก่อนหน้า</h4>
+              <div className='container text-center margin d-flex'>
+              <div className = 'd-flex justify-content-center' style={{width:'50%'}}>
+                  {chapter&&chapter.chapter_id!=1&&<a className="d-flex link"href={`/readchapter/${chapter.novel_id}/${chapter.chapter_id-1}`}><ArrowBackIosNewOutlinedIcon/>
+                  <h4>ตอนก่อนหน้า</h4></a>}
                 </div>
-                <div className = 'd-flex justify-content-center' style={{width:'70%'}}>
-                  <h4>ตอนต่อไป</h4>
-                  <ArrowForwardIosOutlinedIcon/>
+                <div className = 'd-flex justify-content-center' style={{width:'40%'}}>
+                {chapter&&chapter.chapter_id<Allchapter.length&&<a className="d-flex link"href={`/readchapter/${chapter.novel_id}/${chapter.chapter_id+1}`}><h4>ตอนต่อไป</h4>
+                  <ArrowForwardIosOutlinedIcon/></a>}
                 </div>
               </div>
           </div>
