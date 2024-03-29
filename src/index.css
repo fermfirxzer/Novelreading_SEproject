@@ -1,0 +1,489 @@
+
+/* styles.css or App.css */
+@import '@fortawesome/fontawesome-free/css/all.css';
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/scrollbar';
+@import 'component/navbar.scss';
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  
+  
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+nav {
+  background-color: #eee;
+  padding: 10px;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+  font-weight: bold;
+}
+
+.container-lg{
+  margin:50px;
+
+}
+
+
+
+
+.image{
+  height : 300px;
+}
+
+
+/* Swiper container styles */
+.swiper-container {
+  width: 100%;
+  margin: 20px 0;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.swiper{
+  margin: 20px 0px;
+}
+/* Swiper slide styles */
+.swiper-slide,.swiper-all-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+ 
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+.swiper-all-btn{
+  background-color: transparent;
+  box-shadow: 0 0px 0px rgba(255, 255, 255, 0);
+  
+}
+
+/* Swiper navigation styles */
+/* Swiper navigation styles */
+.swiper-button-prev,
+.swiper-button-next {
+  color: #ffffff;
+  font-size: 24px;
+  padding: 25px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 10px;
+
+}
+
+/* Swiper pagination styles */
+.swiper-pagination {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.swiper-pagination-bullet {
+  
+  width: 10px;
+  height: 10px;
+  background-color: #000000;
+  border-radius: 50%;
+  margin: 0 5px;
+  opacity: 0.7;
+}
+
+.swiper-pagination-bullet-active {
+  opacity: 1;
+  background-color: #000 !important;
+}
+
+
+ 
+  .signup-container {
+   
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    width: 850px;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 255, 255);
+    padding: 50px;
+    z-index: 1000;
+    border-radius: 20px;
+    box-shadow:0px 0px 5px 0.1px rgb(0, 0, 0);
+   /* opacity: 0; /* Initially hidden 
+    transition: opacity 0.5s ease;*/
+  }
+  /*.signup-container.show {
+  opacity: 1; /* Shown when the 'show' class is applied 
+}*/
+  .link-login-signin-container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: right;
+  }
+  .link-login-signin{
+   
+    margin-left: 5px;
+    color:#2ac4be;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  .signup-form {
+    display:flex;
+    align-items: center;
+    position: relative;
+    
+  }
+  .img-login{
+    width: 70%;
+    margin-right: 50px;
+  }
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    font-size: 20px;
+    background: none;
+    border: none;
+    
+    color: #000000;
+    cursor: pointer;
+  }
+
+  .signinbtn{
+    background-color:transparent;
+    border-width: inherit;
+    color: rgb(0, 0, 0);
+   
+   
+  }
+  .search-container{
+   
+  }
+ .search-btn,.all-btn{
+  background-color: #dddddd;
+  width:40px;
+  height:40px;
+  border-radius: 30px;
+  border:none;
+ 
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  
+ }
+ 
+ .heart-btn{
+  background-color: transparent;
+  border-width:thin;
+  width:45px;
+  height:45px;
+  border-radius: 50px;
+  border-color: #00cbc3;
+  
+ }
+
+ .all-container:hover{
+  color:#00cbc3;
+ }
+ .search-icon,.all-icon{
+  width: 24px; 
+  height: 24px;
+ 
+ }
+ 
+ 
+ .category-container{
+  width: 100%; /* Set your desired width */
+  margin: 50px auto;
+ }
+ .category-name-con{
+  color:#000000;
+  font-size: 25px;
+  font-weight:600;
+  min-width: 50px;
+  width: auto;
+  
+ }
+ .category-image{
+  width:200px;
+  height:200px;
+ }
+ .clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.all-container{
+  margin: 60px;
+  
+ }
+ .novel-container{
+  background-color: #f8f8f8;
+  margin-bottom: 10px;
+  height:19rem;
+ }
+ .novel-name,.novel-author,.novel-info{
+  margin: 0px 10px;
+ 
+ }
+ .no-underline {
+  text-decoration: none;
+  color:black;
+}
+.author{
+  color:rgb(146, 146, 146);
+}
+.no-underline:hover {
+  color: #00cbc3; 
+}
+
+
+.expand-btn{
+  width:100%;
+  height: 50px;
+  border-radius: 15px;
+  background-color:#dafffe;
+  
+  color: #000000;
+}
+.expand-btn:hover{
+  
+  background-color:#50e4dfc2;
+  color: #ffffff;
+ 
+}
+
+
+
+.reading-novel-container {
+  display:flex; 
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
+  margin-top: -11px;
+  
+}
+
+.reading-novel-img-con {
+  margin-right: 0px; 
+}
+
+.reading-novel-img {
+  width: 450px; /* Set the width of the novel image */
+  height: auto; /* Maintain aspect ratio */
+}
+
+/* Add styling for reading-novel-info, reading-novel-name, reading-novel-author, reading-novel-describe as needed */
+.reading-novel-info {
+  color:#ffffff
+}
+
+.reading-novel-name {
+  font-size: 30px;
+}
+
+.reading-novel-author {
+  display: flex;
+  align-items: center; 
+  
+}
+.reading-novel-author p {
+  margin-top: 10px; 
+  
+}
+.author-profile{
+  width:35px;
+  border-radius: 30px;
+  margin-right: 10px;
+}
+
+.reading-novel-describe{
+  width: 500px;
+  margin:40px 0px;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4; /* Set the number of lines to display */
+  -webkit-box-orient: vertical;
+}
+@media (max-width: 1080px) {
+  .reading-novel-describe{
+    width: 350px;
+    
+  }
+  .reading-novel-img {
+    width: 400px; /* Set the width of the novel image */
+    height: auto; /* Maintain aspect ratio */
+  }
+}
+@media (max-width:480px){
+  .reading-novel-container {
+    display:block; 
+   
+    
+  }
+}
+.follow-btn,.add-playlist,.readnow{
+  background-color: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+  border-radius: 15px; border-width: thin;
+  width:80px;
+  margin-left:15px;
+}
+.add-playlist,.readnow{
+  width:135px;
+  padding: 10px;
+  border-radius: 25px;
+}
+.add-playlist{
+  color: #000000;
+  background-color: #ffffff;
+}
+.readnow{
+  color: #000000;
+  background-color: #00cbc3;
+}
+
+
+.header{
+  padding: 15px ;
+  font-size: 30px;
+  font-weight: 600;
+}
+.reading-novel-chapter{
+  background-color: #fff;
+ 
+}
+
+
+.reading-novel-comment{
+  justify-content: center;
+  margin-top: 15px;
+  background-color: #fff;
+}
+.comment{
+  display: flex;
+  
+  align-items: center;
+  background-color: #ffffff;
+  border:#ccc;
+  height:80px;
+  width:60%;
+}
+.chapter {
+  display: flex;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #ccc;
+  padding: 20px ;
+}
+
+.chapter-btn-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin:20px;
+}
+.chapter-btn{
+  
+  background-color: #ffffff;
+  margin: 0px 10px;
+  border-radius: 30px;
+  width:80px;
+  padding: 5px;
+  border: none;
+}
+
+.related-novel-container{
+  background-color: #ffffff;
+  padding: 0px 30px;
+  padding-bottom: 5px;
+}
+
+
+.bgcolor{
+   background-color: #0f172a;
+}
+
+
+.maincatebtn{
+  background-color:#00cbc3;
+  border:1px solid #bebdbd;
+  color: white;
+  width:auto;
+  min-width:50px;
+}
+.catebtn{
+  background-color: #fdfdfd;
+  border:0.25px solid #bebdbd;
+  color: #000000;
+  width:auto;
+  min-width:50px;
+}
+.coverPage{
+  background-color:  #98faf7;
+  margin-top: 6rem;
+ 
+}
+.background {
+ 
+  background: linear-gradient(to right, #98faf7, #e4ffff  );
+  
+  /* background: linear-gradient(to right, #ffba747e, #fffdfb  );
+  background: linear-gradient(to right, #98faf7, #e4ffff  );
+  background: linear-gradient(to right, #121e3d4b, #e4ffff  );
+  background: linear-gradient(to right, #70ecd8, #fffdfb  );
+  background: linear-gradient(to right, #fdf2e7, #fffdfb  ); */
+  background: linear-gradient(to right, #030916, #030d20  );
+  background-size: 200% 200%;
+  /* animation: gradientAnimation 10s ease infinite; */
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.coverPageText{
+  font-size: 4rem;
+  font-weight: bold;
+  color: #ffffff;
+  
+}

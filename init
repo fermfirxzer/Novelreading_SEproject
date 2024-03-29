@@ -1,0 +1,6 @@
+#Server
+npm add express mysql
+npm add nodemon
+npm install cors
+npm install bcrypt
+npm install express-router

@@ -1,0 +1,106 @@
+.nav-chapter {
+    background-color: rgb(255, 255, 255);
+    height: 5rem;
+
+    border-bottom: 1px solid;
+    border-color: #d4d4d4;
+
+    .hover-bg {
+        height: 100%;
+        width: 5rem;
+        cursor: pointer;
+    }
+
+    .hover-bg:hover {
+        background-color: #ebebeb;
+        transition: background-color 0.2s;
+    }
+
+    .icon {
+        font-size: 35px;
+        color: #a1a1a1;
+    }
+
+    .list-chapter {
+        position: relative;
+
+        .chapters-container {
+            position: absolute;
+            bottom: -120px;
+            right: -100px;
+            width: 11rem;
+        }
+    }
+
+    .text-icon {
+        font-size: 11px;
+        color: #999999;
+    }
+}
+
+.con-chapter {
+    background-color: #ffffff;
+
+    .novelname {
+        color: #a1a1a1;
+    }
+
+    .novelname:hover {
+        color: #00cbc3;
+    }
+
+    .novelImg {
+        width: 5rem;
+        border-radius: 10%;
+    }
+
+    .writerImg {
+        width: 2rem;
+        border-radius: 50%;
+    }
+
+
+
+    .padding {
+        padding-left: 100px;
+        padding-right: 100px;
+    }
+}
+
+.margin {
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.search-right {
+    color: white;
+
+    .search-item {
+        padding: 1rem;
+        background-color: #1e293b;
+        margin-top: 15px;
+    }
+
+    .genre-box {
+        display: inline-block;
+        color: #94A3b8;
+        padding: 4px 10px 4px 6px;
+        background-color: #475569;
+        min-width: 50px;
+        width: auto;
+        border: none;
+        white-space: nowrap;
+        margin: 0.3rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        
+    }
+    .genre-box.active {
+        color: white;
+        background-color: #00cbc3; /* Change to desired active color */
+    }
+    .search-btn{
+        color: #94A3b8;
+    }
+}

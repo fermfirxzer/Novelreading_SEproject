@@ -1,0 +1,30 @@
+.status-con{
+    width: 60%;
+    display:flex;
+    justify-content: space-between;
+
+    .status-con-left{
+        width:40%;
+        padding: 30px;
+        border: solid 1px;
+        border-color: rgb(207, 207, 207);
+        border-radius: 10px;
+       
+        .status-novel,.status-end{
+            display: flex;
+            justify-content: space-between;
+            .slider-container{
+                display: flex;
+                .slider{
+                    margin-left: 15px;
+                    
+                }
+                
+            }
+        }
+
+    }
+    .status-con-right{
+        
+    }
+}
