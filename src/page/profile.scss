@@ -1,0 +1,49 @@
+
+.container{
+    .dropdown-custom{
+        background-color:transparent !important;
+        border:none;
+    }
+    .dropdown-custom:hover{
+        background-color:transparent !important;
+    }
+    .dropdown-custom:focus {
+        background-color: transparent !important;
+        color: black !important;
+    }
+    
+    
+    
+    .profile-img{
+        width:7rem;
+        border-radius: 50%;
+    }
+
+    .custom-btn{
+        background-color: rgb(255, 255, 255);
+        border: 1px solid ;
+        color:aqua;
+    }
+    
+    .camera-icon{
+        bottom: 0;
+        right: 0;
+            
+    }
+   .submit-btn{
+        background-color: aqua;
+        color: rgb(255, 255, 255);
+        border: 0;
+   }
+    .changepass-btn{
+        background-color: transparent;
+        color: aqua;
+        border: none;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    
+}
+
+
