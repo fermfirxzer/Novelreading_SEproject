@@ -3,7 +3,7 @@ import { db } from "../db.js";
 
 const router = express.Router();
 router.get("/:value/:category/:order/:page", (req, res) => {
-    console.log(req.params)
+    
     const page = req.params.page || 0;
     const limit = 30;
     const OFFSET = page * limit;
@@ -20,7 +20,7 @@ router.get("/:value/:category/:order/:page", (req, res) => {
     }
 
     if(req.params.category!=='null'){
-        console.log(req.params.category,order)
+        
     const novelQuery = "SELECT * FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?) ORDER BY novel_id "+order +" LIMIT ? OFFSET ?";
     const categoryQuery = "SELECT category_id FROM categories WHERE category_name = ?";
      // Search term with wildcards
@@ -38,7 +38,7 @@ router.get("/:value/:category/:order/:page", (req, res) => {
     });
     }
     else {
-        console.log(search_term)
+       
         const novelQuery="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,novel.novel_views,novel.novel_rating,novel.novel_date,penname.penname FROM novel JOIN penname ON novel.penid=penname.penid WHERE novel_name LIKE ? AND novel_privacy=1 ORDER BY novel.novel_id "+ order+ " LIMIT ? OFFSET ?";
         db.query(novelQuery, [search_term,limit,OFFSET], (err, novelData) => {
             if (err) {
@@ -52,7 +52,7 @@ router.get("/:value/:category/:order/:page", (req, res) => {
 });
 
 router.get("/totalpage/:value/:category", (req, res) => {
-    // console.log(req.params)
+   
     let search_term,order; // Declare search_term variable here
     if (req.params.value === 'null') {
         search_term = `%%`;
@@ -61,7 +61,7 @@ router.get("/totalpage/:value/:category", (req, res) => {
     }
 
     if(req.params.category!=='null'){
-        console.log(req.params.category)
+       
 
     const novelQuery = "SELECT COUNT(*) AS totalNovels FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?)";
     const categoryQuery = "SELECT category_id FROM categories WHERE category_name = ?";
@@ -82,7 +82,6 @@ router.get("/totalpage/:value/:category", (req, res) => {
     });
     }
     else {
-        console.log(search_term)
         const novelQuery="SELECT COUNT(*) AS totalNovels FROM novel WHERE novel_name LIKE ? AND novel_privacy=1";
         db.query(novelQuery, [search_term], (err, data) => {
             if (err) {

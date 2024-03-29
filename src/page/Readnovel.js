@@ -170,7 +170,7 @@ const Readnovel = () => {
                             </div>
                             <div className='reading-novel-author'>
                                 {novelData && <img src={novelData.writer_img ? `/uploads/profile/${novelData.writer_img}` : "/uploads/novel/osu icon.jpg"} className='author-profile' alt="Author Profile" />}
-                                {novelData && <p>{novelData.writer_name}</p>}
+                                {novelData && <p>{novelData.display_name}</p>}
                                 {/* <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
                                     {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
                                 </button> */}

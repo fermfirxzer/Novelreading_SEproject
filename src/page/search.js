@@ -39,7 +39,6 @@ const Search = () => {
         'Sci-fi',
         'Investigate',
         'Horror',
-
     ];
     const [totalPages, setTotalpage] = useState(0)
     const [page, setPage] = useState(0);
@@ -168,11 +167,12 @@ const Search = () => {
                                         className='form-control'
                                         type='text'
                                         name="value"
+                                        
                                         placeholder='Search by novel name'
                                         onChange={(e) => setValue(e.target.value)}
-                                        onKeyPress={(e) => {
+                                        onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
-                                                search();
+                                                search();   
                                             }
                                         }}
                                     ></input>

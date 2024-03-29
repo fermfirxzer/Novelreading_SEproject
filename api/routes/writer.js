@@ -10,9 +10,10 @@ const router = express.Router();
 ////////////////////////////////////////////////////////////////////////////////////
 router.post('/register', (req, res) => {
   if (!req.body.password || !req.body.username || !req.body.email || !req.body.confirmpassword) return res.status(400).json("Please fill in all information");
-
+  if(!/^[a-zA-Z0-9]+$/.test(req.body.password)||!/^[a-zA-Z0-9]+$/.test(req.body.username))return res.status(400).json("Invalid username or password")
+  
   if (req.body.username.length < 4 || req.body.username.length > 12) return res.status(400).json("User name must be 4-12 characters long")
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)||!/^[a-zA-Z0-9]+$/.test(req.body.email)) {
     return res.status(400).json("Invalid email address");
   }
   if (!/[a-z]/.test(req.body.password) || !/[A-Z]/.test(req.body.password)) return res.status(400).json("Password must contain both uppercase and lowercase characters");

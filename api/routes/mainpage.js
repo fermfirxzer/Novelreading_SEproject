@@ -47,7 +47,7 @@ router.get("/fetchnovelbycategoryrandom/:category", (req, res) => {
 });
 router.get("/fetchnovel/:novelid", (req, res) => {
     console.log(req.params.novelid)
-    const novel = "SELECT novel.*, penname.penname,writer.writer_name,writer.writer_img FROM novel JOIN penname JOIN writer ON penname.penid = novel.penid AND writer.writer_id=novel.writer_id WHERE novel.novel_id = ?";
+    const novel = "SELECT novel.*, penname.penname,writer.writer_name,writer.display_name,writer.writer_img FROM novel JOIN penname JOIN writer ON penname.penid = novel.penid AND writer.writer_id=novel.writer_id WHERE novel.novel_id = ?";
     const category = "SELECT categories.category_name, novel_category.category_type FROM categories JOIN novel_category ON categories.category_id = novel_category.category_id WHERE novel_category.novel_id = ?";
     const updateQuery = "UPDATE novel SET novel_views = novel_views + 1 WHERE novel_id = ?";
     const result = [];

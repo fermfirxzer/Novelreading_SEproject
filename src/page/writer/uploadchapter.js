@@ -61,8 +61,10 @@ const Uploadchapter = () => {
     }
     const handlesubmit = async (e) => {
         e.preventDefault();
-        check();
-        console.log("thisddddddddd",)
+        if(!chapter.title){
+            setErrorsubmit("Please fill in title");
+            return;
+        }
         const dataTosend = {
             novelid: novel.novelid,
             noveltitle: chapter.title,
@@ -79,7 +81,7 @@ const Uploadchapter = () => {
             }, 2000);
         } catch (err) {
             setErrorsubmit(err.response ? err.response.data : "An error occurred");
-            console.log(err)
+        
         }
     }
     const update = async (e) => {
@@ -168,7 +170,7 @@ const Uploadchapter = () => {
                         </div> */}
                         <div className='col-8 chapter-right paddingtopbottom10'>
                             <h5>ชื่อตอน</h5>
-                            <input type="text" className='form-control' name='title' value={chapter.title} onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'></input>
+                            <input type="text" className='form-control' name='title' value={chapter.title} onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'required></input>
                             {errtitle && <p className='error'>{errtitle}</p>}
                         </div>
                         {/* {state&&<div className='col-2 chapter-right paddingtopbottom10' >
@@ -200,7 +202,7 @@ const Uploadchapter = () => {
                     </div>
                     <div className='chapter-text ms-5'>
 
-                        <div dangerouslySetInnerHTML={{ __html: content }} />
+                        <div className='output' dangerouslySetInnerHTML={{ __html: content }} />
                     </div>
                 </div>
                 <div className='text-center mt-5'>
