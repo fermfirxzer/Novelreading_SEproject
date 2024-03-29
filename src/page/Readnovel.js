@@ -103,6 +103,7 @@ const Readnovel = () => {
 
     const [isBooked, setIsBooked] = useState(false);
     const handleClickBooked = async () => {
+        
         try {
             if (!isBooked) {
                 setIsBooked(true);

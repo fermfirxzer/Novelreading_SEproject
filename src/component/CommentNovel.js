@@ -11,6 +11,7 @@ import { Co2Sharp } from '@mui/icons-material';
 
 const CommentNovel = ({ novelid, chapterid }) => {
     const { currentUser } = useContext(AuthContext)
+   
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
     const [isFollowedWriter, setIsFollowedWriter] = useState(false);
     const handleClickFollowed = (target) => {
@@ -238,13 +239,13 @@ const CommentNovel = ({ novelid, chapterid }) => {
                                         </div>
                                         <div className=''>
                                             <p className='text-end'>{formatDistanceToNow(new Date(comment.Timestamp))}</p>
-                                            <div className=''>
+                                            {/* <div className=''>
                                                 {comment.writer_id === currentUser.writer_id && (<>
                                                     <button className="follow-btn text-black me-5" onClick={() => handleEditComment(comment.comment_id)}>Edit</button>
                                                     <button className='follow-btn text-black me-5' onClick={() => handleDeleteComment(comment)}>Delete</button>
                                                 </>
                                                 )}
-                                            </div>
+                                            </div> */}
                                         </div>
 
                                     </div>
