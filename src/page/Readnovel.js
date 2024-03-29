@@ -150,7 +150,7 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
-    console.log("Category:", category);
+    console.log(novelData)
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
@@ -169,11 +169,11 @@ const Readnovel = () => {
                                 {novelData && <p>{novelData.novel_name}</p>}
                             </div>
                             <div className='reading-novel-author'>
-                                <img src="https://1417094351.rsc.cdn77.org/publicassets/3624374/profile_picture/profile_picture.gif?2025751278" className='author-profile' alt="Author Profile" />
-                                <p>ระรินรัก</p>
-                                <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
+                                {novelData && <img src={novelData.writer_img ? `/uploads/profile/${novelData.writer_img}` : "/uploads/novel/osu icon.jpg"} className='author-profile' alt="Author Profile" />}
+                                {novelData && <p>{novelData.writer_name}</p>}
+                                {/* <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
                                     {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                </button>
+                                </button> */}
                             </div>
                             <div className='reading-novel-describe'>
                                 {novelData && <p>{novelData.novel_desc} </p>}
@@ -190,7 +190,7 @@ const Readnovel = () => {
                                 </button>
                                 <button className='readnow'>
                                     <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
-                                    <a href='/readchapter' className='text-decoration-none text-dark'>
+                                    <a href={`/readchapter/${novelid}/1`} className='text-decoration-none text-dark'>
                                         <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
                                     </a>
 
@@ -205,7 +205,8 @@ const Readnovel = () => {
                         {category && category.map((category, index) => (
                             <div key={index} className='mx-2'>
                                 <a href={`/search/${category.category_name}`}>
-                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
+                                    <button className={index === 0 ? "maincatebtn rounded-pill p-1 px-2" : "catebtn rounded-pill p-1 px-2"}>{category.category_name}</button>
+
                                 </a>
                             </div>
                         ))}
@@ -225,7 +226,7 @@ const Readnovel = () => {
                                         </button> */}
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
-                                        {novelData && <span><strong>ผู้เขียน : </strong><a  className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
+                                        {novelData && <span><strong>ผู้เขียน : </strong><a className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
                                         {/* <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('writer')}>
                                             {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}
@@ -259,10 +260,10 @@ const Readnovel = () => {
                                     </Link>
                                     <div style={{ display: 'flex' }}>
                                         <div style={{ marginRight: '15px' }}>
-                                            <span style={{ marginRight: '5px' }}>
+                                            {/* <span style={{ marginRight: '5px' }}>
                                                 <CommentTwoToneIcon />
-                                            </span>
-                                            <span>{chapterItem.chapter_comment}</span>
+                                            </span> */}
+                                            {/* <span>{chapterItem.chapter_comment}</span> */}
                                         </div>
                                         <div>
                                             <span style={{ marginRight: '5px' }}>

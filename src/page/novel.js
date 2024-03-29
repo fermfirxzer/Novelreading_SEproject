@@ -37,7 +37,7 @@ const Novel = () => {
 
     ];
     const penname = useParams().penname || null;
-    console.log(penname)
+    // console.log(penname)
     const getRandomColor = () => {
         const colors = [
             "#FF0000", "#FF5733", "#FFC300", "#FFED97", "#80FFDB",
@@ -72,12 +72,13 @@ const Novel = () => {
     const fetchtotalpage = async (tab) => {
 
         try {
-            const totalpage = await axios.get(`http://localhost:5000/api/font/noveltotalpage/${tab}`);
+            const totalpage = await axios.get(`http://localhost:5000/api/font/noveltotalpage/${tab}/${penname}`);
             setTotalpage(totalpage.data);
-            console.log(totalpage.data)
+            console.log("this", totalpage.data)
         } catch (err) {
             console.log(err)
         }
+
 
     }
     const [activeTab, setActiveTab] = useState(penname != null ? "penname" : "mostview");
@@ -179,9 +180,9 @@ const Novel = () => {
                                                         </a>
                                                     </div>
                                                     <div>
-                                                        <a href="/authorinfo" className='no-underline author'>
+                                                        {novel.penname && <a href={`/novel/${novel.penname}`} className='no-underline author'>
                                                             <Card.Subtitle className="mt-1">{novel.penname.length > 20 ? `${novel.penname.slice(0, 15)}...` : novel.penname}</Card.Subtitle>
-                                                        </a>
+                                                        </a>}
                                                         <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
                                                             <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
                                                             {novel.novel_chaptercount}

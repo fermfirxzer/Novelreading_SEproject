@@ -47,7 +47,7 @@ router.get("/fetchnovelbycategoryrandom/:category", (req, res) => {
 });
 router.get("/fetchnovel/:novelid", (req, res) => {
     console.log(req.params.novelid)
-    const novel = "SELECT novel.*, penname.penname FROM novel JOIN penname ON penname.penid = novel.penid WHERE novel.novel_id = ?";
+    const novel = "SELECT novel.*, penname.penname,writer.writer_name,writer.writer_img FROM novel JOIN penname JOIN writer ON penname.penid = novel.penid AND writer.writer_id=novel.writer_id WHERE novel.novel_id = ?";
     const category = "SELECT categories.category_name, novel_category.category_type FROM categories JOIN novel_category ON categories.category_id = novel_category.category_id WHERE novel_category.novel_id = ?";
     const updateQuery = "UPDATE novel SET novel_views = novel_views + 1 WHERE novel_id = ?";
     const result = [];
@@ -220,9 +220,9 @@ router.post("/update_writerinfo/", (req, res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.writer.writer_email)) {
         return res.status(400).json("Invalid email address");
     }
-    const UPDATE = "UPDATE writer SET writer_name=?,writer_email=?,writer_img=?,display_name=? WHERE writer_id=?";
+    const UPDATE = "UPDATE writer SET writer_name=?,writer_email=?,display_name=? WHERE writer_id=?";
     let q = "SELECT * FROM writer WHERE writer_name=? AND writer_id!=?";
-    const value = [req.body.writer.writer_name, req.body.writer.writer_email, req.body.img, req.body.writer.display_name, req.body.writer.writer_id];
+    const value = [req.body.writer.writer_name, req.body.writer.writer_email, req.body.writer.display_name, req.body.writer.writer_id];
     db.query(q, [req.body.writer.writer_name, req.body.writer.writer_id], (err, data) => {
         if (err) return res.status(400).json(err);
         if (data.length > 0) return res.status(400).json("Username already Taken !");
@@ -238,6 +238,14 @@ router.post("/update_writerinfo/", (req, res) => {
     })
 
     // db.query(UPDATE,[req.body])
+})
+router.post("/update_writerimg/",(req,res)=>{
+    const UPDATE = "UPDATE writer SET writer_img=? WHERE writer_id=?";
+    // console.log(req.body)
+    db.query(UPDATE,[req.body.writer_img,req.body.writer_id],(err,data)=>{
+        if(err)return res.status(400).json(err);
+        return res.status(200).json("Update success!");
+    })
 })
 router.post("/update_writerpassword/", (req, res) => {
 
@@ -330,15 +338,16 @@ router.get("/fetchlikemyreading/:writerid", (req, res) => {
 //     })
 // })
 ///novel page
-router.get("/noveltotalpage/:tab", (req, res) => {
+router.get("/noveltotalpage/:tab/:penname", (req, res) => {
     let select;
-    console.log(req.params.tab)
+    console.log(req.params)
     if (req.params.tab === "penname") {
         select = "SELECT COUNT(*) AS totalNovels FROM novel JOIN penname ON novel.penid=penname.penid WHERE penname.penname=?"
-        db.query(select, [req.params.tab], (err, data) => {
+        db.query(select, [req.params.penname], (err, data) => {
             if (err) return res.status(500).json(err);
             const totalNovels = data[0].totalNovels;
             const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+            console.log(totalPages)
             return res.status(200).json(totalPages);
             
         })
@@ -380,7 +389,7 @@ router.get("/novelgetnovel/:page/:order/:penname", (req, res) => {
             return res.status(200).json(data)
         })
     }else if(req.params.order==="penname"){
-        console.log("This is penname")
+        
         const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating,novel.novel_views FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 AND penname.penname=? ORDER BY novel.novel_id DESC LIMIT ? OFFSET ?";
         db.query(select, [req.params.penname,limit, OFFSET], (err, data) => {
             if (err) {

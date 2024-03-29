@@ -23,7 +23,7 @@ const Profile = () => {
         setConfirmPasswordError(null)
         setEnterPasswordError(null)
     };
-
+    const [count,setcount]=useState(0);
     const [writer, setWriter] = useState(null);
     useEffect(() => {
         const fetchwriter = async () => {
@@ -37,9 +37,10 @@ const Profile = () => {
             }
         }
         fetchwriter();
-        console.log(writer)
+        
         // cons
     }, [])
+    
     const Updatepassword = async (e) => {
         e.preventDefault();
         setConfirmPasswordError(null)
@@ -102,6 +103,7 @@ const Profile = () => {
     const [temp, setTemp] = useState(null)
     const [profileImage, setProfileImage] = useState(writer ? writer.writer_img : null);
     const handleImageChange = (e) => {
+        setcount(1);
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             const fileType = selectedFile.type;
@@ -145,9 +147,13 @@ const Profile = () => {
             writer,
             img: profile,
         }
-        console.log(dataTosend)
+        
         try{
             const res = await axios.post("http://localhost:5000/api/font/update_writerinfo/",dataTosend)
+            if(profile!==null){
+                console.log(profile)
+                const img = await axios.post("http://localhost:5000/api/font/update_writerimg/",{writer_img:profile,writer_id:writer.writer_id});
+            }
             setEnterInfoError(res.data);
         }catch(err){
             console.error(err);
@@ -184,7 +190,7 @@ const Profile = () => {
                     <div className="flex align-items-center">
                         <div className="flex position-relative">
 
-                            <img src={profileImage ? `/uploads/novel/${profileImage}` : "/uploads/novel/osu icon.jpg"} className="profile-img " />
+                            <img src={profileImage ? (count==0? `/uploads/profile/${profileImage}` :profileImage) : "/uploads/novel/osu icon.jpg"} className="profile-img " />
 
 
                             <label htmlFor="image-upload" className="position-absolute camera-icon">

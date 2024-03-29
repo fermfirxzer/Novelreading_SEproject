@@ -2,17 +2,26 @@ import express from 'express';
 import { db } from "../db.js";
 
 const router = express.Router();
-router.get("/:value/:category", (req, res) => {
+router.get("/:value/:category/:order/:page", (req, res) => {
     console.log(req.params)
-    let search_term; // Declare search_term variable here
-
+    const page = req.params.page || 0;
+    const limit = 30;
+    const OFFSET = page * limit;
+    let search_term,order; // Declare search_term variable here
+    if(req.params.order==="newest"){
+        order="DESC";
+    }else{
+        order="ASC";
+    }
     if (req.params.value === 'null') {
         search_term = `%%`;
     } else {
         search_term = `%${req.params.value}%`;
     }
+
     if(req.params.category!=='null'){
-    const novelQuery = "SELECT * FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?) LIMIT 50";
+        console.log(req.params.category,order)
+    const novelQuery = "SELECT * FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?) ORDER BY novel_id "+order +" LIMIT ? OFFSET ?";
     const categoryQuery = "SELECT category_id FROM categories WHERE category_name = ?";
      // Search term with wildcards
     db.query(categoryQuery, [req.params.category], (err, categoryData) => {
@@ -20,7 +29,7 @@ router.get("/:value/:category", (req, res) => {
             return res.status(400).json(err);
         }
         const categoryId = categoryData[0].category_id;
-        db.query(novelQuery, [search_term, categoryId], (err, novelData) => {
+        db.query(novelQuery, [search_term, categoryId,limit,OFFSET], (err, novelData) => {
             if (err) {
                 return res.status(400).json(err);
             }
@@ -30,9 +39,10 @@ router.get("/:value/:category", (req, res) => {
     }
     else {
         console.log(search_term)
-        const novelQuery="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,novel.novel_views,novel.novel_rating,novel.novel_date,penname.penname FROM novel JOIN penname ON novel.penid=penname.penid WHERE novel_name LIKE ? AND novel_privacy=1 LIMIT 50"
-        db.query(novelQuery, [search_term], (err, novelData) => {
+        const novelQuery="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,novel.novel_views,novel.novel_rating,novel.novel_date,penname.penname FROM novel JOIN penname ON novel.penid=penname.penid WHERE novel_name LIKE ? AND novel_privacy=1 ORDER BY novel.novel_id "+ order+ " LIMIT ? OFFSET ?";
+        db.query(novelQuery, [search_term,limit,OFFSET], (err, novelData) => {
             if (err) {
+                console.log(err)
                 return res.status(400).json(err);
             }
             return res.status(200).jsonp(novelData) // Send the search results
@@ -41,8 +51,50 @@ router.get("/:value/:category", (req, res) => {
 
 });
 
+router.get("/totalpage/:value/:category", (req, res) => {
+    // console.log(req.params)
+    let search_term,order; // Declare search_term variable here
+    if (req.params.value === 'null') {
+        search_term = `%%`;
+    } else {
+        search_term = `%${req.params.value}%`;
+    }
 
+    if(req.params.category!=='null'){
+        console.log(req.params.category)
 
+    const novelQuery = "SELECT COUNT(*) AS totalNovels FROM novel WHERE novel_name LIKE ? AND novel_id IN (SELECT novel_id FROM novel_category WHERE category_id = ?)";
+    const categoryQuery = "SELECT category_id FROM categories WHERE category_name = ?";
+     // Search term with wildcards
+    db.query(categoryQuery, [req.params.category], (err, categoryData) => {
+        if (err) {
+            return res.status(400).json(err);
+        }
+        const categoryId = categoryData[0].category_id;
+        db.query(novelQuery, [search_term, categoryId], (err, data) => {
+            if (err) {
+                return res.status(400).json(err);
+            }
+            const totalNovels = data[0].totalNovels;
+            const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+            return res.status(200).json(totalPages); // Send the search results
+        });
+    });
+    }
+    else {
+        console.log(search_term)
+        const novelQuery="SELECT COUNT(*) AS totalNovels FROM novel WHERE novel_name LIKE ? AND novel_privacy=1";
+        db.query(novelQuery, [search_term], (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(400).json(err);
+            }
+            const totalNovels = data[0].totalNovels;
+            const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+            return res.status(200).json(totalPages);// Send the search results
+        });
+    }
+})
 export default router;
 
 

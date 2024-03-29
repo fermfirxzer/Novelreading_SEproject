@@ -14,6 +14,7 @@ const Search = () => {
     const { category: initialCategory } = useParams();
     const [category, setCategory] = useState(initialCategory || null);
     const [novel, setnovel] = useState(null);
+    const [order,setOrder]=useState("newest");
     const handlecategoryClick = (name) => {
         if (name === category) {
             setCategory(null);
@@ -22,7 +23,6 @@ const Search = () => {
         }
 
     };
-    console.log(value)
     const mainCategories = [
         'Romantic',
         'Funny',
@@ -41,29 +41,67 @@ const Search = () => {
         'Horror',
 
     ];
-    const search = async () => {
-        console.log(category)
+    const [totalPages, setTotalpage] = useState(0)
+    const [page, setPage] = useState(0);
+    const fetchtotalpage = async (tab) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/search/${value}/${category}`)
+            const totalpage = await axios.get(`http://localhost:5000/api/search/totalpage/${value}/${category}`);
+            setTotalpage(totalpage.data);
+            console.log("this", totalpage.data)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+    const search = async () => {
+        try {
+            const res = await axios.get(`http://localhost:5000/api/search/${value}/${category}/${order}/${page}`)
             setnovel(res.data);
         } catch (err) {
             console.log(err);
         }
     }
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth' // Optional: Smooth scrolling animation
+        });
+    };
     useEffect(() => {
-        search()
-    }, [category])
+        setPage(0);
+        fetchtotalpage();
+        search();
+        scrollToTop();
+    }, [category,order])
+    useEffect(()=>{
+        search();
+        scrollToTop();
+    },[page])
+    const handlePageChange = (e) => {
+        setPage(Number(e.target.value));
+    }
+    const handleNewerClick = () => {
+        if (page > 0) {
+            setPage((prevPage) => prevPage - 1);
+        }
+    };
+
+    const handleOlderClick = () => {
+        if (page < totalPages - 1) {
+            setPage((prevPage) => prevPage + 1);
+        }
+    };
+    
     return (
         <div style={{ marginTop: '7rem', marginBottom: '15rem' }}>
             <NavbarReactBootstrap></NavbarReactBootstrap>
             <div className='container'>
                 <div className='row'>
                     <div className='col-lg-9'>
-                        <div className='header'>
+                        <div className='header border-bottom mb-5'>
                             Explore
                         </div>
                         <div className='body'>
-                            <div className='card'>
+                            <div className='card border-0'>
                                 <div className='row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4'>
                                     {novel && novel.map((novel) => (
                                         <div key={novel.novel_id} className="col">
@@ -81,9 +119,9 @@ const Search = () => {
                                                             </a>
                                                         </div>
                                                         <div>
-                                                            <a href="/authorinfo" className='no-underline author'>
+                                                            {novel&&<a href={`/novel/${novel.penname}`} className='no-underline author'>
                                                                 <Card.Subtitle className="mt-1">{novel.penname}</Card.Subtitle>
-                                                            </a>
+                                                            </a>}
                                                             <Card.Text className="d-flex align-items-center" style={{ fontSize: "14px" }}>
                                                                 <FormatListBulletedTwoToneIcon style={{ color: '#a1a1a1' }} />
                                                                 {novel.novel_chaptercount}
@@ -98,6 +136,23 @@ const Search = () => {
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        </div>
+                        <div className='row mt-5 flex'>
+                            <div className='col-md-2 col-4 text-center mr-4'>
+                                <button type="button" className='btn btn-secondary btn-block' onClick={handleNewerClick}> Previous</button>
+                            </div>
+                            <div className='col-md-8 col-4'>
+                                <select className='form-control' onChange={handlePageChange} value={page}>
+
+                                    {Array.from({ length: totalPages }, (_, index) => (
+                                        <option key={index} value={index}>{index + 1}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className='col-md-2 col-4 text-center'>
+                                <button type="button" className='btn btn-secondary btn-block' onClick={handleOlderClick}> Next</button>
+
                             </div>
                         </div>
                     </div>
@@ -131,7 +186,7 @@ const Search = () => {
                                 </div>
                                 <hr></hr>
                                 <div className='search-body'>
-                                    <select className='form-control' name="newest">
+                                    <select className='form-control' value={order} onChange={(e)=>setOrder(e.target.value)}>
                                         <option value="newest">Newest Novel</option>
                                         <option value="oldest">Oldest Novel</option>
                                     </select>
@@ -152,9 +207,7 @@ const Search = () => {
                                 </div>
 
                             </div>
-                            {/* <div className='search-item'>
-                                <button className='form-control search-btn' onClick={() => search()}>Search</button>
-                            </div> */}
+                            
                         </div>
                     </div>
                 </div>

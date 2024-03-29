@@ -437,14 +437,20 @@ nav a {
 }
 
 
+.maincatebtn{
+  background-color:#00cbc3;
+  border:1px solid #bebdbd;
+  color: white;
+  width:auto;
+  min-width:50px;
+}
 .catebtn{
   background-color: #fdfdfd;
-  border:1px solid #000000;
+  border:0.25px solid #bebdbd;
   color: #000000;
   width:auto;
   min-width:50px;
 }
-
 .coverPage{
   background-color:  #98faf7;
   margin-top: 6rem;
