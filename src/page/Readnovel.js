@@ -17,16 +17,17 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 const Readnovel = () => {
     const { novelid } = useParams();
     const { currentUser } = useContext(AuthContext)
+    const [writerid, setWriterid] = useState(currentUser ? currentUser.writer_id : null);
     const [novelData, setNovelData] = useState(null);
-    const [category, setCategory] = useState(null);
-    const [chapter, setchapter] = useState(null);
+    const [category, setCategory] = useState([]);
+    const [chapter, setchapter] = useState([]);
     const [recommend, setrecommend] = useState(null);
     const fetchbookmark = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmark/${currentUser.writer_id}/${novelid}`);
+            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmark/${writerid}/${novelid}`);
             console.log(response.data)
             setIsBooked(response.data);
-            
+
         } catch (err) {
             console.log(err)
 
@@ -34,9 +35,9 @@ const Readnovel = () => {
 
 
     }
-    const fetchlike=async()=>{
+    const fetchlike = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchlike/${currentUser.writer_id}/${novelid}`);
+            const response = await axios.get(`http://localhost:5000/api/font/fetchlike/${writerid}/${novelid}`);
             console.log(response.data)
             setIslikeClicked(response.data);
         } catch (err) {
@@ -47,13 +48,13 @@ const Readnovel = () => {
     useEffect(() => {
         const fetchnovel = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
-            if(response.data.length>1){
+            if (response.data.length > 1) {
                 setNovelData(response.data[0])
                 setCategory(response.data[1]);
-            }else{
+            } else {
                 setNovelData(response.data[0])
             }
-           
+
         }
         const fetchchapter = async () => {
             const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
@@ -63,8 +64,10 @@ const Readnovel = () => {
 
         fetchnovel();
         fetchchapter();
-        fetchbookmark();
-        fetchlike();
+        if (writerid) {
+            fetchbookmark();
+            fetchlike();
+        }
     }, [novelid])
     useEffect(() => {
         const fetchRecommendations = async () => {
@@ -80,44 +83,43 @@ const Readnovel = () => {
 
         }
         if (novelData) {
-            // console.log(category[0].category_name)
             fetchRecommendations();
         }
     }, [novelData, category])
 
     const [islikeClicked, setIslikeClicked] = useState(false);
-    const handlelikeClick = async() => {
-        try {
-            if (!islikeClicked) {
-                setIslikeClicked(true);
-                await axios.post("http://localhost:5000/api/font/addlike/", { writerid: currentUser.writer_id, novelid: novelid });
-            } else {
-                setIslikeClicked(false);
-                await axios.post("http://localhost:5000/api/font/removelike/", { writerid: currentUser.writer_id, novelid: novelid });
+    const handlelikeClick = async () => {
+        if (writerid) {
+            try {
+                if (!islikeClicked) {
+                    setIslikeClicked(true);
+                    await axios.post("http://localhost:5000/api/font/addlike/", { writerid: writerid, novelid: novelid });
+                } else {
+                    setIslikeClicked(false);
+                    await axios.post("http://localhost:5000/api/font/removelike/", { writerid: writerid, novelid: novelid });
+                }
+            } catch (err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.log(err);
         }
-       
     };
 
     const [isBooked, setIsBooked] = useState(false);
     const handleClickBooked = async () => {
-        
-        try {
-            if (!isBooked) {
-                setIsBooked(true);
-                await axios.post("http://localhost:5000/api/font/addbookmark/", { writerid: currentUser.writer_id, novelid: novelid });
-            } else {
-                setIsBooked(false);
-                await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: novelid });
-                
-
+        if (writerid) {
+            try {
+                if (!isBooked) {
+                    setIsBooked(true);
+                    await axios.post("http://localhost:5000/api/font/addbookmark/", { writerid: writerid, novelid: novelid });
+                } else {
+                    setIsBooked(false);
+                    await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: writerid, novelid: novelid });
+                }
+            } catch (err) {
+                console.log(err);
             }
-        } catch (err) {
-            console.log(err);
+            console.log(isBooked)
         }
-        console.log(isBooked)
     };
 
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
@@ -132,10 +134,10 @@ const Readnovel = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const chaptersPerPage = 10;
 
-    const totalPages = chapter ? Math.ceil(chapter.length / chaptersPerPage) : 0;
+    const totalPages = 0;
+    const startIndex = chapter ? (currentPage - 1) * chaptersPerPage : 0;
+    const endIndex = chapter ? currentPage * chaptersPerPage : 0;
 
-    const startIndex = (currentPage - 1) * chaptersPerPage;
-    const endIndex = currentPage * chaptersPerPage;
 
 
 
@@ -148,7 +150,7 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
-    
+    console.log(novelData)
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
@@ -167,11 +169,11 @@ const Readnovel = () => {
                                 {novelData && <p>{novelData.novel_name}</p>}
                             </div>
                             <div className='reading-novel-author'>
-                                <img src="https://1417094351.rsc.cdn77.org/publicassets/3624374/profile_picture/profile_picture.gif?2025751278" className='author-profile' alt="Author Profile" />
-                                <p>ระรินรัก</p>
-                                <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
+                                {novelData && <img src={novelData.writer_img ? `/uploads/profile/${novelData.writer_img}` : "/uploads/novel/osu icon.jpg"} className='author-profile' alt="Author Profile" />}
+                                {novelData && <p>{novelData.writer_name}</p>}
+                                {/* <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
                                     {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                </button>
+                                </button> */}
                             </div>
                             <div className='reading-novel-describe'>
                                 {novelData && <p>{novelData.novel_desc} </p>}
@@ -180,7 +182,7 @@ const Readnovel = () => {
                                 <button className='heart-btn' onClick={handlelikeClick}>
                                     <img src={islikeClicked ? 'https://cdn-icons-png.flaticon.com/128/4926/4926592.png' : 'https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png'} alt="Heart Icon" className='search-icon' />
                                 </button>
-                                <button className='add-playlist'onClick={handleClickBooked}>
+                                <button className='add-playlist' onClick={handleClickBooked}>
                                     <BookIcon style={{ color: isBooked ? '#00cbc3' : 'black' }}></BookIcon>
                                     <span style={{ margin: '0px 8px', color: isBooked ? '#00cbc3' : 'black' }} >
                                         {isBooked ? 'เพิ่มแล้ว' : 'เพิ่มเข้าขั้น'}
@@ -188,7 +190,7 @@ const Readnovel = () => {
                                 </button>
                                 <button className='readnow'>
                                     <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
-                                    <a href='/readchapter' className='text-decoration-none text-dark'>
+                                    <a href={`/readchapter/${novelid}/1`} className='text-decoration-none text-dark'>
                                         <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
                                     </a>
 
@@ -199,11 +201,12 @@ const Readnovel = () => {
 
                 </div>
                 <div className='container pb-3' >
-                    <div className='container d-flex p-3' style={{backgroundColor:"#fff"}}> 
-                        {category&&category.map((category, index) => (
+                    <div className='container d-flex p-3' style={{ backgroundColor: "#fff" }}>
+                        {category && category.map((category, index) => (
                             <div key={index} className='mx-2'>
-                                <a href = {`/search/${category.category_name}`}>
-                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
+                                <a href={`/search/${category.category_name}`}>
+                                    <button className={index === 0 ? "maincatebtn rounded-pill p-1 px-2" : "catebtn rounded-pill p-1 px-2"}>{category.category_name}</button>
+
                                 </a>
                             </div>
                         ))}
@@ -216,18 +219,18 @@ const Readnovel = () => {
                                 <div className="mt-2 border-end " style={{ width: '50%' }}>
                                     <h2 >ข้อมูลนักเขียน </h2>
                                     <div className='d-flex justify-content-between '>
-                                        {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>}
-                                        <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
+                                        {/* {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>} */}
+                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('penname')}>
                                             {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button>
+                                        </button> */}
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
-                                        {novelData && <span><strong>ผู้เขียน : </strong> {novelData.penname}</span>}
-                                        <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
+                                        {novelData && <span><strong>ผู้เขียน : </strong><a className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
+                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
                                             onClick={() => handleClickFollowed('writer')}>
                                             {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button>
+                                        </button> */}
                                     </div>
 
                                 </div>
@@ -257,10 +260,10 @@ const Readnovel = () => {
                                     </Link>
                                     <div style={{ display: 'flex' }}>
                                         <div style={{ marginRight: '15px' }}>
-                                            <span style={{ marginRight: '5px' }}>
+                                            {/* <span style={{ marginRight: '5px' }}>
                                                 <CommentTwoToneIcon />
-                                            </span>
-                                            <span>{chapterItem.chapter_comment}</span>
+                                            </span> */}
+                                            {/* <span>{chapterItem.chapter_comment}</span> */}
                                         </div>
                                         <div>
                                             <span style={{ marginRight: '5px' }}>

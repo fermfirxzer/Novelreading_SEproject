@@ -192,53 +192,12 @@ router.post("/upload_category", verifyToken, async (req, res) => {
   
 });
 
-// router.post("/upload_category", verifyToken, async (req, res) => {
-//   const selectQuery = "SELECT category_id FROM categories WHERE category_name IN ("?","Love novel")";
-//   const insertQuery = "INSERT INTO novel_category (novel_id, category_id, category_type) VALUES (?, ?, ?)";
-//   const categories = [req.body.mainCategory, req.body.subCategory1, req.body.subCategory2];
-//   const order = ["main", "subCategory1", "subCategory2"];
-//   console.log("upload_category",req.body)
-//   try {
-//     const categoryData = [];
-
-//     // Fetch category_ids for each category using Promises
-//     const selectPromises = categories.map(async (category, index) => {
-//       if (category !== null) {
-//         const data = await queryPromise(selectQuery, [category]);
-//         if (data && data.length > 0) {
-//           categoryData.push({ id: data[0].category_id, order: index });
-//         } else {
-//           console.error(`Category "${category}" not found in the database.`);
-//           // Handle the case when a category is not found (send an appropriate response)
-//         }
-//       }
-//     });
-
-//     await Promise.all(selectPromises);
-
-//     // Sort categoryData based on the original order
-//     categoryData.sort((a, b) => a.order - b.order);
-
-//     // Insert novel_id, category_id, and category_order into novel_category table
-//     const insertPromises = categoryData.map(async (data) => {
-//       await queryPromise(insertQuery, [req.body.novelid, data.id, order[data.order]]);
-//     });
-
-//     await Promise.all(insertPromises);
-
-//     console.log("Success upload");
-//     return res.status(200).json("Success upload");
-//   } catch (error) {
-//     console.error('Error uploading categories:', error);
-//     return res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 
 // Utility function to promisify db.quer
 
 router.post('/update_novel', verifyToken, (req, res) => {
 
-  const image = req.body.imageUrl === null ? req.body.novelData.image : req.body.imageUrl;
+  const image = req.body.imageUrl === null||req.body.imageUrl===undefined ? req.body.novelData.image : req.body.imageUrl;
   const q = "UPDATE novel SET novel_name=?,novel_desc=?,penid=?,novel_img=?,novel_contentlevel=? WHERE novel_id=?"
   const querypenid = "SELECT * FROM penname WHERE penname=?";
   db.query(querypenid, [req.body.novelData.penname], (err, data) => {

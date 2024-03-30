@@ -8,7 +8,6 @@ import Swal from 'sweetalert2'
 
 import axios from 'axios';
 const Uploadchapter = () => {
-
     const state = useLocation().state || { novel: null };
     const navigate = useNavigate()
     useEffect(() => {
@@ -17,13 +16,11 @@ const Uploadchapter = () => {
         }
         setcount(1);
     }, [state, navigate])
-    console.log(state)
     // console.log("Chapter State:", statechapter);
     const [novel, setNovel] = useState({
         novelid: state.novelid,
         novelname: state.novel?.name,
     })
-    console.log(state)
     const [chapter, setChapter] = useState({
         title: state.chapter?.chapter_title ?? null,
     })
@@ -108,6 +105,9 @@ const Uploadchapter = () => {
             console.log(err)
         }
     }
+    const handleCancle=()=>{
+        navigate("/writer/viewnovel", { state: { novelid: novel.novelid } });
+    }
     const deletechapter = async () => {
         Swal.fire({
             title: "Are you sure?",
@@ -140,6 +140,7 @@ const Uploadchapter = () => {
             }
         });
     }
+    console.log(content)
     return (
         <div className='writingepisode'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -147,7 +148,7 @@ const Uploadchapter = () => {
                 <div className='top d-flex pt-3 backtheme'>
                     <a href='/writer/managewriting' className='link ps-3'><span className='ps-2 mb-2'> กลับสู่หน้าหลัก</span></a>
                     <span className='ps-2 mb-2'> &gt;</span>
-                    {novel && <a href='' className='link ps-3 text-center'><span className='mb-2'>{novel.novelname}</span></a>}
+                    {novel && <a href=''className='link ps-3 text-center' onClick={handleCancle} ><span className='mb-2'>{novel.novelname}</span></a>}
                     <span className='ps-2'> &gt;</span>
                     {state.chapter && <span className='ps-2 mb-2'>{header} </span>}
 
@@ -170,14 +171,14 @@ const Uploadchapter = () => {
                             <input type="text" className='form-control' name='title' value={chapter.title} onChange={handleChange} placeholder='(ตัวอย่าง จุดเริ่มต้นของ ....)'></input>
                             {errtitle && <p className='error'>{errtitle}</p>}
                         </div>
-                        <div className='col-2 chapter-right paddingtopbottom10' >
+                        {/* {state&&<div className='col-2 chapter-right paddingtopbottom10' >
                             <button type='submit' style={{backgroundColor:'#00cbc3',color:"#fff"}} onClick={deletechapter} className='btn btn-danger border-0'>Delete</button>
-                        </div>
+                        </div>} */}
                     </div>
 
                 </div>
                 <div className='chapter-input paddingleftright30'>
-                    <div className='form-control paddingtop20 mt-3 backtheme p-3 paddingleftright30'>
+                    <div className='paddingtop20 mt-3 backtheme p-3 paddingleftright30'>
                         <div className='header'>
                             <h3>เนื้อหา</h3>
                             {errcontent && <p className='error'>{errcontent}</p>}
@@ -197,7 +198,7 @@ const Uploadchapter = () => {
                     <div className='header'>
                         <h3>เนื้อหาที่บันทึก</h3>
                     </div>
-                    <div className='chapter-text text-center'>
+                    <div className='chapter-text ms-5'>
 
                         <div dangerouslySetInnerHTML={{ __html: content }} />
                     </div>
@@ -205,7 +206,7 @@ const Uploadchapter = () => {
                 <div className='text-center mt-5'>
                     {errsubmit && <p className='error'>{errsubmit}</p>}
                     <div className='d-inline-block mr-2'>
-                        <button style={{width:"10rem",backgroundColor:'#fff',borderColor:"#dfdfdf"}} className='form-control border-1 rounded-pill p-2 mx-3'>ยกเลิก</button>
+                        <button style={{width:"10rem",backgroundColor:'#fff',borderColor:"#dfdfdf"}} className='form-control border-1 rounded-pill p-2 mx-3' onClick={handleCancle}>ยกเลิก</button>
                     </div>
                     <div className='d-inline-block'>
                         <button style={{backgroundColor:'#00cbc3',color:"#fff",width:"10rem"}} className='form-control btn  border-0 rounded-pill p-2 mx-3' onClick={state.chapter ? update : handlesubmit}>บันทึก</button>

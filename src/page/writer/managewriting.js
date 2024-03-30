@@ -115,7 +115,7 @@ const Managewriting = () => {
         <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
         <Container style={{width:'65%'}}>
             
-                <div className='flex align-items-center'>
+                <div className='flex align-items-center' >
                     <div className='headtopic'>
                     <Dropdown   className='mt-2' >
                         My Writing
@@ -137,7 +137,7 @@ const Managewriting = () => {
                         </Link>
                     </div>
                 </div>
-                <div className='flex'>
+                <div className='flex' >
                     <div className='manage-btn-container'>
                         <div className=''>
                             <div className='mt-5'>
@@ -160,7 +160,7 @@ const Managewriting = () => {
                     </div>
                 </div>
             </Container>
-            <Container style={{ width: '65%' }}>
+            <Container style={{ width: '65%' ,minHeight:'30rem'}} >
 
                 {novelsData.map((novel, index) => (
 

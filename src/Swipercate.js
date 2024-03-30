@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 const Swipercate = ({ novelsData }) => {
     
-    return (
+    return ( 
         <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={20}
@@ -51,8 +51,8 @@ const Swipercate = ({ novelsData }) => {
                                 </div>
                                 <div className=''>
                                     <div className="novel-author">
-                                        <Link to="/authorinfo" className="no-underline author">
-                                            {novel.penname}
+                                        <Link to={`/novel/${novel.penname}`} className="no-underline author">
+                                        {novel.penname&&novel.penname.length>15? `${novel.penname.slice(0, 15)}...` : novel.penname}
 
                                         </Link>
                                     </div>
@@ -72,7 +72,15 @@ const Swipercate = ({ novelsData }) => {
                                                 alt="Description"
                                             />
                                         </span>
-                                        <span>{novel.novel_rating}k</span>
+                                        <span>{novel.novel_rating}</span>
+                                        <span>
+                                            <img
+                                                src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
+                                                className=""
+                                                alt="Description"
+                                            />
+                                        </span>
+                                        <span>{novel.novel_views}</span>
                                     </div>
                                 </div>
                             

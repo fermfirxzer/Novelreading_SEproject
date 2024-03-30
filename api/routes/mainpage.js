@@ -47,7 +47,7 @@ router.get("/fetchnovelbycategoryrandom/:category", (req, res) => {
 });
 router.get("/fetchnovel/:novelid", (req, res) => {
     console.log(req.params.novelid)
-    const novel = "SELECT novel.*, penname.penname FROM novel JOIN penname ON penname.penid = novel.penid WHERE novel.novel_id = ?";
+    const novel = "SELECT novel.*, penname.penname,writer.writer_name,writer.writer_img FROM novel JOIN penname JOIN writer ON penname.penid = novel.penid AND writer.writer_id=novel.writer_id WHERE novel.novel_id = ?";
     const category = "SELECT categories.category_name, novel_category.category_type FROM categories JOIN novel_category ON categories.category_id = novel_category.category_id WHERE novel_category.novel_id = ?";
     const updateQuery = "UPDATE novel SET novel_views = novel_views + 1 WHERE novel_id = ?";
     const result = [];
@@ -67,7 +67,7 @@ router.get("/fetchnovel/:novelid", (req, res) => {
 })
 //fetch lasted novel add
 router.get("/fetchnovellasted/:limit", (req, res) => {
-    const novel = "SELECT * FROM novel WHERE novel_privacy=1 ORDER BY novel_date DESC LIMIT ?"
+    const novel = "SELECT * FROM novel WHERE novel_privacy=1 ORDER BY novel_id DESC LIMIT ?"
     db.query(novel, [parseInt(req.params.limit)], (err, data) => {
         if (err) return console.log(err);
         return res.status(200).json(data);
@@ -177,38 +177,38 @@ router.post("/addbookmark/", (req, res) => {
 router.post("/removebookmark/", (req, res) => {
     const insert = "DELETE FROM bookmarks WHERE writer_id=? AND novel_id=?";
     db.query(insert, [req.body.writerid, req.body.novelid], (err, data) => {
-        if (err){
+        if (err) {
             console.log(err)
             return res.status(400).json(err);
-        } 
+        }
         return res.status(200).json("Remove Book success");
     })
 })
 router.post("/addlike/", (req, res) => {
     const insert = "INSERT into novel_likes (writer_id,novel_id) VALUES (?,?)";
-    const novel="UPDATE novel SET novel_rating=novel_rating+1 WHERE novel_id=?";
+    const novel = "UPDATE novel SET novel_rating=novel_rating+1 WHERE novel_id=?";
     db.query(insert, [req.body.writerid, req.body.novelid], (err, data) => {
         if (err) return res.status(400).json(err);
-        db.query(novel,[req.body.novelid],(err,data)=>{
+        db.query(novel, [req.body.novelid], (err, data) => {
             if (err) return res.status(400).json(err);
             return res.status(200);
         })
-      
+
     })
 })
 router.post("/removelike/", (req, res) => {
     const insert = "DELETE FROM novel_likes WHERE writer_id=? AND novel_id=?";
-    const novel="UPDATE novel SET novel_rating=novel_rating-1 WHERE novel_id=?";
+    const novel = "UPDATE novel SET novel_rating=novel_rating-1 WHERE novel_id=?";
     db.query(insert, [req.body.writerid, req.body.novelid], (err, data) => {
-        if (err){
+        if (err) {
             console.log(err)
             return res.status(400).json(err);
-        } 
-        db.query(novel,[req.body.novelid],(err,data)=>{
-            if (err){
+        }
+        db.query(novel, [req.body.novelid], (err, data) => {
+            if (err) {
                 console.log(err)
                 return res.status(400).json(err);
-            } 
+            }
             return res.status(200).json("success");
         })
     })
@@ -216,6 +216,36 @@ router.post("/removelike/", (req, res) => {
 
 router.post("/update_writerinfo/", (req, res) => {
     console.log(req.body)
+    if (req.body.writer.writer_name.length < 4 || req.body.writer.writer_name.length > 12) return res.status(400).json("User name must be 4-12 characters long")
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.writer.writer_email)) {
+        return res.status(400).json("Invalid email address");
+    }
+    const UPDATE = "UPDATE writer SET writer_name=?,writer_email=?,display_name=? WHERE writer_id=?";
+    let q = "SELECT * FROM writer WHERE writer_name=? AND writer_id!=?";
+    const value = [req.body.writer.writer_name, req.body.writer.writer_email, req.body.writer.display_name, req.body.writer.writer_id];
+    db.query(q, [req.body.writer.writer_name, req.body.writer.writer_id], (err, data) => {
+        if (err) return res.status(400).json(err);
+        if (data.length > 0) return res.status(400).json("Username already Taken !");
+        q = "SELECT * FROM writer WHERE writer_email=? AND writer_id!=?";
+        db.query(q, [req.body.writer.writer_email, req.body.writer.writer_id], (err, data) => {
+            if (err) return res.status(400).json(err);
+            if (data.length > 0) return res.status(400).json("Email already Taken !");
+            db.query(UPDATE, value, (err, result) => {
+                if (err) return res.status(400).json(err);
+                return res.status(200).json("Update success!")
+            })
+        })
+    })
+
+    // db.query(UPDATE,[req.body])
+})
+router.post("/update_writerimg/",(req,res)=>{
+    const UPDATE = "UPDATE writer SET writer_img=? WHERE writer_id=?";
+    // console.log(req.body)
+    db.query(UPDATE,[req.body.writer_img,req.body.writer_id],(err,data)=>{
+        if(err)return res.status(400).json(err);
+        return res.status(200).json("Update success!");
+    })
 })
 router.post("/update_writerpassword/", (req, res) => {
 
@@ -258,10 +288,10 @@ router.get("/fetchbookmarkmyreading/:writerid", (req, res) => {
                         resolve(pennameData[0]);
                     });
                 });
-            
+
                 result.push({ novel: entry, penname: pennameResult });
             }
-          
+
             return res.status(200).json(result);
         };
         fetchData();
@@ -282,52 +312,95 @@ router.get("/fetchlikemyreading/:writerid", (req, res) => {
                         resolve(pennameData[0]);
                     });
                 });
-            
+
                 result.push({ novel: entry, penname: pennameResult });
             }
-          
+
             return res.status(200).json(result);
         };
         fetchData();
     });
 });
 
-router.get("/noveltotalpage/",(req,res)=>{
-    const totalpage="SELECT COUNT(*) AS totalNovels FROM novel"
-    db.query(totalpage, [req.body.writerid], (err, data) => {
-        if (err) return res.status(500).json(err);
-        const totalNovels = data[0].totalNovels;
-        const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
-        
-        return res.status(200).json( totalPages);
-    })
+// router.get("/noveltotalpage/:tab", (req, res) => {
+//     let select;
+//     if (tab === "penname") {
+//         select = "SELECT COUNT(*) AS totalNovels FROM novel JOIN penname IN novel.penid=penname.penid WHERE penname=?"
+//     }
+//     else {
+//         select = "SELECT COUNT(*) AS totalNovels FROM novel"
+//     }
+//     db.query(totalpage, [req.body.writerid], (err, data) => {
+//         if (err) return res.status(500).json(err);
+//         const totalNovels = data[0].totalNovels;
+//         const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+//         return res.status(200).json(totalPages);
+//     })
+// })
+///novel page
+router.get("/noveltotalpage/:tab/:penname", (req, res) => {
+    let select;
+    console.log(req.params)
+    if (req.params.tab === "penname") {
+        select = "SELECT COUNT(*) AS totalNovels FROM novel JOIN penname ON novel.penid=penname.penid WHERE penname.penname=?"
+        db.query(select, [req.params.penname], (err, data) => {
+            if (err) return res.status(500).json(err);
+            const totalNovels = data[0].totalNovels;
+            const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+            console.log(totalPages)
+            return res.status(200).json(totalPages);
+            
+        })
+    }
+    else {
+        select = "SELECT COUNT(*) AS totalNovels FROM novel"
+
+        db.query(select, [], (err, data) => {
+            if (err) return res.status(500).json(err);
+            const totalNovels = data[0].totalNovels;
+            const totalPages = Math.ceil(totalNovels / 30); // Assuming 5 novels per page
+            return res.status(200).json(totalPages);
+        })
+    }
 })
-router.get("/novelgetnovel/:page/:order",(req,res)=>{
+router.get("/novelgetnovel/:page/:order/:penname", (req, res) => {
     const page = req.params.page || 0;
     const limit = 30;
     const OFFSET = page * limit;
-    if(req.params.order==="lastest"){
-        const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_id DESC LIMIT ? OFFSET ?";
+    if (req.params.order === "lastest") {
+        const select = "SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating,novel.novel_views FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_id DESC LIMIT ? OFFSET ?";
         db.query(select, [limit, OFFSET], (err, data) => {
             if (err) {
                 console.log(err)
                 return res.status(500).json(err);
             }
-            
+
             return res.status(200).json(data)
         })
-    }else if(req.params.order==="mostview"){
-        
-        const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_views DESC LIMIT ? OFFSET ?";
+    } else if (req.params.order === "mostview") {
+
+        const select = "SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating,novel.novel_views FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 ORDER BY novel.novel_views DESC LIMIT ? OFFSET ?";
         db.query(select, [limit, OFFSET], (err, data) => {
             if (err) {
                 console.log(err)
                 return res.status(500).json(err);
             }
-            
+
+            return res.status(200).json(data)
+        })
+    }else if(req.params.order==="penname"){
+        
+        const select="SELECT novel.novel_id,novel.novel_name,novel.novel_img,novel.novel_chaptercount,penname.penname,novel.novel_rating,novel.novel_views FROM novel JOIN penname ON penname.penid=novel.penid WHERE novel.novel_privacy=1 AND penname.penname=? ORDER BY novel.novel_id DESC LIMIT ? OFFSET ?";
+        db.query(select, [req.params.penname,limit, OFFSET], (err, data) => {
+            if (err) {
+                console.log(err)
+                return res.status(500).json(err);
+            }
+
             return res.status(200).json(data)
         })
     }
-    
+
 })
+
 export default router;
