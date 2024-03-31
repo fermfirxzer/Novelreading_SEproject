@@ -13,11 +13,13 @@ router.post('/register', (req, res) => {
   if(!/^[a-zA-Z0-9]+$/.test(req.body.password)||!/^[a-zA-Z0-9]+$/.test(req.body.username))return res.status(400).json("Invalid username or password")
   
   if (req.body.username.length < 4 || req.body.username.length > 12) return res.status(400).json("User name must be 4-12 characters long")
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)||!/^[a-zA-Z0-9]+$/.test(req.body.email)) {
+  if (req.body.password.length < 4 || req.body.password.length > 12) return res.status(400).json("Password must be 4-12 characters long")
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
     return res.status(400).json("Invalid email address");
   }
+  if(!/^[a-zA-Z0-9]+$/.test(req.body.email)) return res.status(400).json("Invalid email address");
   if (!/[a-z]/.test(req.body.password) || !/[A-Z]/.test(req.body.password)) return res.status(400).json("Password must contain both uppercase and lowercase characters");
-  if (req.body.password.length < 4 || req.body.password.length > 12) return res.status(400).json("Password must be 4-12 characters long")
+  
   if (req.body.password != req.body.confirmpassword) return res.status(400).json("Password and ConfirmPassword not matching")
   let q = "SELECT * FROM writer WHERE writer_email=?";
   db.query(q, [req.body.email], (err, data) => {
@@ -26,7 +28,7 @@ router.post('/register', (req, res) => {
     q = "SELECT * FROM writer WHERE writer_name=?";
     db.query(q, [req.body.username], (err, data) => {
       if (err) return res.json(err);
-      if (data.length) return res.status(400).json("Writer name already exists!");
+      if (data.length) return res.status(400).json("Username already exists!");
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(req.body.password, salt);
       const insertQuery = "INSERT INTO writer (writer_name,writer_password,writer_email) VALUES (?, ?, ?)";

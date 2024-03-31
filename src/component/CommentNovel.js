@@ -7,43 +7,13 @@ import { AuthContext } from '../context/authContextuser';
 import Swal from 'sweetalert2';
 import { format, formatDistanceToNow } from 'date-fns';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
-import { Co2Sharp } from '@mui/icons-material';
+
 
 const CommentNovel = ({ novelid, chapterid }) => {
     const { currentUser } = useContext(AuthContext)
-    const [isFollowedPenname, setIsFollowedPenname] = useState(false);
-    const [isFollowedWriter, setIsFollowedWriter] = useState(false);
-    const handleClickFollowed = (target) => {
-        if (target === 'penname') {
-            setIsFollowedPenname(!isFollowedPenname);
-        } else if (target === 'writer') {
-            setIsFollowedWriter(!isFollowedWriter);
-        }
-    };
-    const sampleComments = [
-        {
-            displayname: 'Alice',
-            profileImage: 'https://1417094351.rsc.cdn77.org/publicassets/2156800/profile_picture/profile_picture.gif?1941564742',
-            body: 'Great website! ',
-            publishedDate: '2023-02-15',
-        },
-
-        {
-            displayname: 'Bob',
-            profileImage: 'https://1417094351.rsc.cdn77.org/publicassets/2156800/profile_picture/profile_picture.gif?1941564742',
-            body: 'Nice work!',
-            publishedDate: '2023-02-15',
-        },
-        {
-            displayname: 'Charlie',
-            profileImage: 'https://1417094351.rsc.cdn77.org/publicassets/2156800/profile_picture/profile_picture.gif?1941564742',
-            body: 'I love this!',
-            publishedDate: '2023-02-15',
-        },
-    ];
     const commentPerPage = 10;
     const [Errcomment, setErrcomment] = useState(null);
-
+    const [Errediting,setErrediting]=useState(null);
 
     const [currentPageComment, setCurrentPageComment] = useState(1);
     const handleNextPageComment = () => {
@@ -53,9 +23,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const handlePrevPageComment = () => {
         setCurrentPageComment(prevPage => prevPage - 1);
     };
-
-
-
+    
     const [Allcomment, setAllcomment] = useState(null);
     const startIndexComment = (currentPageComment - 1) * commentPerPage;
     const endIndexComment = currentPageComment * commentPerPage;
@@ -85,7 +53,11 @@ const CommentNovel = ({ novelid, chapterid }) => {
     };
 
     const handleSubmit = async () => {
-        console.log(newComment)
+       
+        if(!newComment){
+            setErrcomment("Please fill in comment!")
+            return;
+        }
         Swal.fire({
             text: 'ต้องการเพิ่มความคิดเห็นหรือไม่?',
             icon: 'question',
@@ -111,7 +83,6 @@ const CommentNovel = ({ novelid, chapterid }) => {
                 }
             }
         });
-        // setNewComment('');
     };
     const [editingcommentid, setEditingCommentId] = useState(null)
     const [editingcommentText, setEditedCommentText] = useState('');
@@ -124,8 +95,12 @@ const CommentNovel = ({ novelid, chapterid }) => {
         setEditedCommentText('');
     }
     const handleUpdateComment = async () => {
+        setErrediting(null);
+        if(!editingcommentText){
+            setErrediting("Please fill in comment!")
+            return;
+        }
         const dataTosend = { editingcommentText, editingcommentid, writerid: currentUser.writer_id };
-        console.log(dataTosend)
         try {
             const response = await axios.post("http://localhost:5000/api/font/update_comment/", dataTosend);
             setErrcomment(response.data)
@@ -138,7 +113,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
         }
     };
     const handleDeleteComment = async (comment) => {
-        console.log(comment);
+        
         try {
             const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment);
             setErrcomment(response.data)
@@ -170,17 +145,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
                         <div className="card-body">
                             <h5 className="card-title header">เพิ่มความคิดเห็น</h5>
                             <div className="form-group">
-                                <textarea
-                                    className="form-control"
-                                    placeholder="เพิ่มความคิดเห็นที่นี่ ..."
-                                    value={newComment}
-                                    onChange={handleChange}
-                                    style={{ height: '150px' }}
-                                    required
-
-                                >
-
-                                </textarea>
+                                <textarea className="form-control" placeholder="เพิ่มความคิดเห็นที่นี่ ..." value={newComment} onChange={handleChange} style={{ height: '150px' }} required />
 
                             </div>
                             <div className='d-flex'>
@@ -260,6 +225,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
 
 
                                                 </div>
+                                                {Errediting&&<p className='text-danger ms-5'>{Errediting}</p>}
                                                 <div className=''>
                                                     <button className='follow-btn text-black mt-3 mb-3' onClick={handleUpdateComment}>Submit</button>
                                                     <button className='follow-btn text-black mt-3 mb-3' onClick={handlecancel}>Cancel</button>

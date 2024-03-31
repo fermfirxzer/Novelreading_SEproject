@@ -98,8 +98,6 @@ const Viewnovel = () => {
                     subCategory2: "",
                     contentLevel: data_novel.data[0].novel_contentlevel,
                 };
-
-
                 for (const category of categories.data.result) {
                     const categoryName = category[0];
                     const categoryType = category[1];
@@ -165,8 +163,6 @@ const Viewnovel = () => {
             }
         });
     }
-    console.log(chapters)
-
 
 
     return (
@@ -176,7 +172,7 @@ const Viewnovel = () => {
                 <div className='top d-flex pt-3'>
                     <a href='/writer/managewriting' className='link ps-3'><h6>กลับสู่หน้าหลัก</h6></a>
                     <span className='ps-2'> &gt;</span>
-                    <h6 className='ps-2'>{novel.novel_name}</h6>
+                    <h6 className='ps-2'>{novel.name}</h6>
                 </div>
                 <div className='row'>
 
