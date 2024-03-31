@@ -82,14 +82,14 @@ const Myreading = () => {
     const handleDelete = (id) => {
         if (activeTab == "books") {
             Swal.fire({
-                title: 'ลบออกจากชั้นหนังสือ?',
-                text: 'ต้องการลบออกจากชั้นหนังสือหรือไม่?',
+                title: 'Delete from bookmarks',
+                text: 'You want to Delete novel from bookmarks?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                cancelButtonText: 'ไม่ลบ',
-                confirmButtonText: 'ลบ',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -97,8 +97,8 @@ const Myreading = () => {
                         fetchbookmarknovel();
                         Swal.fire({
                             icon: "success",
-                            title: "ลบออกจากชั้นหนังสือ",
-                            text: "ลบออกจากชั้นหนังสือสำเร็จ",
+                            title: "Delete from bookmarks",
+                            text: "Delete from bookmarks success",
 
                         });
 
@@ -106,8 +106,8 @@ const Myreading = () => {
                         console.error(err);
                         Swal.fire({
                             icon: 'error',
-                            title: 'เกิดข้อผิดพลาดในการลบ',
-                            text: 'เกิดข้อผิดพลาดขณะลบออกจากชั้นหนังสือ',
+                            title: 'Error Deleting',
+                            text: 'Error Deleting from bookmars',
                         });
                     }
 
@@ -117,14 +117,14 @@ const Myreading = () => {
 
         } else if (activeTab == "likes") {
             Swal.fire({
-                title: 'ลบออกจากนิยายที่ชอบ?',
-                text: 'ลบออกจากนิยายที่ชอบใช่หรือไม่?',
+                title: 'Delete from likes',
+                text: 'You want to Delete novel from likes?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6',
-                cancelButtonText: 'ไม่ลบ',
-                confirmButtonText: 'ลบ',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Yes',
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
@@ -132,16 +132,16 @@ const Myreading = () => {
                         fetchlikenovel();
                         Swal.fire({
                             icon: "success",
-                            title: "ลบออกจากนิยายที่ชอบ",
-                            text: "ลบออกจากนิยายที่ชอบสำเร็จ",
+                            title: "Delete from likes",
+                            text: "Delete from likes success",
                         });
 
                     } catch (err) {
                         console.error(err);
                         Swal.fire({
                             icon: 'error',
-                            title: 'เกิดข้อผิดพลาดในการลบ',
-                            text: 'เกิดข้อผิดพลาดขณะลบออกจากชั้นหนังสือ',
+                            title: 'Error Deleting',
+                            text: 'Error Deleting from likes',
                         });
                     }
 

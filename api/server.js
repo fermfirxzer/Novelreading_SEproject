@@ -1,6 +1,6 @@
 // server.js
 import express from 'express';
-import novel_delete from './routes/novel_delete.js';
+import novel_delete from './routes/delete.js';
 import novelRoutes from './routes/novel.js'
 import writerRoutes from './routes/writer.js'
 import fontRoutes from './routes/mainpage.js';

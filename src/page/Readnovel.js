@@ -101,7 +101,7 @@ const Readnovel = () => {
             } catch (err) {
                 console.log(err);
             }
-        }else{
+        } else {
             seterrlogin("Please login to Likes novel")
             setTimeout(() => {
                 seterrlogin(null);
@@ -124,7 +124,7 @@ const Readnovel = () => {
                 console.log(err);
             }
             console.log(isBooked)
-        }else{
+        } else {
             seterrlogin("Please login to Bookmarks novel")
             setTimeout(() => {
                 seterrlogin(null);
@@ -142,17 +142,17 @@ const Readnovel = () => {
         }
     };
     const [currentPage, setCurrentPage] = useState(0);
-    const chapterperpage=10;
-    const totalPages = chapter?Math.floor(chapter.length/chapterperpage):0;
+    const chapterperpage = 10;
+    const totalPages = chapter ? Math.floor(chapter.length / chapterperpage) : 0;
     console.log(totalPages)
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
     };
-   
+
     const handlePrevPage = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
-    const [errlogin,seterrlogin]=useState(null);
+    const [errlogin, seterrlogin] = useState(null);
 
     return (
 
@@ -174,7 +174,7 @@ const Readnovel = () => {
                             <div className='reading-novel-author'>
                                 {novelData && <img src={novelData.writer_img ? `/uploads/profile/${novelData.writer_img}` : "/uploads/novel/osu icon.jpg"} className='author-profile' alt="Author Profile" />}
                                 {novelData && <p>{novelData.writer_name}</p>}
-                               
+
                             </div>
                             <div className='reading-novel-describe'>
                                 {novelData && <p>{novelData.novel_desc} </p>}
@@ -190,8 +190,9 @@ const Readnovel = () => {
                                     </span>
                                 </button>
                                 <button className='readnow'>
-                                    <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
                                     <a href={`/readchapter/${novelid}/1`} className='text-decoration-none text-dark'>
+                                        <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
+
                                         <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
                                     </a>
 
@@ -213,7 +214,7 @@ const Readnovel = () => {
                         ))}
                     </div>
                 </div>
-                {errlogin&&<p className='text-danger text-center'>{errlogin}</p>}
+                {errlogin && <p className='text-danger text-center'>{errlogin}</p>}
                 <div className='container-lg pb-5 mb-0' >
                     <div className='reading-novel-info mb-5'>
                         <div className='card border-0 p-3'>
@@ -221,11 +222,11 @@ const Readnovel = () => {
                                 <div className="mt-2 border-end " style={{ width: '50%' }}>
                                     <h2 >ข้อมูลนักเขียน </h2>
                                     <div className='d-flex justify-content-between '>
-                                       
+
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
                                         {novelData && <span><strong>ผู้เขียน : </strong><a className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
-                                        
+
                                     </div>
 
                                 </div>
@@ -235,7 +236,7 @@ const Readnovel = () => {
                                     {novelData && <div>
                                         <strong>วันที่เผยแพร่ : </strong> {novelData.novel_date}
                                     </div>}
-                                
+
 
                                 </div>
                             </div>
@@ -246,14 +247,14 @@ const Readnovel = () => {
                             ตอนทั้งหมด ({chapter.length})
                         </div>}
                         <div id="chapterContainer">
-                            {chapter && chapter.slice(currentPage*10).map(chapterItem => (
+                            {chapter && chapter.slice(currentPage * 10).map(chapterItem => (
                                 <div className='chapter px-5' key={chapterItem.chapter_id}>
                                     <Link to={`/readchapter/${novelid}/${chapterItem.chapter_id}`} className="no-underline">
                                         <g style={{ color: '#00cbc3', fontSize: '18px' }}>#{chapterItem.chapter_id}</g> {chapterItem.chapter_title}
                                     </Link>
                                     <div style={{ display: 'flex' }}>
                                         <div style={{ marginRight: '15px' }}>
-                                        
+
                                         </div>
                                         <div>
                                             <span style={{ marginRight: '5px' }}>
@@ -268,8 +269,8 @@ const Readnovel = () => {
                         </div>
 
                         <div id="pagination" className="chapter-btn-container">
-                            <button onClick={handlePrevPage} disabled={currentPage ===0} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
-                            <span>หน้าที่ {currentPage+1}</span>
+                            <button onClick={handlePrevPage} disabled={currentPage === 0} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
+                            <span>หน้าที่ {currentPage + 1}</span>
                             <button onClick={handleNextPage} disabled={currentPage >= totalPages} className='chapter-btn'><NavigateNextIcon></NavigateNextIcon></button>
                         </div>
                     </div>

@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="footer-col">
           <h4>เมนูของฉัน</h4>
           <ul>
-            <li><a href="/writer/myreading">My Reading</a></li>
+            <li><a href="/myreading">My Reading</a></li>
             <li><a href="/writer/managewriting">My Writing</a></li>
             <li><a href="/profile">My Profile</a></li>
             <li><a href="/writer/upload">เพิ่มงานเขียนใหม่</a></li>

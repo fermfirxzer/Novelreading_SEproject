@@ -59,7 +59,6 @@ const Login = () => {
                 <input type="text" className="form-control" placeholder='username' name="email" onChange={handleChange} pattern="^[a-zA-Z0-9_\-@.]+$" required></input>
               </div>
               <div className='mb-3'>
-              
                 <label className='form-label' for="password">Password</label>
                 <input type="text" className="form-control" placeholder='password' name="password" onChange={handleChange}></input>
               </div>

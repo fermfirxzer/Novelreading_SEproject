@@ -6,9 +6,15 @@ import { Form, Button, Modal, Alert, Dropdown } from 'react-bootstrap';
 import axios from "axios";
 import { AuthContext } from '../context/authContextuser.jsx';
 import { Password } from "@mui/icons-material";
+import {useNavigate } from 'react-router-dom';
 const Profile = () => {
     const { currentUser } = useContext(AuthContext);
     const [showpassword, setShowpassword] = useState(false);
+    const navigate=useNavigate()
+    const writerid = currentUser?.writer_id || null;
+    if(writerid===null){
+        navigate("/");
+    }
     const handleShowpassword = () => setShowpassword(true);
     const handleClosepassword = () => {
         setShowpassword(false)
@@ -37,8 +43,6 @@ const Profile = () => {
             }
         }
         fetchwriter();
-        
-        // cons
     }, [])
     
     const Updatepassword = async (e) => {
@@ -79,27 +83,6 @@ const Profile = () => {
             [name]: value,
         }));
     };
-    const handleSubmitPasswordChange = (e) => {
-        // e.preventDefault();
-        // if (currentPassword !== users.password){
-        //     setEnterPasswordError(true);
-
-        // }else{
-
-        //     // Check if new password matches confirm password
-        //     if (users.newPassword !== users.newConfirmPassword) {
-        //         setConfirmPasswordError(true);
-        //     } else {
-        //         setConfirmPasswordError(false);
-        //         // Here you can proceed with submitting the form or updating the password
-        //         console.log("Password change submitted:", users.newPassword);
-        //         // Close the modal
-        //         handleClosepassword();
-        //     }
-        //     setEnterPasswordError(false);
-        // }
-
-    };
     const [temp, setTemp] = useState(null)
     const [profileImage, setProfileImage] = useState(writer ? writer.writer_img : null);
     const handleImageChange = (e) => {
@@ -108,7 +91,7 @@ const Profile = () => {
         if (selectedFile) {
             const fileType = selectedFile.type;
             if (!fileType.startsWith('image/')) {
-                // Not an image file, handle error or inform user
+                
                 alert('Please select an image file.');
                 return;
             }
@@ -121,11 +104,9 @@ const Profile = () => {
         }
     };
     const upload = async () => {
-
         try {
             const formData = new FormData();
             formData.append("file", temp)
-
             const res = await axios.post("http://localhost:5000/api/uploadprofile", formData)
         } catch (err) {
 
@@ -160,9 +141,6 @@ const Profile = () => {
             setEnterInfoError(err.response ? err.response.data : "An error occurred");
         }
     }
-    const handleSubmit = (e) => {
-
-    };
 
     const [formDisable, setFormDisable] = useState(true);
     const handleForm = () => {
@@ -222,7 +200,7 @@ const Profile = () => {
             </div>
 
             <div className="container ">
-                <Form className="col-md-8" onSubmit={handleSubmit}>
+                <Form className="col-md-8" >
                     <div className="mb-3 row">
                         <label htmlFor="formUsername" className="col-sm-3 col-form-label">Username</label>
                         <div className="col-sm-9">
@@ -273,7 +251,7 @@ const Profile = () => {
                             <Modal.Title>เปลี่ยนรหัสผ่าน</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-                            <Form onSubmit={handleSubmit}>
+                            <Form>
                                 <Form.Group controlId="formOldPassword">
                                     <Form.Label>รหัสผ่านเดิม</Form.Label>
                                     <Form.Control type="password" placeholder="รหัสผ่านเดิม" name="password"
@@ -311,27 +289,7 @@ const Profile = () => {
                             </Button>
                         </Modal.Footer>
                     </Modal>
-                    {/* <div className="mb-3 row">
-                        <label htmlFor="formName" className="col-sm-3 col-form-label">Name-surname</label>
-                        <div className="col-sm-4">
-                            <input type="text" className="form-control" id="formName" placeholder="Enter name"  name="Name" value={users.Name} onChange={handleChange} disabled={formDisable}/>
-                        </div>
-                        <div className="col-sm-5">
-                            <input type="text" className="form-control" id="formSurname" placeholder="Enter surname"  name="Surname" value={users.Surname} onChange={handleChange} disabled={formDisable}/>
-                        </div>
-                    </div> */}
-
-
-                    {/* <div className="mb-3 row">
-                        <label htmlFor="formGender" className="col-sm-3 col-form-label">Gender</label>
-                        <div className="col-sm-9">
-                            <select className="form-select" id="formGender"  name="gender" value={users.gender} onChange={handleChange} disabled={formDisable}>
-                            <option value="other">ไม่ระบุ</option>
-                            <option value="male">ชาย</option>
-                            <option value="female">หญิง</option>
-                            </select>
-                        </div>
-                    </div> */}
+                   
 
                     <div className="mb-3 row justify-content-end">
                         <div className="col-sm-2">
@@ -340,9 +298,7 @@ const Profile = () => {
                     </div>
                 </Form>
             </div>
-            {/* <div className="container my-4 border-bottom ">
-                <h2>ที่อยู่</h2>
-            </div> */}
+            
         </div>
     );
 }

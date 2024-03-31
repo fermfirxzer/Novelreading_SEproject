@@ -211,9 +211,9 @@ const Uploadnovel = () => {
       }
       const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
       setError("Success upload");
-      setTimeout(() => {
-        navigate("/writer/managewriting");
-      }, 2000);
+      // setTimeout(() => {
+      //   navigate("/writer/managewriting");
+      // }, 2000);
     } catch (err) {
       console.error("Error in Upload:", err);
       setError(err.response ? err.response.data : "An error occurred");

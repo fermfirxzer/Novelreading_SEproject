@@ -72,7 +72,7 @@ const Swipercate = ({ novelsData }) => {
                                                 alt="Description"
                                             />
                                         </span>
-                                        <span>{novel.novel_rating}k</span>
+                                        <span>{novel.novel_rating}</span>
                                         <span>
                                             <img
                                                 src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"

@@ -53,9 +53,8 @@ const CommentNovel = ({ novelid, chapterid }) => {
     };
 
     const handleSubmit = async () => {
-       
         if(!newComment){
-            setErrcomment("Please fill in comment!")
+            setErrcomment("Unable to comment")
             return;
         }
         Swal.fire({
@@ -65,6 +64,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
             confirmButtonText: 'ยืนยัน',
             cancelButtonText: 'ยกเลิก'
         }).then(async (result) => {
+            
             if (result.isConfirmed) {
                 try {
                     const dataTosend = { novelid, chapterid, newComment, writerid: currentUser.writer_id }
@@ -76,7 +76,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
                 } catch (err) {
                     Swal.fire({
                         title: "Error",
-                        text: `An error occurred: ${err.response ? err.response.data : "Unknown error"}`,
+                        text: `Unable to comment`,
                         icon: "error"
                     });
                     console.log(err)
@@ -97,7 +97,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const handleUpdateComment = async () => {
         setErrediting(null);
         if(!editingcommentText){
-            setErrediting("Please fill in comment!")
+            setErrediting("Unable to comment")
             return;
         }
         const dataTosend = { editingcommentText, editingcommentid, writerid: currentUser.writer_id };
