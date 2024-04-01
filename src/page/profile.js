@@ -5,7 +5,7 @@ import './profile.scss'
 import { Form, Button, Modal, Alert, Dropdown } from 'react-bootstrap';
 import axios from "axios";
 import { AuthContext } from '../context/authContextuser.jsx';
-import { Password } from "@mui/icons-material";
+import { Co2Sharp, Password } from "@mui/icons-material";
 import {useNavigate } from 'react-router-dom';
 const Profile = () => {
     const { currentUser } = useContext(AuthContext);
@@ -34,7 +34,6 @@ const Profile = () => {
     useEffect(() => {
         const fetchwriter = async () => {
             try {
-                console.log(currentUser.writer_id)
                 const response = await axios.get(`http://localhost:5000/api/font/fetchwriter/${currentUser.writer_id}`)
                 setWriter(response.data);
                 setProfileImage(response.data.writer_img)
@@ -95,29 +94,34 @@ const Profile = () => {
                 alert('Please select an image file.');
                 return;
             }
-            setTemp(selectedFile)
+            
             const reader = new FileReader();
             reader.onloadend = () => {
                 setProfileImage(reader.result);
             };
             reader.readAsDataURL(selectedFile);
+            setTemp(selectedFile)
         }
     };
     const upload = async () => {
         try {
-            const formData = new FormData();
-            formData.append("file", temp)
-            const res = await axios.post("http://localhost:5000/api/uploadprofile", formData)
+            var formData = new FormData();
+            formData.append("file",temp)
+            const res = await axios.post("http://localhost:5000/api/uploadprofile",formData)
+            if(res.data){
+                return res.data.filename;
+            }
+            
         } catch (err) {
-
+            console.log(err)
         }
 
     }
     const UpdateInfo = async e => {
         e.preventDefault();
         setEnterInfoError(null);
-        console.log(temp)
         let profile = null;
+        console.log(temp)
         if (temp != null) {
             profile = await upload();
             if (profile == null) {
@@ -128,11 +132,11 @@ const Profile = () => {
             writer,
             img: profile,
         }
-        
+        console.log("this is profile",profile)
         try{
             const res = await axios.post("http://localhost:5000/api/font/update_writerinfo/",dataTosend)
             if(profile!==null){
-                console.log(profile)
+            
                 const img = await axios.post("http://localhost:5000/api/font/update_writerimg/",{writer_img:profile,writer_id:writer.writer_id});
             }
             setEnterInfoError(res.data);
@@ -146,7 +150,7 @@ const Profile = () => {
     const handleForm = () => {
         setFormDisable(!formDisable);
     }
-
+    
     return (
         <div style={{ marginTop: '7rem', marginBottom: '5rem' }}>
             <NavbarReactBootstrap ></NavbarReactBootstrap>

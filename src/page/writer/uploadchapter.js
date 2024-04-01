@@ -53,7 +53,7 @@ const Uploadchapter = () => {
             setErrorsubmit("novelid error occured!")
             return true;
         }
-        if (!content) {
+        if (content=="<p><br></p>"||!content) {
             setErrorcontent("content is required")
             return true;
         }
@@ -83,6 +83,7 @@ const Uploadchapter = () => {
         
         }
     }
+    console.log(content)
     const update = async (e) => {
         e.preventDefault();
         if (check()) {

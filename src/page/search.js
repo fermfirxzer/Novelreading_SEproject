@@ -42,6 +42,8 @@ const Search = () => {
     ];
     const [totalPages, setTotalpage] = useState(0)
     const [page, setPage] = useState(0);
+    console.log(novel)
+
     const fetchtotalpage = async (tab) => {
 
         try {
@@ -60,7 +62,7 @@ const Search = () => {
             const res = await axios.get(`http://localhost:5000/api/search/${value}/${category}/${order}/${page}`)
             setnovel(res.data);
         } catch (err) {
-            console.log(err)
+            
         }
     }
     const scrollToTop = () => {
@@ -131,6 +133,14 @@ const Search = () => {
                                                                 {novel.novel_chaptercount}
                                                                 <FavoriteSharpIcon style={{ color: '#a1a1a1' }} />
                                                                 {novel.novel_rating}
+                                                                <span>
+                                                                <img
+                                                                    src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
+                                                                    className=""
+                                                                    alt="Description"
+                                                                />
+                                                            </span>
+                                                            <span>{novel.novel_views}</span>
                                                             </Card.Text>
                                                         </div>
 

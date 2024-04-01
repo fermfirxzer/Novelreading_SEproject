@@ -162,7 +162,7 @@ const Readnovel = () => {
             <div>
                 <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
-                        <div className='  reading-novel-img-con '>
+                        <div className='reading-novel-img-con '>
                             {novelData && <img src={novelData.novel_img != null ? `/uploads/novel/${novelData.novel_img}` : "/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>

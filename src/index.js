@@ -13,6 +13,6 @@ root.render(
     <App ></App>
     <Footer/>
     </AuthContextProvider>
-  // </React.StrictMode>
+  // {/* </React.StrictMode> */}
 );
 

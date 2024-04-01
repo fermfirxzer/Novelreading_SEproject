@@ -133,7 +133,7 @@ const Managewriting = () => {
                     </div>
                 </div>
             </Container>
-            <Container style={{ width: '65%' }}>
+            <Container style={{ width: '65%',minHeight:"500px" }}>
 
                 {novelsData.map((novel, index) => (
 

@@ -14,9 +14,9 @@ const Viewnovel = () => {
     const state = useLocation().state;
     const [novel, setNovel] = useState({});
     const [novelid, setNovelid] = useState(state.novelid)
-    const [chapters, setchapters] = useState(null)
+    const [chapters, setchapters] = useState(null);
     const [category, setCategory] = useState(null);
-    
+
     const navigate = useNavigate()
     const handleClick = () => {
         navigate("/writer/uploadchapter", { state: { novel, novelid } })
@@ -33,7 +33,6 @@ const Viewnovel = () => {
         }
         fetchnovel();
     }, [])
-    console.log(novel)
     const handleDelete = async () => {
         Swal.fire({
             title: "Are you sure?",
@@ -52,10 +51,9 @@ const Viewnovel = () => {
                     icon: "success"
                 });
                 try {
-
                     await axios.post("http://localhost:5000/api/novel_delete/deletenovel/", { novelid: novelid }, { withCredentials: true, });
                     await axios.post("http://localhost:5000/api/novel_delete/deletechapter/", { novelid: novelid }, { withCredentials: true, });
-                    // Navigate to the desired location after deletion
+                    
                     navigate("/writer/managewriting");
                 } catch (error) {
                     console.error("Error deleting novel:", error);
@@ -81,17 +79,31 @@ const Viewnovel = () => {
         if (state) {
             try {
                 const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
-
+                const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
                 const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
                 const updatedNovelData = {
                     name: data_novel.data[0].novel_name,
                     desc: data_novel.data[0].novel_desc,
                     penname: penname.data[0].penname,
                     image: data_novel.data[0].novel_img || null,
-                    
+                    mainCategory: '',
+                    subCategory1: "",
+                    subCategory2: "",
                     contentLevel: data_novel.data[0].novel_contentlevel,
                 };
+                for (const category of categories.data.result) {
+                    const categoryName = category[0];
+                    const categoryType = category[1];
+                    if (categoryType === 'main') {
+                        updatedNovelData.mainCategory = categoryName;
+                    } else if (categoryType === 'subcategory1') {
+                        updatedNovelData.subCategory1 = categoryName;
+                    } else if (categoryType === 'subcategory2') {
+                        updatedNovelData.subCategory2 = categoryName;
+                    }
+                }
                 setNovel(updatedNovelData);
+                setCategory(categories)
             } catch (err) {
                 console.log(err);
             }
@@ -141,8 +153,7 @@ const Viewnovel = () => {
             }
         });
     }
-
-    console.log(category)
+    console.log(novel)
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -166,7 +177,7 @@ const Viewnovel = () => {
                 </div>
                 <div className='img-box'>
                     <div className='box-left'>
-                        <img src={`/uploads/novel/${novel.image}`}></img>
+                        <img src={novel.image ? `/uploads/novel/${novel.image}` : `/uploads/novel/osu icon.jpg`}></img>
                     </div>
                     <div className='box-right ms-5 mt-3'>
                         <h3>{novel.name}</h3>
@@ -176,14 +187,21 @@ const Viewnovel = () => {
                 </div>
                 <div className='novel-box my-5'>
                     <div className='d-flex'>
-                    {category && category.map((category, index) => (
-                            <div key={index} className='mx-2'>
-                                <a href={`/search/${category.category_name}`}>
-                                    <button className={index === 0 ? "maincatebtn rounded-pill p-1 px-2" : "catebtn rounded-pill p-1 px-2"}>{category.category_name}</button>
-
-                                </a>
-                            </div>
-                        ))}
+                        {novel.mainCategory && <div className='mx-2'>
+                            <a href={`/search/${novel.mainCategory}`}>
+                                <button className={ "maincatebtn rounded-pill p-1 px-2"}>{novel.mainCategory}</button>
+                            </a>
+                        </div>}
+                        {novel.subCategory1 && <div className='mx-2'>
+                            <a href={`/search/${novel.subCategory1}`}>
+                                <button className={"catebtn rounded-pill p-1 px-2"}>{novel.subCategory1}</button>
+                            </a>
+                        </div>}
+                        {novel.subCategory2 && <div className='mx-2'>
+                            <a href={`/search/${novel.subCategory2 }`}>
+                                <button className={"catebtn rounded-pill p-1 px-2"}>{novel.subCategory2}</button>
+                            </a>
+                        </div>}
                     </div>
                     <div className='d-flex justify-content-center my-5'><h2 >จัดการตอน</h2></div>
                     <div className='novel-box-header'>
