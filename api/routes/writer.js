@@ -17,7 +17,9 @@ router.post('/register', (req, res) => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
     return res.status(400).json("Invalid email address");
   }
-  if(!/^[a-zA-Z0-9]+$/.test(req.body.email)) return res.status(400).json("Invalid email address");
+  if (!/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$/.test(req.body.email)) {
+    return res.status(400).json("Invalid character email address");
+}
   if (!/[a-z]/.test(req.body.password) || !/[A-Z]/.test(req.body.password)) return res.status(400).json("Password must contain both uppercase and lowercase characters");
   
   if (req.body.password != req.body.confirmpassword) return res.status(400).json("Password and ConfirmPassword not matching")

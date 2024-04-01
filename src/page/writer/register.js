@@ -17,13 +17,16 @@ const Register = () => {
 
   
   const [err,setError]=useState(null)
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res=await axios.post("http://localhost:5000/api/writer/register",input);
       console.log(res)
       setError(res.data)
-      
+      setTimeout(() => {
+        navigate("/writer/login")
+      }, 2000);
     } catch (err) {
       console.error("Error in login:", err);
       setError(err.response ? err.response.data : "An error occurred");

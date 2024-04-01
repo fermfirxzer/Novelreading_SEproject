@@ -51,7 +51,7 @@ const Swipercate = ({ novelsData }) => {
                                 </div>
                                 <div className=''>
                                     <div className="novel-author">
-                                        <Link to="/authorinfo" className="no-underline author">
+                                        <Link to={novel.penname?`/novel/${novel.penname}`:"/novel"} className="no-underline author">
                                         {novel.penname&&novel.penname.length>15? `${novel.penname.slice(0, 15)}...` : novel.penname}
 
                                         </Link>

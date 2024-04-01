@@ -62,7 +62,7 @@ const Mainpage = () => {
         fetchlasted();
     
     }, []);
-
+    
     
     return (
         <div className = "" style={{ marginTop: '4rem', marginBottom: '15rem' }}>

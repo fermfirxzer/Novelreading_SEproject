@@ -66,7 +66,7 @@ router.get("/fetchnovel/:novelid", (req, res) => {
 })
 //fetch lasted novel add
 router.get("/fetchnovellasted/:limit", (req, res) => {
-    const novel = "SELECT * FROM novel WHERE novel_privacy=1 ORDER BY novel_id DESC LIMIT ?"
+    const novel = "SELECT novel.*, penname.penname FROM novel JOIN penname ON penname.penid = novel.penid ORDER BY novel_id DESC LIMIT ?"
     db.query(novel, [parseInt(req.params.limit)], (err, data) => {
         if (err) return console.log(err);
         return res.status(200).json(data);
