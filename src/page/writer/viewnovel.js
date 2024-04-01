@@ -26,7 +26,7 @@ const Viewnovel = () => {
     }
     useEffect(() => {
         const fetchnovel = async () => {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
+            const response = await axios.get(`http://localhost:5000/api/novel/fetchnovel/${novelid}`)
             if (response.data.length > 1) {
                 setCategory(response.data[1]);
             }

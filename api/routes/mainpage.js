@@ -66,7 +66,7 @@ router.get("/fetchnovel/:novelid", (req, res) => {
 })
 //fetch lasted novel add
 router.get("/fetchnovellasted/:limit", (req, res) => {
-    const novel = "SELECT * FROM novel WHERE novel_privacy=1 ORDER BY novel_id DESC LIMIT ?"
+    const novel = "SELECT novel.*, penname.penname FROM novel JOIN penname ON penname.penid = novel.penid WHERE novel.novel_privacy=1 ORDER BY novel_id DESC LIMIT ?"
     db.query(novel, [parseInt(req.params.limit)], (err, data) => {
         if (err) return console.log(err);
         return res.status(200).json(data);
@@ -325,7 +325,7 @@ router.get("/noveltotalpage/:tab/:penname", (req, res) => {
     let select;
     console.log(req.params)
     if (req.params.tab === "penname") {
-        select = "SELECT COUNT(*) AS totalNovels FROM novel JOIN penname ON novel.penid=penname.penid WHERE penname.penname=?"
+        select = "SELECT COUNT(*) AS totalNovels FROM novel JOIN penname ON novel.penid=penname.penid WHERE penname.penname=? AND novel.novel_privacy=1"
         db.query(select, [req.params.penname], (err, data) => {
             if (err) return res.status(500).json(err);
             const totalNovels = data[0].totalNovels;
@@ -336,7 +336,7 @@ router.get("/noveltotalpage/:tab/:penname", (req, res) => {
         })
     }
     else {
-        select = "SELECT COUNT(*) AS totalNovels FROM novel"
+        select = "SELECT COUNT(*) AS totalNovels FROM novel WHERE novel_privacy=1"
 
         db.query(select, [], (err, data) => {
             if (err) return res.status(500).json(err);

@@ -72,6 +72,9 @@ app.post("/api/uploadprofile", Profile.single('file'), (req, res) => {
     const filename = req.file.filename;
     res.status(200).json({ filename: filename });
 });
+app.get("/",(req,res)=>{
+  res.send("Hi");
+})
 // const uploadnovel = multer({ storage: novel })
 
 // app.post("/api/upload", (req, res, next) => {

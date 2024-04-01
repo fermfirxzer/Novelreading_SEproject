@@ -101,4 +101,21 @@ router.post("/writer_fetchpenname/",(req,res)=>{
         })
     })
 })
+router.get("/fetchnovel/:novelid", (req, res) => {
+    const novel = "SELECT novel.*, penname.penname,writer.writer_name,writer.writer_img FROM novel JOIN penname JOIN writer ON penname.penid = novel.penid AND writer.writer_id=novel.writer_id WHERE novel.novel_id = ?";
+    const category = "SELECT categories.category_name, novel_category.category_type FROM categories JOIN novel_category ON categories.category_id = novel_category.category_id WHERE novel_category.novel_id = ?";
+    
+    const result = [];
+    db.query(novel, [req.params.novelid], (err, data) => {
+        if (err) return console.log(err);
+        result.push(data[0]);
+        db.query(category, [req.params.novelid], (err, data) => {
+            if (err) return console.log(err);
+            result.push(data);
+            return res.status(200).json(result)
+            
+
+        })
+    })
+})
 export default router;

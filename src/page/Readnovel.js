@@ -11,7 +11,7 @@ import '../index.css';
 import CommentNovel from '../component/CommentNovel';
 import BookIcon from '@mui/icons-material/Book';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
-import CommentTwoToneIcon from '@mui/icons-material/CommentTwoTone';
+
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 const Readnovel = () => {
@@ -61,7 +61,7 @@ const Readnovel = () => {
             setchapter(response.data)
             console.log(response.data)
         }
-
+        scrollToTop();
         fetchnovel();
         fetchchapter();
         if (writerid) {
@@ -131,7 +131,12 @@ const Readnovel = () => {
             }, 10000);
         }
     };
-
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
     const [isFollowedPenname, setIsFollowedPenname] = useState(false);
     const [isFollowedWriter, setIsFollowedWriter] = useState(false);
     const handleClickFollowed = (target) => {
@@ -153,7 +158,7 @@ const Readnovel = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
     const [errlogin, seterrlogin] = useState(null);
-
+    
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
@@ -190,7 +195,7 @@ const Readnovel = () => {
                                     </span>
                                 </button>
                                 <button className='readnow'>
-                                    <a href={`/readchapter/${novelid}/1`} className='text-decoration-none text-dark'>
+                                    <a href={chapter.length>0?`/readchapter/${novelid}/1`:""} className='text-decoration-none text-dark'>
                                         <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
 
                                         <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
