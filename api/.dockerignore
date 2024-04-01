@@ -7,4 +7,3 @@ docker-compose*
 .gitignore
 .vscode
 package-lock.json
-/api

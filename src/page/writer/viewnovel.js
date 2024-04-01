@@ -1,23 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import "./managewrting.scss"
-import "./viewnovel.scss"
 import NavbarReactBootstrap from '../../component/Navbar';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
-import CommentIcon from '@mui/icons-material/Comment';
-import CircleIcon from '@mui/icons-material/Circle';
-import Select from 'react-select';
+// import CommentIcon from '@mui/icons-material/Comment';
+// import CircleIcon from '@mui/icons-material/Circle';
+// import Select from 'react-select';
 import Swal from 'sweetalert2'
 import axios from 'axios';
 const Viewnovel = () => {
 
     const state = useLocation().state;
-    console.log(state)
     const [novel, setNovel] = useState({});
     const [novelid, setNovelid] = useState(state.novelid)
-    const [chapters, setchapters] = useState(null)
+    const [chapters, setchapters] = useState(null);
     const [category, setCategory] = useState(null);
+
     const navigate = useNavigate()
     const handleClick = () => {
         navigate("/writer/uploadchapter", { state: { novel, novelid } })
@@ -33,9 +32,7 @@ const Viewnovel = () => {
             }
         }
         fetchnovel();
-
-    }, [novelid])
-    console.log(category)
+    }, [])
     const handleDelete = async () => {
         Swal.fire({
             title: "Are you sure?",
@@ -50,14 +47,13 @@ const Viewnovel = () => {
 
                 Swal.fire({
                     title: "Deleted!",
-                    text: "Your file has been deleted.",
+                    text: "Successfully deleted novel",
                     icon: "success"
                 });
                 try {
-
                     await axios.post("http://localhost:5000/api/novel_delete/deletenovel/", { novelid: novelid }, { withCredentials: true, });
                     await axios.post("http://localhost:5000/api/novel_delete/deletechapter/", { novelid: novelid }, { withCredentials: true, });
-                    // Navigate to the desired location after deletion
+                    
                     navigate("/writer/managewriting");
                 } catch (error) {
                     console.error("Error deleting novel:", error);
@@ -70,10 +66,9 @@ const Viewnovel = () => {
             }
         });
     }
-    const fetchData = async () => {
+    const fetchchapter = async () => {
         try {
             const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novelid });
-
             setchapters(res.data);
 
         } catch (error) {
@@ -84,13 +79,11 @@ const Viewnovel = () => {
         if (state) {
             try {
                 const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
-
                 const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
                 const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
-
                 const updatedNovelData = {
                     name: data_novel.data[0].novel_name,
-                    description: data_novel.data[0].novel_desc,
+                    desc: data_novel.data[0].novel_desc,
                     penname: penname.data[0].penname,
                     image: data_novel.data[0].novel_img || null,
                     mainCategory: '',
@@ -98,12 +91,9 @@ const Viewnovel = () => {
                     subCategory2: "",
                     contentLevel: data_novel.data[0].novel_contentlevel,
                 };
-
-
                 for (const category of categories.data.result) {
                     const categoryName = category[0];
                     const categoryType = category[1];
-
                     if (categoryType === 'main') {
                         updatedNovelData.mainCategory = categoryName;
                     } else if (categoryType === 'subcategory1') {
@@ -113,6 +103,7 @@ const Viewnovel = () => {
                     }
                 }
                 setNovel(updatedNovelData);
+                setCategory(categories)
             } catch (err) {
                 console.log(err);
             }
@@ -121,15 +112,12 @@ const Viewnovel = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchchapter();
         fetchnovel();
     }, [state]);
 
     const handleNonDeleteClick = (chapterid, e, index) => {
-
-
         if (!e.target.closest('.delete-button')) {
-
             navigate(`/writer/uploadchapter`, { state: { novel, novelid, chapter: chapters[index], index: index + 1 } });
         }
     };
@@ -152,7 +140,7 @@ const Viewnovel = () => {
                 });
                 try {
                     await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novelid, chapterid }, { withCredentials: true, });
-                    fetchData();
+                    fetchchapter();
                 } catch (error) {
                     console.error("Error deleting novel:", error);
                     Swal.fire({
@@ -165,10 +153,7 @@ const Viewnovel = () => {
             }
         });
     }
-    console.log(chapters)
-
-
-
+    console.log(novel)
     return (
         <div className='writingnovel'>
             <NavbarReactBootstrap isLoggedIn={true}></NavbarReactBootstrap>
@@ -176,7 +161,7 @@ const Viewnovel = () => {
                 <div className='top d-flex pt-3'>
                     <a href='/writer/managewriting' className='link ps-3'><h6>กลับสู่หน้าหลัก</h6></a>
                     <span className='ps-2'> &gt;</span>
-                    <h6 className='ps-2'>{novel.novel_name}</h6>
+                    <h6 className='ps-2'>{novel.name}</h6>
                 </div>
                 <div className='row'>
 
@@ -192,7 +177,7 @@ const Viewnovel = () => {
                 </div>
                 <div className='img-box'>
                     <div className='box-left'>
-                        <img src={`/uploads/novel/${novel.image}`}></img>
+                        <img src={novel.image ? `/uploads/novel/${novel.image}` : `/uploads/novel/osu icon.jpg`}></img>
                     </div>
                     <div className='box-right ms-5 mt-3'>
                         <h3>{novel.name}</h3>
@@ -202,13 +187,21 @@ const Viewnovel = () => {
                 </div>
                 <div className='novel-box my-5'>
                     <div className='d-flex'>
-                        {category && category.map((category, index) => (
-                            <div key={index} className='mx-2'>
-                                <a href={`/search/${category.category_name}`}>
-                                    <button className="catebtn rounded-pill p-1 px-2" >{category.category_name} </button>
-                                </a>
-                            </div>
-                        ))}
+                        {novel.mainCategory && <div className='mx-2'>
+                            <a href={`/search/${novel.mainCategory}`}>
+                                <button className={ "maincatebtn rounded-pill p-1 px-2"}>{novel.mainCategory}</button>
+                            </a>
+                        </div>}
+                        {novel.subCategory1 && <div className='mx-2'>
+                            <a href={`/search/${novel.subCategory1}`}>
+                                <button className={"catebtn rounded-pill p-1 px-2"}>{novel.subCategory1}</button>
+                            </a>
+                        </div>}
+                        {novel.subCategory2 && <div className='mx-2'>
+                            <a href={`/search/${novel.subCategory2 }`}>
+                                <button className={"catebtn rounded-pill p-1 px-2"}>{novel.subCategory2}</button>
+                            </a>
+                        </div>}
                     </div>
                     <div className='d-flex justify-content-center my-5'><h2 >จัดการตอน</h2></div>
                     <div className='novel-box-header'>
@@ -231,9 +224,9 @@ const Viewnovel = () => {
                                         <div className='a views '>
                                             <VisibilityTwoToneIcon className='mx-2' />{chapter.chapter_views}
                                         </div>
-                                        <div className='a views'>
+                                        {/* <div className='a views'>
                                             <CommentIcon style={{ color: '#0009' }} className='mx-2' />{chapter.chapter_views}
-                                        </div>
+                                        </div> */}
 
                                         <div className='a delete-button'>
                                             <button style={{ backgroundColor: '#00cbc3', color: "#fff" }} type="button" className='btn btn-danger border-0' onClick={(e) => { e.stopPropagation(); handleDeleteChapter(chapter.chapter_id); }}>

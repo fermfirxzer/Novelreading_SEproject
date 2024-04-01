@@ -8,6 +8,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 import "./managewrting.scss"
 import "./authorupload.scss"
+
 import axios from 'axios';
 import { AuthContext } from '../../context/authContextuser';
 import { Link,useNavigate } from 'react-router-dom';
@@ -18,12 +19,15 @@ const Managewriting = () => {
 
     const { currentUser } = useContext(AuthContext)
     const [novelsData, setNovelsData] = useState([]);
-    
+
     const [totalpage, setTotalpage] = useState(0);
-   
     const [page, setPage] = useState(0);
-    const writerid = currentUser.writer_id;
+    const writerid = currentUser?.writer_id || null;
+    
     const navigate=useNavigate()
+    if(writerid===null){
+        navigate("/");
+    }
     const fetchData = async () => {
         const value = {
             page,
@@ -32,7 +36,6 @@ const Managewriting = () => {
         try {
 
             const totalpage = await axios.post("http://localhost:5000/api/novel/writer_gettotalpage/", { writerid });
-
             setTotalpage(totalpage.data.totalPages);
             const res = await axios.post("http://localhost:5000/api/novel/writer_getnovel/", value)
             setNovelsData(res.data)
@@ -45,11 +48,6 @@ const Managewriting = () => {
         fetchData();
 
     }, [page,novelsData.novel_privacy])
-
-  
-
-
-
 
     const handleDropdownChange=async(option,novel_id)=>{
         const novel_privacy=option.value;
@@ -68,10 +66,6 @@ const Managewriting = () => {
             )
         );
     }
-
-
-
-
     const handlePageChange = (e) => {
         setPage(Number(e.target.value));
     }
@@ -89,8 +83,6 @@ const Managewriting = () => {
     };
     
     const handleLinkClick=(e,novel)=>{
-       
-        
         navigate("/writer/viewnovel",{state:{novelid:novel.novel_id}})
     }
 
@@ -99,14 +91,6 @@ const Managewriting = () => {
         { value: 0, label: <div>< CircleIcon className='dot' style={{ color: "#eee" }} /> ไม่เผยแพร่</div> },
     ];
 
-
-
-
-    const [sortBy, setSortBy] = useState('latest');
-   
-    const handleSortChange = (value) => {
-        setSortBy(value);
-    };
        
    
 
@@ -142,25 +126,14 @@ const Managewriting = () => {
                         <div className=''>
                             <div className='mt-5'>
                                     <Dropdown className="mt-2 mx-2"> 
-                                        <div className="d-flex align-items-center text-center ">
-                                            <h5>{sortBy === 'latest' ? 'ใหม่สุด' : sortBy === 'oldest' ? 'เก่าสุด' : 'ยอดนิยม'}</h5> 
-                                            <Dropdown.Toggle className="dropdown-custom " variant="primary" id="dropdown-sort">
-                                                <ExpandMoreIcon style={{color:"black"}}></ExpandMoreIcon> 
-                                            </Dropdown.Toggle>
-                                        </div>
-                                        <Dropdown.Menu className="dropdown-menu" align="end">
-                                            <Dropdown.Item onClick={() => handleSortChange('latest')}>ใหม่สุด</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleSortChange('oldest')}>เก่าสุด</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleSortChange('mostlike')}>ยอดนิยม</Dropdown.Item>
-                                            
-                                        </Dropdown.Menu>
+                                        
                                     </Dropdown>
                             </div>
                         </div>
                     </div>
                 </div>
             </Container>
-            <Container style={{ width: '65%' }}>
+            <Container style={{ width: '65%',minHeight:"500px" }}>
 
                 {novelsData.map((novel, index) => (
 
@@ -169,7 +142,7 @@ const Managewriting = () => {
 
                             <div className='container-left'>
                            
-                                <img src={`/uploads/novel/${novel.novel_img}`} alt="imgnovel" className='novel-img-manage' />
+                                <img src={novel.novel_img?`/uploads/novel/${novel.novel_img}`:"/uploads/novel/osu icon.jpg"} alt="imgnovel" className='novel-img-manage' />
                                 <div className='describe-con'>
                                     <div className='describe'>
                                         {novel.novel_name}

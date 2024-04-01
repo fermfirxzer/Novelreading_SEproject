@@ -295,7 +295,8 @@ nav a {
 }
 
 .reading-novel-img-con {
-  margin-right: 0px; 
+  margin-right: 0px;
+  
 }
 
 .reading-novel-img {
@@ -316,6 +317,7 @@ nav a {
   display: flex;
   align-items: center; 
   
+  
 }
 .reading-novel-author p {
   margin-top: 10px; 
@@ -325,6 +327,7 @@ nav a {
   width:35px;
   border-radius: 30px;
   margin-right: 10px;
+  height: 35px;
 }
 
 .reading-novel-describe{

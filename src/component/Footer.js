@@ -1,8 +1,11 @@
-import React from 'react'
+
+import React, { useEffect, useState, useContext } from 'react';
 import "./footer.scss"
+import { AuthContext } from '../context/authContextuser';
 const Footer = () => {
 
-
+  const { currentUser } = useContext(AuthContext)
+  const [writerid, setWriterid] = useState(currentUser ? currentUser.writer_id : null);
   return (
     <footer className="footer">
     <div className="container">
@@ -17,10 +20,10 @@ const Footer = () => {
         <div className="footer-col">
           <h4>เมนูของฉัน</h4>
           <ul>
-            <li><a href="/writer/myreading">My Reading</a></li>
-            <li><a href="/writer/managewriting">My Writing</a></li>
-            <li><a href="/profile">My Profile</a></li>
-            <li><a href="/writer/upload">เพิ่มงานเขียนใหม่</a></li>
+            <li><a href={writerid?"/myreading":""}>My Reading</a></li>
+            <li><a href={writerid?"/writer/managewriting":""}>My Writing</a></li>
+            <li><a href={writerid?"/profile":""}>My Profile</a></li>
+            <li><a href={writerid?"/writer/upload":""}>เพิ่มงานเขียนใหม่</a></li>
           </ul>
         </div>
         <div className="footer-col">

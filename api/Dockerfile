@@ -1,5 +1,5 @@
 # base image
-FROM node:21-alpine
+FROM node:alpine
 
 # set working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm install
-EXPOSE 3000
+EXPOSE 5000
 
 CMD ["npm","start"]
 

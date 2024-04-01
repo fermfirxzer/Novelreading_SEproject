@@ -126,7 +126,7 @@ console.log(Allchapter)
                 <h5 className=''>โดย {chapter&&chapter.penname}</h5>
               </div>
             
-              <div className='container text-center mt-5 padding'>
+              <div className='container mt-5 padding'>
                 
                 <p className='lead'>
                   {chapter&&<div dangerouslySetInnerHTML={{ __html: chapter.chapter_content }} />}
@@ -144,11 +144,11 @@ console.log(Allchapter)
                           <h4>{chapter&&chapter.novel_name}</h4>
                           <div className='d-flex'>
                             {/* <img  className = "writerImg me-2" src={chapter.novel_img?`/uploads/novel/${chapter.novel_img}`:`/uploads/novel/osu icon.jpg`}></img> */}
-                            <span><strong> </strong> {chapter&&chapter.penname}</span>
-                            <button className='follow-btn ms-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000',width: isFollowedPenname ? '100px':''}} 
+                            <span>{chapter&&<a className="link" href={`/novel/${chapter.penname}`}>{chapter.penname}</a>}</span>
+                            {/* <button className='follow-btn ms-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000',width: isFollowedPenname ? '100px':''}} 
                               onClick={() => handleClickFollowed()}>
                               {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}  
-                            </button>
+                            </button> */}
                           </div>
                             
                       </div>

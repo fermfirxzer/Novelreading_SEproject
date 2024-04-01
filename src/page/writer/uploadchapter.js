@@ -45,24 +45,23 @@ const Uploadchapter = () => {
         setErrortitle(null);
         setErrorcontent(null);
         setErrorsubmit(null)
-        const validationErrors = [];
         if (!chapter.title) {
             setErrortitle("title is required!")
-            return;
+            return true;
         }
         if (!novel.novelid) {
             setErrorsubmit("novelid error occured!")
-            return;
+            return true;
         }
-        if (!content) {
+        if (content=="<p><br></p>"||!content) {
             setErrorcontent("content is required")
-            return;
+            return true;
         }
+        return false;
     }
     const handlesubmit = async (e) => {
         e.preventDefault();
-        if(!chapter.title){
-            setErrorsubmit("Please fill in title");
+        if (check()) {
             return;
         }
         const dataTosend = {
@@ -72,7 +71,7 @@ const Uploadchapter = () => {
         }
         try {
             const res = await axios.post("http://localhost:5000/api/writer/upload_chapter/", dataTosend)
-            console.log(res.data)
+            
             setErrorsubmit(res.data)
 
 
@@ -84,10 +83,13 @@ const Uploadchapter = () => {
         
         }
     }
+    console.log(content)
     const update = async (e) => {
         e.preventDefault();
-        check();
-        console.log("this update")
+        if (check()) {
+            return;
+        }
+        
         const dataTosend = {
             novelid: novel.novelid,
             chapterid: state.chapter.chapter_id,
@@ -157,7 +159,7 @@ const Uploadchapter = () => {
                 </div>
                 <div className='d-flex mx-auto justify-content-center'>
                     <div className='top text-center'>
-                        {state.chapter?.chapter_title && <h3>{"ลำดับตอนที่: " + number + " - " + header}</h3>}
+                        {state.chapter?.chapter_title && <h3>{"ลำดับตอนที่ : " + number + " - " + header}</h3>}
                     </div>
                 </div>
                 <div className='chapter-input backtheme paddingleftright30'>
@@ -206,7 +208,7 @@ const Uploadchapter = () => {
                     </div>
                 </div>
                 <div className='text-center mt-5'>
-                    {errsubmit && <p className='error'>{errsubmit}</p>}
+                    {errsubmit&& <p className='error'>{errsubmit}</p>}
                     <div className='d-inline-block mr-2'>
                         <button style={{width:"10rem",backgroundColor:'#fff',borderColor:"#dfdfdf"}} className='form-control border-1 rounded-pill p-2 mx-3' onClick={handleCancle}>ยกเลิก</button>
                     </div>

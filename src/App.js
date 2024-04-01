@@ -27,7 +27,6 @@ function App() {
             <Route path="/" element={<Mainpage/>} />
             <Route path="/signin" element={<Signup/>} />
             <Route path="/readnovel/:novelid" element={<Readnovel/>} />
-            <Route path="/authorinfo" element={<Authorinfo/>} />
             <Route path="/readchapter/:novelid/:chapterid" element={<Readchapter/>} />
             <Route path="/writer/upload" element={<Uploadnovel/>} />
             <Route path="/writer/managewriting" element={<Managewriting/>} />

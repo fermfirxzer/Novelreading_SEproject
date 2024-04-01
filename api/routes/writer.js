@@ -13,11 +13,13 @@ router.post('/register', (req, res) => {
   if(!/^[a-zA-Z0-9]+$/.test(req.body.password)||!/^[a-zA-Z0-9]+$/.test(req.body.username))return res.status(400).json("Invalid username or password")
   
   if (req.body.username.length < 4 || req.body.username.length > 12) return res.status(400).json("User name must be 4-12 characters long")
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)||!/^[a-zA-Z0-9]+$/.test(req.body.email)) {
+  if (req.body.password.length < 4 || req.body.password.length > 12) return res.status(400).json("Password must be 4-12 characters long")
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(req.body.email)) {
     return res.status(400).json("Invalid email address");
   }
+  if(!/^[a-zA-Z0-9]+$/.test(req.body.email)) return res.status(400).json("Invalid email address");
   if (!/[a-z]/.test(req.body.password) || !/[A-Z]/.test(req.body.password)) return res.status(400).json("Password must contain both uppercase and lowercase characters");
-  if (req.body.password.length < 4 || req.body.password.length > 12) return res.status(400).json("Password must be 4-12 characters long")
+  
   if (req.body.password != req.body.confirmpassword) return res.status(400).json("Password and ConfirmPassword not matching")
   let q = "SELECT * FROM writer WHERE writer_email=?";
   db.query(q, [req.body.email], (err, data) => {
@@ -26,7 +28,7 @@ router.post('/register', (req, res) => {
     q = "SELECT * FROM writer WHERE writer_name=?";
     db.query(q, [req.body.username], (err, data) => {
       if (err) return res.json(err);
-      if (data.length) return res.status(400).json("Writer name already exists!");
+      if (data.length) return res.status(400).json("Username already exists!");
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(req.body.password, salt);
       const insertQuery = "INSERT INTO writer (writer_name,writer_password,writer_email) VALUES (?, ?, ?)";
@@ -150,7 +152,7 @@ router.post('/upload_novel', verifyToken, (req, res) => {
   });
 });
 router.post("/upload_category", verifyToken, async (req, res) => {
-  console.log(req.body)
+  
     const select = "SELECT category_id FROM categories WHERE category_name=?";
     const insert = "INSERT INTO novel_category (novel_id, category_id, category_type) VALUES (?, ?, ?)";
     const result = [];
@@ -176,7 +178,7 @@ router.post("/upload_category", verifyToken, async (req, res) => {
     result.push(await getCategoryID(req.body.subCategory1), "subCategory1");
     result.push(await getCategoryID(req.body.subCategory2), "subCategory2");
     const novelID = req.body.novelid; // Assuming you have novel ID in the request
-    console.log(result)
+    
     for (let i = 0; i < result.length; i += 2) {
       const categoryID = result[i];
       const categoryType = result[i + 1];
@@ -225,7 +227,7 @@ router.post('/update_novel', verifyToken, (req, res) => {
 
 })
 router.post('/updata_category', verifyToken, async (req, res) => {
-  console.log(req.body);
+ 
   const selectQuery = "SELECT category_id FROM categories WHERE LOWER(category_name) = LOWER(?)";
   const insertQuery = "INSERT INTO novel_category (novel_id,category_id,category_type) VALUES (?,?,?)";
   const deleteQuery = "DELETE FROM novel_category WHERE novel_id=?"
@@ -294,7 +296,7 @@ router.post('/update_penname', verifyToken, (req, res) => {
         const lastpenid = data.insertId;
         db.query(update, [lastpenid, req.body.novelid], (err, data) => {
           if (err) return res.json(err);
-          console.log("penname success");
+          
           return res.status(200).json(data);
         })
       })
@@ -315,7 +317,7 @@ router.post("/upload_chapter/", (req, res) => {
     if (err) return res.status(500).json(err);
     const maxChapterId = data[0].maxChapterId || 0;
     const newChapterId = maxChapterId + 1;
-    console.log(req.body)
+   
 
     const q = "INSERT INTO novel_chapter (novel_id,chapter_id,chapter_title,chapter_content)VALUES (?,?,?,?)";
     const value = [
@@ -336,11 +338,11 @@ router.post("/upload_chapter/", (req, res) => {
   })
 })
 router.post("/update_chapter/", (req, res) => {
-  console.log(req.body);
+  
   const update = "UPDATE novel_chapter SET chapter_title=?,chapter_content=? WHERE novel_id=? AND chapter_id=?";
 
   const value = [req.body.title, req.body.content, req.body.novelid, req.body.chapterid];
-  console.log(value)
+  
   db.query(update, value, (err, data) => {
     if (err) {
       console.log(err)

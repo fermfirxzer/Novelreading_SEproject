@@ -104,9 +104,15 @@ const Novel = () => {
             }
         }
     }
-
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    };
     useEffect(() => {
         fetchData(activeTab);
+        scrollToTop();
     }, [page])
     useEffect(() => {
         fetchtotalpage(activeTab);
@@ -116,7 +122,9 @@ const Novel = () => {
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
+        setPage(0);
         if (tab === "mostview") {
+            
             fetchData("mostview");
             fetchtotalpage("mostviews");
         } else if (tab == "penname") {

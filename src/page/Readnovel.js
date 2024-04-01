@@ -101,6 +101,11 @@ const Readnovel = () => {
             } catch (err) {
                 console.log(err);
             }
+        } else {
+            seterrlogin("Please login to Likes novel")
+            setTimeout(() => {
+                seterrlogin(null);
+            }, 10000);
         }
     };
 
@@ -119,6 +124,11 @@ const Readnovel = () => {
                 console.log(err);
             }
             console.log(isBooked)
+        } else {
+            seterrlogin("Please login to Bookmarks novel")
+            setTimeout(() => {
+                seterrlogin(null);
+            }, 10000);
         }
     };
 
@@ -131,17 +141,10 @@ const Readnovel = () => {
             setIsFollowedWriter(!isFollowedWriter);
         }
     };
-    const [currentPage, setCurrentPage] = useState(1);
-    const chaptersPerPage = 10;
-
-    const totalPages = 0;
-    const startIndex = chapter ? (currentPage - 1) * chaptersPerPage : 0;
-    const endIndex = chapter ? currentPage * chaptersPerPage : 0;
-
-
-
-
-
+    const [currentPage, setCurrentPage] = useState(0);
+    const chapterperpage = 10;
+    const totalPages = chapter ? Math.floor(chapter.length / chapterperpage) : 0;
+    console.log(totalPages)
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
     };
@@ -149,8 +152,8 @@ const Readnovel = () => {
     const handlePrevPage = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
+    const [errlogin, seterrlogin] = useState(null);
 
-    console.log(novelData)
     return (
 
         <div style={{ backgroundColor: '#f4f4f4', marginTop: '4rem' }} className='px-0 mx-0 bgcolor'>
@@ -159,7 +162,7 @@ const Readnovel = () => {
             <div>
                 <div className="reading-novel-container d-lg-flex ">
                     <div className='col-lg-4 col-md-12 px-0 mx-0'>
-                        <div className='  reading-novel-img-con '>
+                        <div className='reading-novel-img-con '>
                             {novelData && <img src={novelData.novel_img != null ? `/uploads/novel/${novelData.novel_img}` : "/uploads/novel/osu icon.jpg"} className='reading-novel-img' alt="Novel Cover" />}
                         </div>
                     </div>
@@ -170,10 +173,8 @@ const Readnovel = () => {
                             </div>
                             <div className='reading-novel-author'>
                                 {novelData && <img src={novelData.writer_img ? `/uploads/profile/${novelData.writer_img}` : "/uploads/novel/osu icon.jpg"} className='author-profile' alt="Author Profile" />}
-                                {novelData && <p>{novelData.display_name}</p>}
-                                {/* <button className='follow-btn' style={{ color: isFollowedPenname ? '#00cbc3' : '#fff', borderColor: isFollowedPenname ? '#00cbc3' : '#fff', width: isFollowedPenname ? '100px' : '' }} onClick={() => handleClickFollowed('penname')}>
-                                    {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                </button> */}
+                                {novelData && <p>{novelData.writer_name}</p>}
+
                             </div>
                             <div className='reading-novel-describe'>
                                 {novelData && <p>{novelData.novel_desc} </p>}
@@ -189,8 +190,9 @@ const Readnovel = () => {
                                     </span>
                                 </button>
                                 <button className='readnow'>
-                                    <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
                                     <a href={`/readchapter/${novelid}/1`} className='text-decoration-none text-dark'>
+                                        <img src="https://cdn-icons-png.flaticon.com/128/159/159604.png" className='search-icon' alt="Read Icon" />
+
                                         <span style={{ margin: '0px 8px' }}>อ่านเลย</span>
                                     </a>
 
@@ -212,6 +214,7 @@ const Readnovel = () => {
                         ))}
                     </div>
                 </div>
+                {errlogin && <p className='text-danger text-center'>{errlogin}</p>}
                 <div className='container-lg pb-5 mb-0' >
                     <div className='reading-novel-info mb-5'>
                         <div className='card border-0 p-3'>
@@ -219,18 +222,11 @@ const Readnovel = () => {
                                 <div className="mt-2 border-end " style={{ width: '50%' }}>
                                     <h2 >ข้อมูลนักเขียน </h2>
                                     <div className='d-flex justify-content-between '>
-                                        {/* {novelData && <span><strong>นามปากกา :  </strong> {novelData.penname}</span>} */}
-                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedPenname ? '#00cbc3' : '#000', borderColor: isFollowedPenname ? '#00cbc3' : '#000', width: isFollowedPenname ? '100px' : '' }}
-                                            onClick={() => handleClickFollowed('penname')}>
-                                            {isFollowedPenname ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button> */}
+
                                     </div>
                                     <div className='d-flex justify-content-between mt-2'>
                                         {novelData && <span><strong>ผู้เขียน : </strong><a className="link" href={`/novel/${novelData.penname}`}> {novelData.penname}</a></span>}
-                                        {/* <button className='follow-btn me-5' style={{ color: isFollowedWriter ? '#00cbc3' : '#000', borderColor: isFollowedWriter ? '#00cbc3' : '#000', width: isFollowedWriter ? '100px' : '' }}
-                                            onClick={() => handleClickFollowed('writer')}>
-                                            {isFollowedWriter ? 'ติดตามแล้ว' : 'ติดตาม'}
-                                        </button> */}
+
                                     </div>
 
                                 </div>
@@ -240,9 +236,7 @@ const Readnovel = () => {
                                     {novelData && <div>
                                         <strong>วันที่เผยแพร่ : </strong> {novelData.novel_date}
                                     </div>}
-                                    {/* <div className='mt-2'>
-                                        <strong>วันที่แก้ไขล่าสุด : </strong> {novel.publishedDate}
-                                    </div> */}
+
 
                                 </div>
                             </div>
@@ -253,17 +247,14 @@ const Readnovel = () => {
                             ตอนทั้งหมด ({chapter.length})
                         </div>}
                         <div id="chapterContainer">
-                            {chapter && chapter.map(chapterItem => (
+                            {chapter && chapter.slice(currentPage * 10).map(chapterItem => (
                                 <div className='chapter px-5' key={chapterItem.chapter_id}>
                                     <Link to={`/readchapter/${novelid}/${chapterItem.chapter_id}`} className="no-underline">
                                         <g style={{ color: '#00cbc3', fontSize: '18px' }}>#{chapterItem.chapter_id}</g> {chapterItem.chapter_title}
                                     </Link>
                                     <div style={{ display: 'flex' }}>
                                         <div style={{ marginRight: '15px' }}>
-                                            {/* <span style={{ marginRight: '5px' }}>
-                                                <CommentTwoToneIcon />
-                                            </span> */}
-                                            {/* <span>{chapterItem.chapter_comment}</span> */}
+
                                         </div>
                                         <div>
                                             <span style={{ marginRight: '5px' }}>
@@ -278,9 +269,9 @@ const Readnovel = () => {
                         </div>
 
                         <div id="pagination" className="chapter-btn-container">
-                            <button onClick={handlePrevPage} disabled={currentPage === 1} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
-                            <span>หน้าที่ {currentPage}</span>
-                            <button onClick={handleNextPage} disabled={currentPage === totalPages} className='chapter-btn'><NavigateNextIcon></NavigateNextIcon></button>
+                            <button onClick={handlePrevPage} disabled={currentPage === 0} className='chapter-btn'><NavigateBeforeIcon></NavigateBeforeIcon></button>
+                            <span>หน้าที่ {currentPage + 1}</span>
+                            <button onClick={handleNextPage} disabled={currentPage >= totalPages} className='chapter-btn'><NavigateNextIcon></NavigateNextIcon></button>
                         </div>
                     </div>
                     <div className='related-novel-container'>
