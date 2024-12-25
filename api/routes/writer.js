@@ -56,7 +56,7 @@ router.post('/login', (req, res) => {
   const q = "SELECT * FROM writer WHERE writer_email=?"
   db.query(q, [req.body.email], (err, data) => {
     if (err) return res.json(err)
-    if (data.length == 0) return res.status(404).json("Email not found!");
+    if (data.length === 0) return res.status(404).json("Email not found!");
     const ispasswordcorrect = bcrypt.compareSync(req.body.password, data[0].writer_password);
     if (!ispasswordcorrect) return res.status(400).json("Wrong Email or password!")
     const token = jwt.sign({ writer_id: data[0].writer_id }, "jwtkey", { expiresIn: "6h" });
@@ -69,9 +69,8 @@ router.post('/login', (req, res) => {
   })
 })
 router.post('/logout', (req, res) => {
-  // res.redirect('http://localhost:3000/');
   res.clearCookie("token", {
-    domain: 'localhost:3000',
+    domain: `${process.env.REACT_APP_URL}`,
     path: '/'
   });
 

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState, useContext } from 'react';
+import React, {useState, useContext } from 'react';
 import "./footer.scss"
 import { AuthContext } from '../context/authContextuser';
 const Footer = () => {
@@ -29,17 +29,17 @@ const Footer = () => {
         <div className="footer-col">
           <h4>เกี่ยวกับเรา</h4>
           <ul>
-            <li><a href="#">ติดต่อเรา</a></li>
-            <li><a href="#">เงื่อนไขการให้บริการ</a></li>
-            <li><a href="#">นโนบายความเป็นส่วนตัว</a></li>
+            <li><a href="/#">ติดต่อเรา</a></li>
+            <li><a href="/#">เงื่อนไขการให้บริการ</a></li>
+            <li><a href="/#">นโนบายความเป็นส่วนตัว</a></li>
           </ul>
         </div>
         <div className="footer-col">
           <h4>follow us</h4>
           <div className="social-links">
-            <a href="#"><i className="fab fa-facebook-f"></i></a>
-            <a href="#"><i className="fab fa-twitter"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
+            <a href="/#"><i className="fab fa-facebook-f"></i></a>
+            <a href="/#"><i className="fab fa-twitter"></i></a>
+            <a href="/#"><i className="fab fa-instagram"></i></a>
           </div>
         </div>
       </div>

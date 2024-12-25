@@ -34,7 +34,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchwriter = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/font/fetchwriter/${currentUser.writer_id}`)
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchwriter/${currentUser.writer_id}`)
                 setWriter(response.data);
                 setProfileImage(response.data.writer_img)
             } catch (err) {
@@ -55,7 +55,7 @@ const Profile = () => {
             writerid: currentUser.writer_id
         }
         try {
-            const res = await axios.post("http://localhost:5000/api/font/update_writerpassword/", dataTosend)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/font/update_writerpassword/`, dataTosend)
             setEnterPasswordError(res.data);
         } catch (err) {
             if (err.response && err.response.data === "Password and ConfirmPassword not matching") {
@@ -107,7 +107,7 @@ const Profile = () => {
         try {
             var formData = new FormData();
             formData.append("file",temp)
-            const res = await axios.post("http://localhost:5000/api/uploadprofile",formData)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/uploadprofile`,formData)
             if(res.data){
                 return res.data.filename;
             }
@@ -134,10 +134,10 @@ const Profile = () => {
         }
         console.log("this is profile",profile)
         try{
-            const res = await axios.post("http://localhost:5000/api/font/update_writerinfo/",dataTosend)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/font/update_writerinfo/`,dataTosend)
             if(profile!==null){
             
-                const img = await axios.post("http://localhost:5000/api/font/update_writerimg/",{writer_img:profile,writer_id:writer.writer_id});
+                const img = await axios.post(`${process.env.REACT_APP_API_URL}/api/font/update_writerimg/`,{writer_img:profile,writer_id:writer.writer_id});
             }
             setEnterInfoError(res.data);
         }catch(err){

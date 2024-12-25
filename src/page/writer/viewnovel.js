@@ -26,7 +26,7 @@ const Viewnovel = () => {
     }
     useEffect(() => {
         const fetchnovel = async () => {
-            const response = await axios.get(`http://localhost:5000/api/novel/fetchnovel/${novelid}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/novel/fetchnovel/${novelid}`)
             if (response.data.length > 1) {
                 setCategory(response.data[1]);
             }
@@ -51,8 +51,8 @@ const Viewnovel = () => {
                     icon: "success"
                 });
                 try {
-                    await axios.post("http://localhost:5000/api/novel_delete/deletenovel/", { novelid: novelid }, { withCredentials: true, });
-                    await axios.post("http://localhost:5000/api/novel_delete/deletechapter/", { novelid: novelid }, { withCredentials: true, });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/novel_delete/deletenovel/`, { novelid: novelid }, { withCredentials: true, });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/novel_delete/deletechapter/`, { novelid: novelid }, { withCredentials: true, });
                     
                     navigate("/writer/managewriting");
                 } catch (error) {
@@ -68,7 +68,7 @@ const Viewnovel = () => {
     }
     const fetchchapter = async () => {
         try {
-            const res = await axios.post("http://localhost:5000/api/novel/writer_fetchchapter/", { novelid: novelid });
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_fetchchapter/`, { novelid: novelid });
             setchapters(res.data);
 
         } catch (error) {
@@ -78,9 +78,9 @@ const Viewnovel = () => {
     const fetchnovel = async () => {
         if (state) {
             try {
-                const data_novel = await axios.post("http://localhost:5000/api/novel/writer_fetchnovel/", { novelid: novelid });
-                const categories = await axios.post("http://localhost:5000/api/novel/writer_fetchcategory/", { novelid: novelid });
-                const penname = await axios.post("http://localhost:5000/api/novel/writer_fetchpenname/", { novelid: novelid });
+                const data_novel = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_fetchnovel/`, { novelid: novelid });
+                const categories = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_fetchcategory/`, { novelid: novelid });
+                const penname = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_fetchpenname/`, { novelid: novelid });
                 const updatedNovelData = {
                     name: data_novel.data[0].novel_name,
                     desc: data_novel.data[0].novel_desc,
@@ -139,7 +139,7 @@ const Viewnovel = () => {
                     icon: "success"
                 });
                 try {
-                    await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novelid, chapterid }, { withCredentials: true, });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/novel_delete/deletechapter_id/`, { novelid: novelid, chapterid }, { withCredentials: true, });
                     fetchchapter();
                 } catch (error) {
                     console.error("Error deleting novel:", error);

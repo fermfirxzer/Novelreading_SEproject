@@ -24,7 +24,7 @@ const Readnovel = () => {
     const [recommend, setrecommend] = useState(null);
     const fetchbookmark = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmark/${writerid}/${novelid}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchbookmark/${writerid}/${novelid}`);
             console.log(response.data)
             setIsBooked(response.data);
 
@@ -37,7 +37,7 @@ const Readnovel = () => {
     }
     const fetchlike = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchlike/${writerid}/${novelid}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchlike/${writerid}/${novelid}`);
             console.log(response.data)
             setIslikeClicked(response.data);
         } catch (err) {
@@ -47,7 +47,7 @@ const Readnovel = () => {
     }
     useEffect(() => {
         const fetchnovel = async () => {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchnovel/${novelid}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchnovel/${novelid}`)
             if (response.data.length > 1) {
                 setNovelData(response.data[0])
                 setCategory(response.data[1]);
@@ -57,7 +57,7 @@ const Readnovel = () => {
 
         }
         const fetchchapter = async () => {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchAllchapter/${novelid}`)
             setchapter(response.data)
             console.log(response.data)
         }
@@ -74,7 +74,7 @@ const Readnovel = () => {
             if (category && category.length > 0) {
                 const category_tosend = category[0].category_name;
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/font/fetchnovelbycategoryrandom/${category_tosend}`);
+                    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchnovelbycategoryrandom/${category_tosend}`);
                     setrecommend(response.data);
                 } catch (err) {
                     console.log(err);
@@ -93,10 +93,10 @@ const Readnovel = () => {
             try {
                 if (!islikeClicked) {
                     setIslikeClicked(true);
-                    await axios.post("http://localhost:5000/api/font/addlike/", { writerid: writerid, novelid: novelid });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/font/addlike/`, { writerid: writerid, novelid: novelid });
                 } else {
                     setIslikeClicked(false);
-                    await axios.post("http://localhost:5000/api/font/removelike/", { writerid: writerid, novelid: novelid });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/font/removelike/`, { writerid: writerid, novelid: novelid });
                 }
             } catch (err) {
                 console.log(err);
@@ -115,10 +115,10 @@ const Readnovel = () => {
             try {
                 if (!isBooked) {
                     setIsBooked(true);
-                    await axios.post("http://localhost:5000/api/font/addbookmark/", { writerid: writerid, novelid: novelid });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/font/addbookmark/`, { writerid: writerid, novelid: novelid });
                 } else {
                     setIsBooked(false);
-                    await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: writerid, novelid: novelid });
+                    await axios.post(`${process.env.REACT_APP_API_URL}/api/font/removebookmark/`, { writerid: writerid, novelid: novelid });
                 }
             } catch (err) {
                 console.log(err);

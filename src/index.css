@@ -250,7 +250,7 @@ nav a {
  .novel-container{
   background-color: #f8f8f8;
   margin-bottom: 10px;
-  height:19rem;
+  /* height:19rem; */
  }
  .novel-name,.novel-author,.novel-info{
   margin: 0px 10px;

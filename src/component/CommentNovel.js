@@ -32,7 +32,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const fetchcomment = async () => {
         if (novelid !== undefined && chapterid !== undefined) {
             try {
-                const response = await axios.get(`http://localhost:5000/api/font/fetchcomment/${novelid}/${chapterid}`);
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchcomment/${novelid}/${chapterid}`);
                 console.log(response.data)
                 setAllcomment(response.data)
             } catch (err) {
@@ -68,7 +68,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
             if (result.isConfirmed) {
                 try {
                     const dataTosend = { novelid, chapterid, newComment, writerid: currentUser.writer_id }
-                    const response = await axios.post("http://localhost:5000/api/font/upload_comment/", dataTosend)
+                    const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/font/upload_comment/`, dataTosend)
 
                     setErrcomment(response.data)
                     Swal.fire('เพิ่มความคิดเห็นแล้ว!', '', 'success');
@@ -102,7 +102,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
         }
         const dataTosend = { editingcommentText, editingcommentid, writerid: currentUser.writer_id };
         try {
-            const response = await axios.post("http://localhost:5000/api/font/update_comment/", dataTosend);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/font/update_comment/`, dataTosend);
             setErrcomment(response.data)
             fetchcomment();
             setEditingCommentId(0);
@@ -115,7 +115,7 @@ const CommentNovel = ({ novelid, chapterid }) => {
     const handleDeleteComment = async (comment) => {
         
         try {
-            const response = await axios.post("http://localhost:5000/api/novel_delete/deletecomment/", comment);
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel_delete/deletecomment/`, comment);
             setErrcomment(response.data)
 
             fetchcomment();

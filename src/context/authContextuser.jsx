@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 export const AuthContext = createContext();
 
@@ -9,7 +8,7 @@ export const AuthContextProvider = ({ children }) => {
   );
 
   const login = async (input, userType) => {
-    const url = "http://localhost:5000/api/writer/login" 
+    const url = `${process.env.REACT_APP_API_URL}/api/writer/login` 
     try {
       const res = await axios.post(url, input, { withCredentials: true });
       setCurrentUser(res.data)
@@ -26,7 +25,7 @@ export const AuthContextProvider = ({ children }) => {
     if(currentUser){
       setCurrentUser(null);
     }
-    axios.post("http://localhost:5000/api/writer/logout",{},{withCredentials: true});
+    axios.post(`${process.env.REACT_APP_API_URL}/api/writer/logout`,{},{withCredentials: true});
     
   };
 
@@ -39,7 +38,6 @@ export const AuthContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    // Update localStorage when currentUser changes
     localStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 

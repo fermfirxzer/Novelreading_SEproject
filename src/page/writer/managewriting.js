@@ -35,9 +35,9 @@ const Managewriting = () => {
         }
         try {
 
-            const totalpage = await axios.post("http://localhost:5000/api/novel/writer_gettotalpage/", { writerid });
+            const totalpage = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_gettotalpage/`, { writerid });
             setTotalpage(totalpage.data.totalPages);
-            const res = await axios.post("http://localhost:5000/api/novel/writer_getnovel/", value)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/novel/writer_getnovel/`, value)
             setNovelsData(res.data)
         
         } catch (err) {
@@ -52,7 +52,7 @@ const Managewriting = () => {
     const handleDropdownChange=async(option,novel_id)=>{
         const novel_privacy=option.value;
         try{
-            await axios.post("http://localhost:5000/api/novel//writer_setprivacy/",{novel_privacy,novel_id})
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/novel//writer_setprivacy/`,{novel_privacy,novel_id})
             
             
         }catch(err){

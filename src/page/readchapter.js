@@ -15,12 +15,12 @@ const Readchapter = () => {
   const [Allchapter, setAllchapter] = useState(null);
   useEffect(() => {
     const fetchchapter = async () => {
-      const response = await axios.get(`http://localhost:5000/api/font/fetchchapter/${novelid}/${chapterid}`)
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchchapter/${novelid}/${chapterid}`)
       setChapter(response.data[0])
 
     }
     const Allchapter = async () => {
-      const response = await axios.get(`http://localhost:5000/api/font/fetchAllchapter/${novelid}`)
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchAllchapter/${novelid}`)
       setAllchapter(response.data)
       // console.log(response.data)
     }

@@ -1,13 +1,13 @@
 import React from 'react';
 import 'swiper/swiper-bundle.css';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
-import { Swiper, SwiperSlide, useSwiper } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { Link } from 'react-router-dom';
 
 
 const Swipercate = ({ novelsData }) => {
-    
+
     return (
         <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -38,54 +38,63 @@ const Swipercate = ({ novelsData }) => {
         >
             <Swiper >
                 {novelsData && novelsData.map((novel) => (
-                    <SwiperSlide key={novel.novel_id}>
-                        <div className="novel-container">
+                    <SwiperSlide key={novel.novel_id} className=''>
+                        <div className="novel-container flex flex-column gap-1">
                             <Link to={`/readnovel/${novel.novel_id}`}>
                                 <img src={novel.novel_img ? `/uploads/novel/${novel.novel_img}` : "/uploads/novel/osu icon.jpg"} className="category-image" alt="Description" />
                             </Link>
-                            <div className='d-flex flex-column justify-content-between' style={{height: "6.5rem"}} >
+                            <div className='d-flex flex-column justify-content-between' style={{ height: "7.5rem" }} >
                                 <div className="novel-name mt-1">
                                     <Link to={`/readnovel/${novel.novel_id}`} className="no-underline">
                                         {novel.novel_name.length > 30 ? `${novel.novel_name.slice(0, 30)}...` : novel.novel_name}
                                     </Link>
                                 </div>
                                 <div className=''>
-                                    <div className="novel-author">
-                                        <Link to={novel.penname?`/novel/${novel.penname}`:"/novel"} className="no-underline author">
-                                        {novel.penname&&novel.penname.length>15? `${novel.penname.slice(0, 15)}...` : novel.penname}
+                                    <div className="novel-author mb-2">
+                                        <Link to={novel.penname ? `/novel/${novel.penname}` : "/novel"} className="no-underline author">
+                                            เขียนโดย : 
+                                            {novel.penname && novel.penname.length > 15 ? `${novel.penname.slice(0, 15)}...` : novel.penname}
 
                                         </Link>
                                     </div>
-                                    <div className="novel-info">
-                                        <span>
-                                            <img
-                                                src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/icon-amount-chapter@2x.png?t_143"
-                                                className=""
-                                                alt="Description"
-                                            />
-                                        </span>
-                                        <span>{novel.novel_chaptercount}</span>
-                                        <span>
-                                            <img
-                                                src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png"
-                                                className=""
-                                                alt="Description"
-                                            />
-                                        </span>
-                                        <span>{novel.novel_rating}</span>
-                                        <span>
-                                            <img
-                                                src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
-                                                className=""
-                                                alt="Description"
-                                            />
-                                        </span>
-                                        <span>{novel.novel_views}</span>
+                                    <div className="novel-info flex justify-content-start gap-1 p-1">
+                                        <div className='flex align-items-center'>
+                                            <span className='p-1'>
+                                                <img
+                                                    src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/icon-amount-chapter@2x.png?t_143"
+                                                    className=""
+                                                    alt="Description"
+                                                />
+                                            </span>
+                                            <span>{novel.novel_chaptercount}</span>
+                                        </div>
+                                        
+                                            <div className='flex align-items-center'>
+                                                <span className='p-1'>
+                                                    <img
+                                                        src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/rating/heart_darkgrey14.png"
+                                                        className=""
+                                                        alt="Description"
+                                                    />
+                                                </span>
+                                                <span>{novel.novel_rating}</span>
+                                            </div>
+                                            
+
+                                            <div className='flex align-items-center'>
+                                                <span>
+                                                    <img
+                                                        src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/topic_view@2x.png?t_145"
+                                                        className=""
+                                                        alt="Description"
+                                                    />
+                                                </span>
+                                                <span>{novel.novel_views}</span>
+                                            </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            
-                            </div>
-                           
+
                         </div>
                     </SwiperSlide>
                 ))}

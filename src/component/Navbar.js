@@ -25,7 +25,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
 
     const fetchwriter = async () => {
         try {
-          const res = await axios.get(`http://localhost:5000/api/font/fetchwriter/${writerid}`)
+          const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchwriter/${writerid}`)
           setwriterinfo(res.data);
         } catch (err) {
           console.log(err)
@@ -36,10 +36,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
       fetchwriter();
     }
   }, [writerid])
-  const handleIconClick = (event) => {
-    event.stopPropagation();
-    // Handle the click event for profile, writing, notification icons
-  };
+
   return (
     <>
       <Navbar className="fixed-top " expand="lg" style={{ backgroundColor: "#030916", borderBottom: '1px solid black', padding: '15px', width: '100%' }}>
@@ -60,7 +57,7 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
             <div className="search-container">
               <a href="/search">
                 <button className="search-btn " onClick={toggleSearch} style={{ cursor: 'pointer' }}>
-                  <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="Button Image" />
+                  <img className="search-icon" src="https://1146890965.rsc.cdn77.org/web/newux/dist/assets/images/ic-search@2x.png?t_143" alt="ButtonImage" />
                 </button>
               </a>
 
@@ -77,12 +74,12 @@ const NavbarReactBootstrap = ({ onSignInClick, isLoggedIn }) => {
 
                 <Dropdown align="end" className='mt-2 mx-3' >
                   <Dropdown.Toggle variant="primary" id="dropdown-basic" style={{ color: 'black', marginRight: '10px', background: '#dddddd', borderRadius: '50%', width: '20px', height: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
-                    <img src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn" />
+                    <img src="https://1146890965.rsc.cdn77.org/web/newux/assets/images/profile-X.png?t_144" className="search-btn" alt="search" />
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu className="dropdown-menu">
                     <Dropdown.Item href="/profile" className='w-auto'>
-                      {writerinfo&&<img src={writerinfo.image?`/uploads/profile/${writerinfo.writer_img}` : `/uploads/novel/osu icon.jpg`} className="search-btn" />}
+                      {writerinfo&&<img src={writerinfo.image?`/uploads/profile/${writerinfo.writer_img}` : `/uploads/novel/osu icon.jpg`} className="search-btn" alt="search" />}
                       <span className='mx-3'>{currentUser.writer_name}</span>
                     </Dropdown.Item>
                     <Dropdown.Divider />

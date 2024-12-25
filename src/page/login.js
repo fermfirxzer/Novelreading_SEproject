@@ -45,7 +45,7 @@ const  Login = ( { onSignInClick} ) => {
         }
     
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", RegisterInput);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register", RegisterInput);
             console.log(res);
         } catch (err) {
             console.error("Error in login:", err);

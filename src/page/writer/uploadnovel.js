@@ -66,7 +66,7 @@ const Uploadnovel = () => {
       console.log("This is upload")
       var formData = new FormData();
       formData.append('file', novelData.image);
-      const res=await axios.post("http://localhost:5000/api/upload", formData);
+      const res=await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`, formData);
       console.log(res)
       if(res.data){
         return res.data.filename;
@@ -166,14 +166,14 @@ const Uploadnovel = () => {
     };
     // console.log(dataToSend)
     try {
-      const res = await axios.post("http://localhost:5000/api/writer/upload_novel", dataToSend, { withCredentials: true, });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/upload_novel`, dataToSend, { withCredentials: true, });
       const category = {
         mainCategory: novelData.mainCategory,
         subCategory1: novelData.subCategory1,
         subCategory2: novelData.subCategory2,
         novelid: res.data || null,
       }
-      const rescategory = await axios.post("http://localhost:5000/api/writer/upload_category", category, { withCredentials: true, })
+      const rescategory = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/upload_category`, category, { withCredentials: true, })
       setError("Success upload");
 
     } catch (err) {
@@ -213,9 +213,9 @@ const Uploadnovel = () => {
       penname: novelData.penname,
     }
     try {
-      const res = await axios.post("http://localhost:5000/api/writer/update_novel", dataToSend, { withCredentials: true, });
-      const penname = await axios.post("http://localhost:5000/api/writer/update_penname", penToSend, { withCredentials: true, });
-      const category = await axios.post("http://localhost:5000/api/writer/updata_category", dataToSend, { withCredentials: true, });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/update_novel`, dataToSend, { withCredentials: true, });
+      const penname = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/update_penname`, penToSend, { withCredentials: true, });
+      const category = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/updata_category`, dataToSend, { withCredentials: true, });
       setError("Success update")
     } catch (err) {
       setError(err.respone.data? err.response.data : "An error occurred");

@@ -70,7 +70,7 @@ const Uploadchapter = () => {
             content,
         }
         try {
-            const res = await axios.post("http://localhost:5000/api/writer/upload_chapter/", dataTosend)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/upload_chapter/`, dataTosend)
             
             setErrorsubmit(res.data)
 
@@ -98,7 +98,7 @@ const Uploadchapter = () => {
         }
         console.log(dataTosend)
         try {
-            const res = await axios.post("http://localhost:5000/api/writer/update_chapter/", dataTosend)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/update_chapter/`, dataTosend)
             console.log(res.data)
             setErrorsubmit(res.data)
             setTimeout(() => {
@@ -130,7 +130,7 @@ const Uploadchapter = () => {
                     icon: "success"
                 });
                 try {
-                      await axios.post("http://localhost:5000/api/novel_delete/deletechapter_id/", { novelid: novel.novelid, chapterid:state.chapter.chapter_id }, { withCredentials: true, });
+                      await axios.post(`${process.env.REACT_APP_API_URL}/api/novel_delete/deletechapter_id/`, { novelid: novel.novelid, chapterid:state.chapter.chapter_id }, { withCredentials: true, });
                       navigate("/writer/viewnovel",{state:{novelid:novel.novelid}})
                 } catch (error) {
                     console.error("Error deleting novel:", error);

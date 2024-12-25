@@ -1,14 +1,12 @@
 
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { AuthContext } from '../context/authContextuser.jsx';
 import axios from 'axios';
 
 const Signup = ({  }) => {
     const [showSignup, setShowSignup] = useState(true);
     
     
-    const { login } = useContext(AuthContext)
     const [err, setError] = useState(null)
     const [userinput, setUserinput] = useState({
         username: "",
@@ -23,7 +21,7 @@ const Signup = ({  }) => {
     const handleSubmit = async e => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/auth/register", userinput)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, userinput)
             console.log(res)
         } catch (err) {
             console.log(err)

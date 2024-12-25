@@ -59,7 +59,7 @@ const Writer_upload = () => {
     try{
       const formData=new FormData();
       formData.append("file",novelData.image)
-      const res=await axios.post("http://localhost:5000/api/upload",formData)
+      const res=await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`,formData)
       return res.data
     
     }catch(err){
@@ -86,7 +86,6 @@ const Writer_upload = () => {
       case 'contentlevel':
         setErrorcontentlevel(message);
         break;
-      // handle other form fields...
       default:
         break;
     }
@@ -125,7 +124,7 @@ const Writer_upload = () => {
       imageUrl=await upload();
     }
     let penname=novelData.penname;
-    if(novelData.penname==''){
+    if(novelData.penname===''){
       penname=currentUser.writer_name;
     }
     const dataToSend = {
@@ -135,7 +134,7 @@ const Writer_upload = () => {
     };
     console.log(dataToSend)
     try{
-      const res=await axios.post("http://localhost:5000/api/writer/upload",dataToSend,{
+      const res=await axios.post(`${process.env.REACT_APP_API_URL}/api/writer/upload`,dataToSend,{
         withCredentials: true, // Include cookies in the request
       });
       setError(res.data)

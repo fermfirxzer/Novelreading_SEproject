@@ -36,7 +36,7 @@ const Myreading = () => {
     const [novel, setnovel] = useState(null);
     const fetchbookmarknovel = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchbookmarkmyreading/${currentUser.writer_id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchbookmarkmyreading/${currentUser.writer_id}`);
             console.log(response.data)
             setnovel(response.data)
 
@@ -48,7 +48,7 @@ const Myreading = () => {
     }
     const fetchlikenovel = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/font/fetchlikemyreading/${currentUser.writer_id}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/font/fetchlikemyreading/${currentUser.writer_id}`);
             console.log(response.data)
             setnovel(response.data)
             console.log(novel)
@@ -93,7 +93,7 @@ const Myreading = () => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios.post("http://localhost:5000/api/font/removebookmark/", { writerid: currentUser.writer_id, novelid: id });
+                        await axios.post(`${process.env.REACT_APP_API_URL}/api/font/removebookmark/`, { writerid: currentUser.writer_id, novelid: id });
                         fetchbookmarknovel();
                         Swal.fire({
                             icon: "success",
@@ -128,7 +128,7 @@ const Myreading = () => {
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     try {
-                        await axios.post("http://localhost:5000/api/font/removelike/", { writerid: currentUser.writer_id, novelid: id });
+                        await axios.post(`${process.env.REACT_APP_API_URL}/api/font/removelike/`, { writerid: currentUser.writer_id, novelid: id });
                         fetchlikenovel();
                         Swal.fire({
                             icon: "success",
